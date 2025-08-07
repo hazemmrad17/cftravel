@@ -1,0 +1,176 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Layla Travel Agent - Status{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                    🚀 Layla Travel Agent Integration
+                </h1>
+                <p class="text-lg text-gray-600 dark:text-gray-300">
+                    Status Dashboard
+                </p>
+            </div>
+
+            <!-- Status Cards -->
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <!-- Python API Status -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            🐍 Python API Server
+                        </h3>
+                        <span id="python-status" class="px-3 py-1 rounded-full text-sm font-medium">
+                            Checking...
+                        </span>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="text-gray-600 dark:text-gray-300">
+                            <strong>URL:</strong> <code class="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">http://localhost:8000</code>
+                        </p>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            <strong>Health:</strong> <span id="python-health">-</span>
+                        </p>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            <strong>Agent:</strong> <span id="python-agent">-</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Symfony Server Status -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            🌐 Symfony Web Server
+                        </h3>
+                        <span id="symfony-status" class="px-3 py-1 rounded-full text-sm font-medium">
+                            Checking...
+                        </span>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="text-gray-600 dark:text-gray-300">
+                            <strong>URL:</strong> <code class="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">http://localhost:8001</code>
+                        </p>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            <strong>Status:</strong> <span id="symfony-health">-</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                    🎯 Quick Actions
+                </h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <a href="/chat" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-center font-medium transition-colors">
+                        💬 Open Chat
+                    </a>
+                    <a href="http://localhost:8000/docs" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-center font-medium transition-colors">
+                        📚 API Docs
+                    </a>
+                    <button onclick="testChat()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg text-center font-medium transition-colors">
+                        🧪 Test Chat
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test Results -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                    🧪 Test Results
+                </h3>
+                <div id="test-results" class="space-y-4">
+                    <p class="text-gray-600 dark:text-gray-300">Click "Test Chat" to run integration tests...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function checkStatus() {
+    // Check Python API
+    try {
+        const pythonResponse = await fetch('http://localhost:8000/health');
+        const pythonData = await pythonResponse.json();
+        
+        document.getElementById('python-status').textContent = '✅ Running';
+        document.getElementById('python-status').className = 'px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800';
+        document.getElementById('python-health').textContent = pythonData.status;
+        document.getElementById('python-agent').textContent = pythonData.agent_loaded ? '✅ Loaded' : '❌ Not Loaded';
+    } catch (error) {
+        document.getElementById('python-status').textContent = '❌ Error';
+        document.getElementById('python-status').className = 'px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800';
+        document.getElementById('python-health').textContent = 'Connection failed';
+        document.getElementById('python-agent').textContent = 'Unknown';
+    }
+
+    // Check Symfony Server
+    try {
+        const symfonyResponse = await fetch('/');
+        document.getElementById('symfony-status').textContent = '✅ Running';
+        document.getElementById('symfony-status').className = 'px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800';
+        document.getElementById('symfony-health').textContent = 'OK';
+    } catch (error) {
+        document.getElementById('symfony-status').textContent = '❌ Error';
+        document.getElementById('symfony-status').className = 'px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800';
+        document.getElementById('symfony-health').textContent = 'Connection failed';
+    }
+}
+
+async function testChat() {
+    const resultsDiv = document.getElementById('test-results');
+    resultsDiv.innerHTML = '<p class="text-blue-600">🔄 Testing chat integration...</p>';
+
+    try {
+        const response = await fetch('http://localhost:8000/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: "Bonjour, je veux partir en voyage",
+                conversation_id: null,
+                user_id: null
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            resultsDiv.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-green-800 mb-2">✅ Chat Test Successful!</h4>
+                    <p class="text-green-700 mb-2">Layla responded to your message:</p>
+                    <div class="bg-white border rounded p-3 text-sm">
+                        ${data.response.substring(0, 200)}...
+                    </div>
+                </div>
+            `;
+        } else {
+            resultsDiv.innerHTML = `
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-red-800 mb-2">❌ Chat Test Failed</h4>
+                    <p class="text-red-700">Status: ${response.status}</p>
+                </div>
+            `;
+        }
+    } catch (error) {
+        resultsDiv.innerHTML = `
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                <h4 class="font-semibold text-red-800 mb-2">❌ Chat Test Failed</h4>
+                <p class="text-red-700">Error: ${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+// Check status on page load
+document.addEventListener('DOMContentLoaded', checkStatus);
+</script>
+{% endblock %} 

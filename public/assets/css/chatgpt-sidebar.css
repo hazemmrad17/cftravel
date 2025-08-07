@@ -1,0 +1,366 @@
+.chat-sidebar-item {
+  display: block;
+  width: 100%;
+  padding: 0.75em 1em;
+  background: #f3f4f6; /* Light gray for light mode */
+  border-radius: 9999px;
+  position: relative;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.chat-sidebar-item.active {
+  background: #e5e7eb !important; /* Solid highlight for active */
+  color: #222 !important;
+}
+.chat-sidebar-item:hover {
+  background: #e0e7ef !important;
+}
+.dark .chat-sidebar-item {
+  background: transparent;
+}
+.dark .chat-sidebar-item.active {
+  background: #353945 !important;
+  color: #fff !important;
+}
+.dark .chat-sidebar-item:hover {
+  background: #23272f !important;
+}
+.chat-title {
+  color: #fff;
+  font-size: 1em;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chat-menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25em;
+  margin-left: 0.5em;
+  border-radius: 0.5em;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+}
+.chat-menu-btn:hover {
+  background: #2d323c;
+}
+.chat-menu-dropdown {
+  display: none;
+  background: #fff;
+  color: #222;
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px 0 rgba(60,60,60,0.12), 0 1.5px 4px 0 rgba(60,60,60,0.08);
+  border: 1px solid #e5e7eb;
+  min-width: 180px;
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+  z-index: 100;
+  position: absolute;
+  right: 0;
+  top: 2.5rem;
+  border-radius: 1rem;
+  overflow: visible;
+}
+.chat-sidebar-item.open .chat-menu-dropdown {
+  display: flex !important;
+  flex-direction: column;
+}
+.chat-menu-action {
+  background: none;
+  border: none;
+  color: #222;
+  text-align: left;
+  padding: 0.75em 2.2em 0.75em 2.2em;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  cursor: pointer;
+  border-radius: 9999px !important;
+  margin: 0.25em 0;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  box-shadow: none;
+}
+.chat-menu-action:hover {
+  background: #ececec !important;
+  color: #111;
+  box-shadow: 0 2px 8px 0 rgba(60,60,60,0.06);
+}
+.chat-menu-action[data-action="delete"] {
+  color: #e53e3e;
+}
+.chat-menu-action[data-action="delete"]:hover {
+  background: #fae2e2 !important;
+  color: #e53e3e !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 2px 8px 0 rgba(229,62,62,0.08) !important;
+  border: 1px solid #e53e3e !important;
+}
+.conv-menu-dropdown {
+  display: none;
+  background: #fff;
+  color: #222;
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px 0 rgba(60,60,60,0.12), 0 1.5px 4px 0 rgba(60,60,60,0.08);
+  border: 1px solid #e5e7eb;
+  min-width: 140px;
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+  z-index: 100;
+  position: absolute;
+  right: 0;
+  top: 2.5rem;
+  transition: opacity 0.15s;
+}
+.chat-sidebar-item.open .conv-menu-dropdown {
+  display: flex !important;
+  flex-direction: column;
+  opacity: 1;
+}
+.conv-menu-action {
+  background: none;
+  border: none;
+  color: #222;
+  text-align: left;
+  padding: 0.75em 2.2em 0.75em 2.2em;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  cursor: pointer;
+  border-radius: 9999px !important;
+  margin: 0.25em 0;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  box-shadow: none;
+}
+.conv-menu-action:hover {
+  background: #ececec !important;
+  color: #111;
+  box-shadow: 0 2px 8px 0 rgba(60,60,60,0.06);
+}
+.conv-menu-action[data-action="delete"] {
+  color: #e53e3e;
+}
+.conv-menu-action[data-action="delete"]:hover {
+  background: #ffeaea !important;
+  color: #b91c1c !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 2px 8px 0 rgba(229,62,62,0.08);
+}
+.history-item.bg-gray-200,
+.bg-gray-200,
+.chat-sidebar-item.bg-gray-200 {
+  position: relative !important;
+  background: none !important;
+}
+
+.history-item.bg-gray-200::before,
+.bg-gray-200::before,
+.chat-sidebar-item.bg-gray-200::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  z-index: 0;
+}
+
+.history-item.bg-gray-200 h4,
+.bg-gray-200 h4,
+.chat-sidebar-item.bg-gray-200 h4 {
+  position: relative;
+  z-index: 1;
+  background: none !important;
+} 
+
+/* --- Place this at the very end of the file for max specificity --- */
+.conv-menu-dropdown .conv-menu-action[data-action="delete"]:hover,
+.chat-menu-dropdown .chat-menu-action[data-action="delete"]:hover {
+  background: #fae2e2 !important;
+  color: #e53e3e !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 2px 8px 0 rgba(229,62,62,0.08) !important;
+  border: 1px solid #e53e3e !important;
+} 
+
+/* Dark mode for menu dropdown */
+.dark .conv-menu-dropdown,
+.dark .chat-menu-dropdown {
+  background: #353945 !important;
+  color: #f3f4f6 !important;
+  border: 1px solid #353945 !important;
+  box-shadow: 0 8px 32px 0 rgba(20,20,20,0.32), 0 1.5px 4px 0 rgba(20,20,20,0.18) !important;
+}
+.dark .conv-menu-action,
+.dark .chat-menu-action {
+  color: #f3f4f6 !important;
+}
+.dark .conv-menu-action:hover,
+.dark .chat-menu-action:hover {
+  background: #353945 !important;
+  color: #fff !important;
+}
+.dark .conv-menu-action[data-action="delete"]:hover,
+.dark .chat-menu-action[data-action="delete"]:hover {
+  background: #3a2323 !important;
+  color: #ff6b6b !important;
+  border: 1px solid #ff6b6b !important;
+} 
+
+/* --- Force dark mode menu dropdown at the end for max specificity --- */
+.dark body .conv-menu-dropdown,
+.dark body .chat-menu-dropdown,
+.dark .conv-menu-dropdown,
+.dark .chat-menu-dropdown {
+  background: #23272f !important;
+  color: #f3f4f6 !important;
+  border: none !important;
+  box-shadow: none !important;
+} 
+
+.sidebar-save-btn {
+  display: block;
+  width: 100%;
+  background: linear-gradient(90deg, #8B0000 0%, #DC2626 100%);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5em 0;
+  font-weight: 500;
+  margin-top: 0.5em;
+  margin-bottom: 0.25em;
+  transition: background 0.18s, color 0.18s;
+  cursor: pointer;
+}
+.sidebar-save-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.sidebar-cancel-btn {
+  display: block;
+  width: 100%;
+  background: #f3f4f6;
+  color: #222;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.5em 0;
+  font-weight: 500;
+  margin-bottom: 0.25em;
+  transition: background 0.18s, color 0.18s;
+  cursor: pointer;
+}
+.dark .sidebar-cancel-btn {
+  background: #23272f;
+  color: #f3f4f6;
+}
+.sidebar-cancel-btn:hover {
+  background: #e5e7eb;
+}
+.dark .sidebar-cancel-btn:hover {
+  background: #353945;
+} 
+
+/* Chat Message Styling */
+.bg-chat-user {
+  background: linear-gradient(135deg, #8B0000 0%, #DC2626 100%);
+  color: white;
+}
+
+.bg-chat-ai {
+  background: #f8f9fa !important;
+  color: #1e293b !important;
+}
+
+/* Force AI message background for light mode */
+div.bg-chat-ai {
+  background: #f8f9fa !important;
+  color: #1e293b !important;
+}
+
+/* Even more specific selector for chat messages */
+.chat-messages div.bg-chat-ai {
+  background: #f8f9fa !important;
+  color: #1e293b !important;
+}
+
+/* Override any Tailwind bg-white classes */
+.chat-messages div.bg-chat-ai.bg-white {
+  background: #f8f9fa !important;
+  color: #1e293b !important;
+}
+
+/* Most specific override for AI messages */
+.chat-messages .flex.justify-start .bg-chat-ai {
+  background: #f8f9fa !important;
+  color: #1e293b !important;
+}
+
+/* Target the exact structure generated by JavaScript */
+.chat-messages .flex.justify-start .max-w-3xl.bg-chat-ai {
+  background: #f8f9fa !important;
+  color: #1e293b !important;
+}
+
+/* Force override for any conflicting classes */
+.chat-messages div[class*="bg-chat-ai"] {
+  background: #f8f9fa !important;
+  color: #1e293b !important;
+}
+
+/* Light mode specific override */
+html:not(.dark) .chat-messages div[class*="bg-chat-ai"] {
+  background: #f8f9fa !important;
+  color: #1e293b !important;
+}
+
+/* Ensure light mode override */
+html.light .chat-messages div[class*="bg-chat-ai"] {
+  background: #f8f9fa !important;
+  color: #1e293b !important;
+}
+
+.dark .bg-chat-ai {
+  background: rgba(255, 255, 255, 0.05);
+  color: #f1f5f9;
+}
+
+.shadow-theme-xs {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 3px 1px rgba(0, 0, 0, 0.1);
+}
+
+.dark .shadow-theme-xs {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Typing indicator animated dots */
+.typing-dots {
+  display: inline-flex;
+  align-items: center;
+  height: 1.5em;
+}
+.typing-dots .dot {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  margin: 0 0.1em;
+  background: #a3a3a3;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: typing-bounce 1s infinite;
+}
+.typing-dots .dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots .dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.6; }
+  40% { transform: translateY(-0.4em); opacity: 1; }
+}
+
+@media (prefers-color-scheme: dark) {
+  .typing-dots .dot {
+    background: #e5e7eb;
+  }
+}

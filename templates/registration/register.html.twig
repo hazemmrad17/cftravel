@@ -1,0 +1,196 @@
+{% extends 'base_auth.html.twig' %}
+{% block body %}
+        <section class="py-28 relative">
+          <div class="wrapper">
+            <div class="relative max-w-[600px] mx-auto">
+      <div class="contact-wrapper border p-14 relative z-30 bg-white dark:bg-dark-primary dark:border-dark-primary border-gray-100">
+                <div class="text-center mb-8">
+          <h3 class="text-gray-800 dark:text-white/90 font-bold text-3xl mb-2">S'inscrire</h3>
+          <p class="text-gray-500 dark:text-gray-400">Entrez vos détails pour créer un compte</p>
+                </div>
+        <div class="flex flex-col sm:flex-row justify-center gap-5 mb-6">
+          <button class="bg-gray-100 w-full h-12 justify-center dark:hover:bg-white/10 dark:hover:text-white/90 dark:bg-white/5 transition dark:text-gray-400 font-normal text-sm hover:bg-gray-200 rounded-full text-gray-700 hover:text-gray-800 flex items-center gap-3 px-8 py-2.5">
+            <img src="{{ asset('assets/images/google.svg') }}" alt="Google" class="h-5 w-5" />
+                    S'inscrire avec Google
+                  </button>
+          <button class="bg-gray-100 w-full h-12 justify-center dark:hover:bg-white/10 dark:hover:text-white/90 dark:bg-white/5 transition dark:text-gray-400 font-normal text-sm hover:bg-gray-200 rounded-full text-gray-700 hover:text-gray-800 flex items-center gap-3 px-8 py-2.5">
+            <img src="{{ asset('assets/images/x.svg') }}" alt="X" class="h-5 w-5" />
+            S'inscrire avec X
+                  </button>
+                </div>
+                <div class="relative py-3 sm:py-5">
+                  <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-200 dark:border-gray-800"></div>
+                  </div>
+                  <div class="relative flex justify-center text-sm">
+            <span class="p-2 text-gray-400 bg-white dark:bg-dark-primary sm:px-5 sm:py-2">Ou</span>
+                  </div>
+                </div>
+        {{ form_start(registrationForm) }}
+        {{ form_errors(registrationForm) }}
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <!-- First Name -->
+                    <div
+                      x-data="{ touched: false, valid: {{ registrationForm.firstName.vars.errors|length == 0 and registrationForm.firstName.vars.value ? 'true' : 'false' }}, error: {{ registrationForm.firstName.vars.errors|length > 0 ? 'true' : 'false' }}, value: '{{ registrationForm.firstName.vars.value|e('js') }}' }"
+                      class="relative mb-6"
+                    >
+                      <label for="{{ registrationForm.firstName.vars.id }}" class="mb-1 block dark:text-gray-400 text-gray-700 font-medium text-sm">Prénom</label>
+                      <input
+                        type="text"
+                        id="{{ registrationForm.firstName.vars.id }}"
+                        name="{{ registrationForm.firstName.vars.full_name }}"
+                        x-model="value"
+                        placeholder="Votre prénom"
+                        class="border w-full text-sm transition dark:text-white/90 dark:placeholder:text-white/30 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:outline-0 h-12 shadow-theme-xs rounded-full px-5 py-2.5"
+                        @blur="touched = true"
+                        @input="valid = $event.target.value.length >= 2; error = !valid; value = $event.target.value;"
+                        :class="{
+                          'border-gray-300': !touched,
+                          'border-green-500': touched && valid,
+                          'border-red-500 bg-red-50 dark:bg-red-900': touched && error,
+                          'focus:border-primary-500': true
+                        }"
+                        :aria-invalid="touched && error"
+                        :aria-describedby="'firstName-error'"
+                      >
+                      <!-- Error message: show Symfony error if present, else show custom if touched and invalid -->
+                      <template x-if="touched && error && !valid && !{{ registrationForm.firstName.vars.errors|length > 0 ? 'true' : 'false' }}">
+                        <p id="firstName-error" class="text-xs text-red-500 mt-2">
+                          Le prénom doit contenir au moins 2 caractères.
+                        </p>
+                      </template>
+                      <template x-if="touched && error && {{ registrationForm.firstName.vars.errors|length > 0 ? 'true' : 'false' }}">
+                        <p id="firstName-error" class="text-xs text-red-500 mt-2">
+                          {{ form_errors(registrationForm.firstName) }}
+                        </p>
+                      </template>
+                    </div>
+                    <!-- Last Name -->
+                    <div
+                      x-data="{ touched: false, valid: {{ registrationForm.lastName.vars.errors|length == 0 and registrationForm.lastName.vars.value ? 'true' : 'false' }}, error: {{ registrationForm.lastName.vars.errors|length > 0 ? 'true' : 'false' }}, value: '{{ registrationForm.lastName.vars.value|e('js') }}' }"
+                      class="relative mb-6"
+                    >
+                      <label for="{{ registrationForm.lastName.vars.id }}" class="mb-1 block dark:text-gray-400 text-gray-700 font-medium text-sm">Nom</label>
+                      <input
+                        type="text"
+                        id="{{ registrationForm.lastName.vars.id }}"
+                        name="{{ registrationForm.lastName.vars.full_name }}"
+                        x-model="value"
+                        placeholder="Votre nom"
+                        class="border w-full text-sm transition dark:text-white/90 dark:placeholder:text-white/30 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:outline-0 h-12 shadow-theme-xs rounded-full px-5 py-2.5"
+                        @blur="touched = true"
+                        @input="valid = $event.target.value.length >= 2; error = !valid; value = $event.target.value;"
+                        :class="{
+                          'border-gray-300': !touched,
+                          'border-green-500': touched && valid,
+                          'border-red-500 bg-red-50 dark:bg-red-900': touched && error,
+                          'focus:border-primary-500': true
+                        }"
+                        :aria-invalid="touched && error"
+                        :aria-describedby="'lastName-error'"
+                      >
+                      <template x-if="touched && error && !valid && !{{ registrationForm.lastName.vars.errors|length > 0 ? 'true' : 'false' }}">
+                        <p id="lastName-error" class="text-xs text-red-500 mt-2">
+                          Le nom doit contenir au moins 2 caractères.
+                        </p>
+                      </template>
+                      <template x-if="touched && error && {{ registrationForm.lastName.vars.errors|length > 0 ? 'true' : 'false' }}">
+                        <p id="lastName-error" class="text-xs text-red-500 mt-2">
+                          {{ form_errors(registrationForm.lastName) }}
+                        </p>
+                      </template>
+                    </div>
+                    <!-- Email -->
+                    <div class="col-span-full"
+                      x-data="{ touched: false, valid: {{ registrationForm.email.vars.errors|length == 0 and registrationForm.email.vars.value ? 'true' : 'false' }}, error: {{ registrationForm.email.vars.errors|length > 0 ? 'true' : 'false' }}, value: '{{ registrationForm.email.vars.value|e('js') }}' }"
+                    >
+                      <label for="{{ registrationForm.email.vars.id }}" class="mb-1 block dark:text-gray-400 text-gray-700 font-medium text-sm">Adresse email</label>
+                      <input
+                        type="email"
+                        id="{{ registrationForm.email.vars.id }}"
+                        name="{{ registrationForm.email.vars.full_name }}"
+                        x-model="value"
+                        placeholder="Entrez votre adresse email"
+                        class="border w-full text-left text-sm transition dark:text-white/90 dark:placeholder:text-white/30 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:outline-0 h-12 shadow-theme-xs rounded-full px-5 py-2.5"
+                        @blur="touched = true"
+                        @input="valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($event.target.value); error = !valid; value = $event.target.value;"
+                        :class="{
+                          'border-gray-300': !touched,
+                          'border-green-500': touched && valid,
+                          'border-red-500 bg-red-50 dark:bg-red-900': touched && error,
+                          'focus:border-primary-500': true
+                        }"
+                        :aria-invalid="touched && error"
+                        :aria-describedby="'email-error'"
+                      >
+                      <template x-if="touched && error && !valid && !{{ registrationForm.email.vars.errors|length > 0 ? 'true' : 'false' }}">
+                        <p id="email-error" class="text-xs text-red-500 mt-2">
+                          Veuillez entrer une adresse email valide.
+                        </p>
+                      </template>
+                      <template x-if="touched && error && {{ registrationForm.email.vars.errors|length > 0 ? 'true' : 'false' }}">
+                        <p id="email-error" class="text-xs text-red-500 mt-2">
+                          {{ form_errors(registrationForm.email) }}
+                        </p>
+                      </template>
+                    </div>
+                    <!-- Password -->
+                    <div class="col-span-full relative mb-6"
+                      x-data="{ touched: false, valid: false, error: {{ registrationForm.plainPassword.vars.errors|length > 0 ? 'true' : 'false' }}, value: '' }"
+                    >
+                      <label for="{{ registrationForm.plainPassword.vars.id }}" class="mb-1 block dark:text-gray-400 text-gray-700 font-medium text-sm">Mot de passe</label>
+                        <input
+                        type="password"
+                        id="{{ registrationForm.plainPassword.vars.id }}"
+                        name="{{ registrationForm.plainPassword.vars.full_name }}"
+                        x-model="value"
+                        class="border w-full text-sm pr-10 transition dark:text-white/90 dark:placeholder:text-white/30 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:outline-0 text-left h-12 shadow-theme-xs rounded-full px-5 py-2.5"
+                          placeholder="Entrez votre mot de passe"
+                        @blur="touched = true"
+                        @input="valid = $event.target.value.length >= 6; error = !valid; value = $event.target.value;"
+                        :class="{
+                          'border-gray-300': !touched,
+                          'border-green-500': touched && valid,
+                          'border-red-500 bg-red-50 dark:bg-red-900': touched && error,
+                          'focus:border-primary-500': true
+                        }"
+                        :aria-invalid="touched && error"
+                        :aria-describedby="'password-error'"
+                      >
+                      <template x-if="touched && error && !valid && !{{ registrationForm.plainPassword.vars.errors|length > 0 ? 'true' : 'false' }}">
+                        <p id="password-error" class="text-xs text-red-500 mt-2">
+                          Le mot de passe doit contenir au moins 6 caractères.
+                        </p>
+                      </template>
+                      <template x-if="touched && error && {{ registrationForm.plainPassword.vars.errors|length > 0 ? 'true' : 'false' }}">
+                        <p id="password-error" class="text-xs text-red-500 mt-2">
+                          {{ form_errors(registrationForm.plainPassword) }}
+                        </p>
+                      </template>
+                      </div>
+                    <!-- Agree Terms -->
+                    <div class="flex items-center col-span-full mb-4">
+                      {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'mr-4'}}) }}
+                      <label class="mb-0" for="{{ registrationForm.agreeTerms.vars.id }}">
+                        J'accepte les <a href="{{ path('privacy') }}" class="text-primary-500 font-semibold underline" target="_blank">Conditions Générales</a>
+                      </label>
+                      {{ form_errors(registrationForm.agreeTerms) }}
+                    </div>
+                    <!-- Submit -->
+                    <div class="col-span-full">
+                      <button class="bg-primary-500 hover:bg-primary-600 transition py-3 px-6 w-full font-medium text-white text-sm rounded-full">S'inscrire</button>
+                    </div>
+                  </div>
+        {{ form_row(registrationForm._token) }}
+        {{ form_end(registrationForm, {'render_rest': false}) }}
+                <div class="mt-5">
+          <p class="text-gray-700 dark:text-gray-400 font-normal text-sm">
+                    Vous avez déjà un compte ?
+            <a href="{{ path('app_login') }}" class="text-sm font-semibold text-primary-500">Se connecter</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+{% endblock %}

@@ -1,0 +1,89 @@
+/* Ovoyage CSS */
+
+body {
+  background-image: url("/images/maldives.webp");
+  color: #151b54; /* texte night blue */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #da1884; /* barbie pink */
+  background-image: url("/images/ovh-logo.png");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 100px auto; /* made bigger (was 60px) */
+  color: #ffffff;
+  text-align: center;
+  padding: 15px 0 15px; /* add left padding so text doesn’t overlap logo */
+  font-weight: 600;
+}
+
+footer {
+  background-color: #da1884; /* barbie pink */
+  color: #ffffff; /* white text */
+  text-align: center;
+  padding: 15px 0;
+  font-weight: 600;
+}
+
+header h1,
+footer p {
+  margin: 0;
+}
+
+.chat-container {
+  max-width: 600px;
+  margin: 40px auto;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 75vh;
+  border: 2px solid rgba(0, 31, 77, 0.8); /* night blue with 40% opacity */
+}
+
+.messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  border-bottom: 1px solid rgba(0, 31, 77, 0.3) !important; /* darker line */
+}
+
+.input-container {
+  display: flex;
+  padding: 10px 20px;
+  border-top: 1px solid #ccc;
+}
+
+input[type="text"] {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid #da1884; /* bordure barbie pink */
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+input[type="text"]:focus {
+  border-color: #151b54; /* accentue le focus */
+  box-shadow: 0 0 5px #da1884;
+}
+
+button {
+  background-color: #da1884; /* barbie pink */
+  color: #151b54; /* night blue */
+  font-weight: 600;
+  border: none;
+  padding: 12px 25px;
+  margin-left: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #e754a6; /* rose plus clair au survol */
+}

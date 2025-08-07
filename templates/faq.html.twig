@@ -1,0 +1,99 @@
+{% extends 'base_app.html.twig' %}
+
+{% block title %}FAQ - Agent IA{% endblock %}
+
+{% block content %}
+<main class="py-6 px-4 sm:px-6 lg:px-8">
+    <div class="mb-8 p-6 rounded-2xl bg-white dark:bg-dark-primary border border-gray-100 dark:border-gray-800">
+        <div class="mb-6">
+          <h2 class="text-xl font-bold text-gray-800 dark:text-white/90 mb-1">
+          Questions Fréquemment Posées
+        </h2>
+          <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
+            Trouvez des réponses aux questions courantes sur l'utilisation du Planificateur de Voyage IA pour une planification de voyage plus intelligente, plus rapide et plus personnalisée. Vous avez encore des questions ? Contactez-nous pour une aide experte !
+        </p>
+      </div>
+        <div class="divide-y divide-gray-200 dark:divide-gray-800">
+            <div class="py-5" x-data="{ open: true }">
+                <div class="flex justify-between items-center cursor-pointer" @click="open = !open">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                    Est-ce que je reçois des mises à jour gratuites ?
+                    </h3>
+                    <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" :class="{ 'rotate-180': open }" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+                <div x-show="open" class="mt-4">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Oui, toutes les mises à jour sont incluses gratuitement dans votre abonnement. Nous améliorons constamment notre plateforme avec de nouvelles fonctionnalités et optimisations pour vous offrir la meilleure expérience possible.
+              </p>
+            </div>
+          </div>
+
+            <div class="py-5" x-data="{ open: false }">
+                <div class="flex justify-between items-center cursor-pointer" @click="open = !open">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                    À quoi fait référence le nombre de "Projets" ?
+                    </h3>
+                    <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" :class="{ 'rotate-180': open }" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+                <div x-show="open" class="mt-4" style="display: none;">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Le nombre de "Projets" fait référence au nombre total d'espaces de travail séparés que vous pouvez créer et gérer dans votre compte. Chaque projet peut avoir ses propres paramètres, membres d'équipe et ressources.
+              </p>
+            </div>
+          </div>
+
+            <div class="py-5" x-data="{ open: false }">
+                <div class="flex justify-between items-center cursor-pointer" @click="open = !open">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                    Puis-je passer à un plan supérieur ?
+                    </h3>
+                    <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" :class="{ 'rotate-180': open }" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+                <div x-show="open" class="mt-4" style="display: none;">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Oui, vous pouvez passer à un plan supérieur à tout moment. Lors de la mise à niveau, vous serez facturé de la différence au prorata pour le reste de votre cycle de facturation actuel. Vos nouvelles fonctionnalités seront disponibles immédiatement après la mise à niveau.
+              </p>
+            </div>
+          </div>
+
+            <div class="py-5" x-data="{ open: false }">
+                <div class="flex justify-between items-center cursor-pointer" @click="open = !open">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                    Que signifie "Projets Illimités" ?
+                    </h3>
+                    <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" :class="{ 'rotate-180': open }" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+                <div x-show="open" class="mt-4" style="display: none;">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                    "Projets Illimités" signifie que vous pouvez créer autant de projets que vous le souhaitez sans aucune restriction. Cela vous permet d'organiser votre travail efficacement sans vous soucier d'atteindre une limite de projets.
+              </p>
+            </div>
+          </div>
+
+            <div class="py-5" x-data="{ open: false }">
+                <div class="flex justify-between items-center cursor-pointer" @click="open = !open">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                    Comment puis-je ajouter ma clé OpenAI ?
+                    </h3>
+                    <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" :class="{ 'rotate-180': open }" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+                <div x-show="open" class="mt-4" style="display: none;">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Pour ajouter votre clé API OpenAI, allez dans les paramètres de votre compte et naviguez vers la section "Clés API". Cliquez sur "Ajouter une nouvelle clé", collez votre clé API OpenAI et sauvegardez vos modifications. La clé sera stockée de manière sécurisée et utilisée pour toutes les fonctionnalités alimentées par l'IA.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+</main>
+{% endblock %}

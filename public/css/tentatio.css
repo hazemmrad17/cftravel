@@ -1,0 +1,17 @@
+/* Tentatio Theme */
+:root {
+    --primary-color: #D946EF; /* A fuchsia/magenta color */
+    --user-message-bg: #F3E8FF; /* Lighter shade of primary */
+}
+
+body.tentatio-theme .bg-primary-100 {
+    background-color: var(--user-message-bg);
+}
+
+body.tentatio-theme .bg-primary-500 {
+    background-color: var(--primary-color);
+}
+
+body.tentatio-theme .text-primary-500 {
+    color: var(--primary-color);
+} 

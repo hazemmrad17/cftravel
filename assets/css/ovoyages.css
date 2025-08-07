@@ -1,0 +1,8 @@
+/* Ovoyages Theme - Asia.fr Olive Green */
+:root {
+  --primary-500: #6B8E23;  /* Olive Green like asia.fr secondary */
+  --primary-100: #F0F8E0;  /* Light olive background */
+}
+.bg-primary-500 { background-color: var(--primary-500) !important; }
+.bg-primary-100 { background-color: var(--primary-100) !important; }
+.text-primary-500 { color: var(--primary-500) !important; } 

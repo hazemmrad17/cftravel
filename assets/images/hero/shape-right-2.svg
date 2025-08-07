@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 187 52">
+  <!-- Generator: Adobe Illustrator 29.6.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 9)  -->
+  <defs>
+    <style>
+      .st0 {
+        font-family: MVBoli, 'MV Boli';
+        font-size: 16px;
+      }
+
+      .st0, .st1, .st2 {
+        fill: #ffb128;
+      }
+
+      .st1 {
+        fill-opacity: .1;
+      }
+
+      .st3 {
+        fill: url(#radial-gradient);
+        fill-rule: evenodd;
+      }
+    </style>
+    <radialGradient id="radial-gradient" cx="-866.89" cy="516.7" fx="-866.89" fy="516.7" r="1" gradientTransform="translate(17770.29 -9956.37) rotate(-60.18) scale(20.18 -20.17)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffac19"/>
+      <stop offset="1" stop-color="#ffce78"/>
+    </radialGradient>
+  </defs>
+  <path class="st1" d="M8,30c0-12.15,9.85-22,22-22h135c12.15,0,22,9.85,22,22s-9.85,22-22,22H30c-12.15,0-22-9.85-22-22Z"/>
+  <path class="st2" d="M2.89,12.49L.09,2.04C-.34.84.81-.33,2.02.09l10.64,2.67c1.92.66,2.08,3.32.25,4.21l-1.13.55c-1.88.91-3.38,2.44-4.27,4.32l-.41.86c-.86,1.84-3.52,1.71-4.21-.2Z"/>
+  <text class="st0" transform="translate(47.33 35.05)"><tspan x="0" y="0">Vaccation to Bali</tspan></text>
+  <path class="st3" d="M20.96,38.15h0s0-.01,0-.01c0-.01.02-.03.04-.05.04-.05.1-.12.17-.21.14-.19.33-.46.53-.78.36-.59.74-1.32.92-2.07-1.17-1.66-1.85-3.69-1.85-5.87,0-5.64,4.57-10.21,10.21-10.21s10.21,4.57,10.21,10.21-4.57,10.21-10.21,10.21c-1.28,0-2.5-.24-3.63-.66-1.14.43-2.57.59-3.68.65-.62.03-1.17.04-1.56.03-.2,0-.36,0-.47-.01-.06,0-.1,0-.13,0h-.03s0,0,0,0h0s.04-.73.04-.73q-.04.73-.04.73c-.28-.02-.52-.19-.63-.44-.11-.26-.06-.55.12-.76ZM26.25,27.92c-.67,0-1.22.55-1.22,1.22s.55,1.22,1.22,1.22h.01c.67,0,1.22-.55,1.22-1.22s-.55-1.22-1.22-1.22h-.01ZM30.99,27.92c-.67,0-1.22.55-1.22,1.22s.55,1.22,1.22,1.22h.01c.67,0,1.22-.55,1.22-1.22s-.55-1.22-1.22-1.22h-.01ZM35.73,27.92c-.67,0-1.22.55-1.22,1.22s.55,1.22,1.22,1.22h.01c.67,0,1.22-.55,1.22-1.22s-.55-1.22-1.22-1.22h-.01Z"/>
+</svg>

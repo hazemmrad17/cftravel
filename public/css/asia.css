@@ -1,0 +1,92 @@
+/* Asia CSS */
+
+body {
+  background-image: url("/images/china.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #0c090a; /* texte night (très sombre) */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #0c090a; /* night black */
+  background-image: url("/images/asia.png"); /* logo only in header */
+  background-size: 100px auto; /* smaller width, auto height */
+  background-repeat: no-repeat;
+  background-position: left center;
+  color: #ffffff; /* white text */
+  text-align: center;
+  padding: 15px 0;
+  font-weight: 600;
+}
+
+footer {
+  background-color: #0c090a; /* same night black */
+  color: #ffffff;
+  text-align: center;
+  padding: 15px 0;
+  font-weight: 600;
+}
+
+header h1,
+footer p {
+  margin: 0;
+}
+
+.chat-container {
+  max-width: 600px;
+  margin: 40px auto;
+  background-color: rgba(255, 255, 255, 0.9) !important; /* more transparent */
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 75vh;
+  border: 2px solid rgba(12, 9, 10, 0.8);
+}
+
+.messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  border-bottom: 1px solid rgba(12, 9, 10, 0.3) !important; /* darker line */
+}
+
+.input-container {
+  display: flex;
+  padding: 10px 20px;
+  border-top: 1px solid #ccc;
+}
+
+input[type="text"] {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid #800000; /* bordure maroon */
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+input[type="text"]:focus {
+  border-color: #0c090a; /* accentue le focus */
+  box-shadow: 0 0 5px #800000;
+}
+
+button {
+  background-color: #800000; /* maroon */
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 12px 25px;
+  margin-left: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #a00000; /* maroon plus clair au survol */
+}

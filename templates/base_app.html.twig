@@ -1,0 +1,501 @@
+{% set mostRecentConversationId = mostRecentConversationId|default(null) %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Agent IA{% endblock %}</title>
+    <link rel="icon" href="{{ asset('assets/images/favicon.png') }}" />
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    
+    {% block stylesheets %}
+        <link href="{{ asset('assets/css/glightbox.css') }}" rel="stylesheet" />
+        <link href="{{ asset('assets/css/output.css') }}" rel="stylesheet" />
+        <link rel="stylesheet" href="{{ asset('assets/css/chatgpt-sidebar.css') }}"/>
+    {% endblock %}
+
+    {% block javascripts_head %}
+    {% endblock %}
+</head>
+<body class="dark:bg-dark-primary" x-data="{
+    mobileMenuOpen: false,
+    activeDropdown: null,
+    sidebarOpen: false, 
+    rightSidebarOpen: false, 
+    editProfileModal: false, 
+    changePasswordModal: false, 
+    twoFactorEnabled: false,
+    darkMode: localStorage.getItem('darkMode') === 'true',
+    toggleDarkMode() {
+        this.darkMode = !this.darkMode;
+        localStorage.setItem('darkMode', this.darkMode);
+        
+        if (this.darkMode) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      },
+      toggleDropdown(dropdown) {
+        if (window.innerWidth < 1024) {
+          this.activeDropdown = this.activeDropdown === dropdown ? null : dropdown;
+        }
+      },
+      closeDropdowns() {
+        this.activeDropdown = null;
+      },
+      init() {
+        if (localStorage.getItem('darkMode') === 'true') {
+            this.darkMode = true;
+            document.documentElement.classList.add('dark');
+        } else {
+            this.darkMode = false;
+            document.documentElement.classList.remove('dark');
+        }
+        
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.nav-item') && !e.target.closest('.dropdown-menu') && !e.target.closest('.mobile-dropdown-toggle')) {
+            this.closeDropdowns();
+          }
+        });
+        
+        window.addEventListener('resize', () => {
+          if (window.innerWidth >= 1024) {
+            this.activeDropdown = null;
+            this.mobileMenuOpen = false;
+          }
+        });
+      }
+    }" x-init="init()">
+    <div class="dark:bg-dark-primary">
+      <!-- Header Start -->
+      <header
+        class="bg-white dark:bg-dark-primary border-b dark:border-gray-800 border-gray-100 sticky top-0 z-50 py-4 lg:py-0"
+      >
+        <div class="px-4 sm:px-6 lg:px-7">
+          <div class="flex items-center justify-between">
+            <!-- Logo and Mobile Menu Button -->
+            <div class="flex items-center">
+              <!-- Logo -->
+              <a href="{{ path('home_page') }}">
+                <img src="{{ asset('assets/images/logo.png') }}" class="block dark:hidden w-12 h-8" alt=""/>
+                <img src="{{ asset('assets/images/logo.png') }}" class="hidden dark:block w-12 h-8" alt=""/>
+              </a>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex lg:items-center">
+              <a
+                href="{{ path('home_page') }}"
+                class="text-gray-800 dark:text-white/90 text-sm px-4 py-6 hover:text-red-600 font-medium"
+                >Accueil</a>
+
+              <!-- Chat Dropdown (Desktop) -->
+              <div class="relative nav-item">
+                <button
+                  class="text-gray-500 dark:text-gray-400 hover:text-red-600 group text-sm inline-flex items-center px-4 py-6 font-medium rounded-full"
+                >
+                  Chat
+                  <svg
+                    class="dropdown-arrow ml-1 h-4 w-4 transition-transform duration-200"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="17"
+                    height="16"
+                    viewBox="0 0 17 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M4.33301 5.91666L8.49967 10.0833L12.6663 5.91666"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                <!-- Chat dropdown menu -->
+                <div
+                  class="dropdown-menu absolute dark:bg-dark-secondary dark:border-gray-800 left-0 w-[266px] bg-white rounded-2xl shadow-theme-lg border border-gray-100 p-3 z-50 hidden"
+                >
+                  <div class="space-y-1">
+                    <a
+                      {% if mostRecentConversationId %}
+                        href="{{ path('chat_agent', {'agent': 'tentatio', 'conversation_id': mostRecentConversationId}) }}"
+                      {% else %}
+                        href="{{ path('create_conversation_route') }}"
+                      {% endif %}
+                      class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Tentatio Agent
+                    </a>
+                    <a
+                      {% if mostRecentConversationId %}
+                        href="{{ path('chat_agent', {'agent': 'ovoyages', 'conversation_id': mostRecentConversationId}) }}"
+                      {% else %}
+                        href="{{ path('create_conversation_route') }}"
+                      {% endif %}
+                      class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Ovoyages Agent
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pages Dropdown (Desktop) -->
+              <div class="relative nav-item">
+                <button
+                  class="text-gray-500 group dark:text-gray-400 hover:text-red-600 text-sm inline-flex items-center px-4 py-6 font-medium rounded-full"
+                >
+                  Pages
+                  <svg
+                    class="dropdown-arrow ml-1 h-4 w-4 transition-transform duration-200"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="17"
+                    height="16"
+                    viewBox="0 0 17 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M4.33301 5.91666L8.49967 10.0833L12.6663 5.91666"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                <!-- Pages dropdown menu -->
+                <div
+                  class="dropdown-menu absolute left-0 w-[266px] bg-white dark:bg-dark-secondary dark:border-gray-800 rounded-2xl shadow-theme-lg border border-gray-100 p-3 z-50 hidden"
+                >
+                  <div class="space-y-1">
+                    <a
+                      href="{{ path('settings_page') }}"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Paramètres
+                    </a>
+                    <a
+                      href="{{ path('faq_page') }}"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      FAQ
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </nav>
+
+            <!-- Right side buttons -->
+            <div class="flex items-center gap-4">
+              <!-- Theme toggle -->
+              <button @click="toggleDarkMode()" class="inline-flex items-center dark:hover:bg-white/5 dark:hover:text-white/90 hover:bg-gray-100 hover:text-gray-800 text-gray-500 dark:text-gray-400 justify-center border border-gray-200 dark:border-gray-700 rounded-full size-11">
+                <svg x-show="!darkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M6.24683 7.08492C6.24683 10.7677 9.23232 13.7532 12.9151 13.7532C14.6687 13.7532 16.2641 13.0764 17.4545 11.9697C16.584 15.2727 13.5765 17.7083 10.0001 17.7083C5.74289 17.7083 2.29175 14.2572 2.29175 9.99996C2.29175 6.42356 4.72736 3.41602 8.03036 2.54558C6.92367 3.73594 6.24683 5.33139 6.24683 7.08492Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <svg x-show="darkMode" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+              </button>
+              <!-- Account dropdown -->
+              <div class="relative flex-shrink-0" x-data="{ open: false }">
+                <div>
+                  <button
+                    @click="open = !open"
+                    class="rounded-full text-sm font-medium focus:outline-none"
+                  >
+                    <img
+                      src="{{ asset('assets/images/users/user-1.png') }}"
+                      class="w-11 h-11 rounded-full"
+                      alt=""
+                    />
+                  </button>
+                </div>
+                <div
+                  x-show="open"
+                  @click.away="open = false"
+                  class="origin-top-right absolute right-0 mt-2 w-[260px] shadow-lg dark:bg-dark-secondary dark:border-gray-800 py-4 px-3 bg-white border border-gray-200 rounded-2xl"
+                  style="display: none;"
+                >
+                  <div class="mb-4 px-3">
+                    {% if app.user %}
+                      <span class="text-gray-700 text-sm font-medium dark:text-gray-400">{{ app.user.firstName }} {{ app.user.lastName }}</span>
+                      <p class="text-gray-500 text-sm dark:text-gray-400">{{ app.user.email }}</p>
+                    {% else %}
+                      <span class="text-gray-700 text-sm font-medium dark:text-gray-400">Guest</span>
+                      <p class="text-gray-500 text-sm dark:text-gray-400">Not signed in</p>
+                    {% endif %}
+                  </div>
+                  <div class="space-y-1">
+                    <a
+                      href="#"
+                      class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="22"
+                        height="22"
+                        viewBox="0 0 22 22"
+                        fill="none"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M8.75211 6.7963C8.75211 5.3555 9.92011 4.1875 11.3609 4.1875C12.8017 4.1875 13.9697 5.3555 13.9697 6.7963C13.9697 8.2371 12.8017 9.4051 11.3609 9.4051C9.92011 9.4051 8.75211 8.2371 8.75211 6.7963ZM11.3609 2.6875C9.09168 2.6875 7.25211 4.52707 7.25211 6.7963C7.25211 9.06553 9.09168 10.9051 11.3609 10.9051C13.6301 10.9051 15.4697 9.06553 15.4697 6.7963C15.4697 4.52707 13.6301 2.6875 11.3609 2.6875ZM9.81431 12.208C6.38418 12.208 3.60352 14.9887 3.60352 18.4188V18.7367C3.60352 19.1509 3.9393 19.4867 4.35352 19.4867C4.76773 19.4867 5.10352 19.1509 5.10352 18.7367V18.4188C5.10352 15.8171 7.21261 13.708 9.81431 13.708H12.9088C15.5105 13.708 17.6196 15.8171 17.6196 18.4188V18.7367C17.6196 19.1509 17.9554 19.4867 18.3696 19.4867C18.7838 19.4867 19.1196 19.1509 19.1196 18.7367V18.4188C19.1196 14.9887 16.3389 12.208 12.9088 12.208H9.81431Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      Modifier le profil
+                    </a>
+                    <a
+                      href="#"
+                      class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="22"
+                        height="22"
+                        viewBox="0 0 22 22"
+                        fill="none"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M9.61304 3.27092L12.3927 3.27092C12.7295 3.27092 13.0027 3.54406 13.0027 3.88104C13.0027 5.50501 14.7607 6.52057 16.1675 5.7084C16.4591 5.54 16.8321 5.63994 17.0005 5.93161L18.3905 8.33918C18.559 8.63101 18.459 9.00417 18.1672 9.17266C16.7604 9.98485 16.7604 12.0153 18.1672 12.8275C18.459 12.996 18.559 13.3692 18.3905 13.661L17.0005 16.0686C16.8321 16.3603 16.4591 16.4602 16.1674 16.2918C14.7607 15.4796 13.0027 16.4952 13.0027 18.1192C13.0027 18.4561 12.7295 18.7293 12.3927 18.7293H9.61303C9.27596 18.7293 9.00271 18.456 9.00271 18.1189C9.00271 16.4942 7.2438 15.4793 5.83708 16.2915C5.54502 16.4601 5.17158 16.36 5.00304 16.0681L3.61337 13.6611C3.44488 13.3692 3.54487 12.9961 3.83671 12.8276C5.2435 12.0154 5.24347 9.98484 3.8367 9.17264C3.54485 9.00414 3.44486 8.63095 3.61335 8.33911L5.00301 5.93215C5.17156 5.64022 5.545 5.54012 5.83706 5.70875C7.24379 6.52092 9.00271 5.50595 9.00271 3.88125C9.00271 3.54417 9.27597 3.27092 9.61304 3.27092ZM12.3927 1.77092L9.61304 1.77092C8.44754 1.77092 7.50271 2.71575 7.50271 3.88125C7.50271 4.3509 6.9941 4.64471 6.58706 4.40971C5.57769 3.82695 4.28681 4.17265 3.70397 5.18215L2.31431 7.58911C1.7316 8.5984 2.07742 9.88897 3.0867 10.4717C3.49349 10.7065 3.49348 11.2937 3.08671 11.5285C2.07743 12.1112 1.73162 13.4018 2.31433 14.4111L3.704 16.8181C4.28684 17.8276 5.57772 18.1732 6.58708 17.5905C6.99411 17.3555 7.50271 17.6493 7.50271 18.1189C7.50271 19.2844 8.44753 20.2293 9.61303 20.2293H12.3927C13.5581 20.2293 14.5027 19.2844 14.5027 18.1192C14.5027 17.6495 15.0111 17.3562 15.4174 17.5908C16.4266 18.1735 17.7169 17.8277 18.2995 16.8186L19.6895 14.411C20.2722 13.4017 19.9264 12.1112 18.9172 11.5285C18.5104 11.2937 18.5104 10.7066 18.9172 10.4717C19.9264 9.889 20.2723 8.59845 19.6896 7.58918L18.2995 5.18161C17.7169 4.1725 16.4266 3.82675 15.4175 4.40936C15.0111 4.644 14.5027 4.35067 14.5027 3.88104C14.5027 2.71579 13.5581 1.77092 12.3927 1.77092ZM8.92395 11C8.92395 9.85242 9.85427 8.9221 11.0019 8.9221C12.1495 8.9221 13.0798 9.85242 13.0798 11C13.0798 12.1476 12.1495 13.0779 11.0019 13.0779C9.85427 13.0779 8.92395 12.1476 8.92395 11ZM11.0019 7.4221C9.02584 7.4221 7.42395 9.02399 7.42395 11C7.42395 12.976 9.02584 14.5779 11.0019 14.5779C12.9779 14.5779 14.5798 12.976 14.5798 11C14.5798 9.02399 12.9779 7.4221 11.0019 7.4221Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      Paramètres du compte
+                    </a>
+                    <a
+                      href="#"
+                      class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="22"
+                        height="22"
+                        viewBox="0 0 22 22"
+                        fill="none"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M3.27148 11C3.27148 6.7313 6.73195 3.27083 11.0007 3.27083C15.2694 3.27083 18.7298 6.7313 18.7298 11C18.7298 15.2687 15.2694 18.7292 11.0007 18.7292C6.73195 18.7292 3.27148 15.2687 3.27148 11ZM11.0007 1.77083C5.90352 1.77083 1.77148 5.90287 1.77148 11C1.77148 16.0971 5.90352 20.2292 11.0007 20.2292C16.0978 20.2292 20.2298 16.0971 20.2298 11C20.2298 5.90287 16.0978 1.77083 11.0007 1.77083ZM10 7.94734C10 8.49962 10.4478 8.94734 11 8.94734H11.0008C11.5531 8.94734 12.0008 8.49962 12.0008 7.94734C12.0008 7.39505 11.5531 6.94734 11.0008 6.94734H11C10.4478 6.94734 10 7.39505 10 7.94734ZM11 15.3214C10.5858 15.3214 10.25 14.9856 10.25 14.5714L10.25 10.699C10.25 10.2848 10.5858 9.94902 11 9.94902C11.4143 9.94902 11.75 10.2848 11.75 10.699L11.75 14.5714C11.75 14.9856 11.4143 15.3214 11 15.3214Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      Support
+                    </a>
+                    <div class="my-3 h-px bg-gray-200 dark:bg-gray-800"></div>
+                    <a
+                      href="#"
+                      class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="22"
+                        height="22"
+                        viewBox="0 0 22 22"
+                        fill="none"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M13.9679 17.5805C13.5537 17.5805 13.2179 17.2448 13.2179 16.8305L13.2179 13.2454L11.7179 13.2454L11.7179 16.8305C11.7179 18.0732 12.7253 19.0805 13.9679 19.0805H16.8346C18.0773 19.0805 19.0846 18.0732 19.0846 16.8305V5.16309C19.0846 3.92045 18.0773 2.91309 16.8346 2.91309L13.9679 2.91309C12.7253 2.91309 11.7179 3.92045 11.7179 5.16309V8.74543L13.2179 8.74542V5.16309C13.2179 4.74887 13.5537 4.41309 13.9679 4.41309L16.8346 4.41309C17.2488 4.41309 17.5846 4.74887 17.5846 5.16309V16.8305C17.5846 17.2448 17.2488 17.5805 16.8346 17.5805H13.9679ZM2.91797 10.9986C2.91797 11.2142 3.00896 11.4086 3.15464 11.5454L7.37668 15.7701C7.66948 16.0631 8.14436 16.0632 8.43734 15.7704C8.73033 15.4776 8.73048 15.0028 8.43768 14.7098L5.47835 11.7486H14.668C15.0822 11.7486 15.418 11.4128 15.418 10.9986C15.418 10.5844 15.0822 10.2486 14.668 10.2486L5.48212 10.2486L8.4377 7.29092C8.73049 6.99793 8.73032 6.52306 8.43733 6.23026C8.14433 5.93747 7.66946 5.93764 7.37667 6.23064L3.18798 10.4223C3.02297 10.5598 2.91797 10.7669 2.91797 10.9986Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      Déconnexion
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <!-- Mobile menu button -->
+              <button
+                @click="rightSidebarOpen = !rightSidebarOpen"
+                type="button"
+                class="inline-flex lg:hidden items-center dark:hover:bg-white/5 dark:hover:text-white/90 hover:bg-gray-100 hover:text-gray-800 text-gray-500 dark:text-gray-400 justify-center border border-gray-200 dark:border-gray-700 rounded-full size-11"
+              >
+                <span class="sr-only">Open right sidebar</span>
+                <svg
+                  class="size-7"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 25 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  transform="rotate(0 0 0)"
+                >
+                  <path
+                    d="M6.3125 13.7558C5.346 13.7559 4.5625 12.9723 4.5625 12.0059V11.9959C4.5625 11.0294 5.346 10.2458 6.3125 10.2458C7.279 10.2458 8.0625 11.0294 8.0625 11.9958V12.0058C8.0625 12.9723 7.279 13.7558 6.3125 13.7558Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M18.3125 13.7558C17.346 13.7558 16.5625 12.9723 16.5625 12.0058V11.9958C16.5625 11.0294 17.346 10.2458 18.3125 10.2458C19.279 10.2458 20.0625 11.0294 20.0625 11.9958V12.0058C20.0625 12.9723 19.279 13.7558 18.3125 13.7558Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M10.5625 12.0058C10.5625 12.9723 11.346 13.7558 12.3125 13.7558C13.279 13.7558 14.0625 12.9723 14.0625 12.0058V11.9958C14.0625 11.0294 13.279 10.2458 12.3125 10.2458C11.346 10.2458 10.5625 11.0294 10.5625 11.9958V12.0058Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="flex h-screen overflow-hidden">
+        {% block sidebar %}
+        <!-- Sidebar -->
+        <aside
+          :class="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen}"
+          class="fixed inset-y-0 left-0 h-screen z-20 w-[288px] dark:border-gray-800 bg-white border-r dark:bg-dark-primary border-gray-100 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0"
+        >
+          <div class="h-full flex flex-col">
+            <div
+              class="h-16 flex items-center px-6 border-b border-gray-200 lg:hidden"
+            >
+              <div class="flex items-center">
+                <svg
+                  class="h-8 w-8 text-primary"
+                  viewBox="0 0 40 40"
+                  fill="currentColor"
+                >
+                  <circle cx="20" cy="20" r="18" fill="#8B0000" />
+                  <path
+                    d="M15 15 L25 25 M25 15 L15 25"
+                    stroke="white"
+                    stroke-width="3"
+                  />
+                </svg>
+                <span class="ml-2 text-xl font-bold text-gray-900">AI Agent</span>
+              </div>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+              <div class="px-10 mb-4 pt-10 text-xs font-normal text-gray-500">
+                Main Menu
+              </div>
+              {% set current_route = app.request.attributes.get('_route') %}
+
+              <nav class="space-y-1">
+                <a
+                  href="{{ path('settings_page')}}"
+                  class="group flex gap-2.5 items-center px-10 py-3 text-sm font-medium transition-colors
+                    {% if current_route == 'settings_page' %}
+                        dark:bg-red-600/10 border-l-3 border-red-600 text-red-600
+                    {% else %}
+                        dark:hover:bg-red-600/10 hover:bg-red-100 border-l-3 border-transparent hover:border-l-3 hover:border-red-600 hover:text-red-600 text-gray-700 dark:text-gray-400
+                    {% endif %}
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 22 22"
+                    fill="none"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M8.7526 6.7963C8.7526 5.3555 9.9206 4.1875 11.3614 4.1875C12.8022 4.1875 13.9702 5.3555 13.9702 6.7963C13.9702 8.2371 12.8022 9.4051 11.3614 9.4051C9.9206 9.4051 8.7526 8.2371 8.7526 6.7963ZM11.3614 2.6875C9.09217 2.6875 7.2526 4.52707 7.2526 6.7963C7.2526 9.06553 9.09217 10.9051 11.3614 10.9051C13.6306 10.9051 15.4702 9.06553 15.4702 6.7963C15.4702 4.52707 13.6306 2.6875 11.3614 2.6875ZM9.8148 12.208C6.38467 12.208 3.604 14.9887 3.604 18.4188V18.7367C3.604 19.1509 3.93979 19.4867 4.354 19.4867C4.76822 19.4867 5.104 19.1509 5.104 18.7367V18.4188C5.104 15.8171 7.2131 13.708 9.8148 13.708H12.9092C15.511 13.708 17.6201 15.8171 17.6201 18.4188V18.7367C17.6201 19.1509 17.9558 19.4867 18.3701 19.4867C18.7843 19.4867 19.1201 19.1509 19.1201 18.7367V18.4188C19.1201 14.9887 16.3394 12.208 12.9092 12.208H9.8148Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  Profile et sécurité
+                </a>
+                <a
+                  href="{{ path('billing_page')}}"
+                  class="group flex gap-2.5 items-center px-10 py-3 text-sm font-medium transition-colors
+                    {% if current_route == 'billing_page' %}
+                        dark:bg-red-600/10 border-l-3 border-red-600 text-red-600
+                    {% else %}
+                        dark:hover:bg-red-600/10 hover:bg-red-100 border-l-3 border-transparent hover:border-l-3 hover:border-red-600 hover:text-red-600 text-gray-700 dark:text-gray-400
+                    {% endif %}
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 22 22"
+                    fill="none"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M5.1665 2.91666C3.92386 2.91666 2.9165 3.92402 2.9165 5.16666V7.33333V16.8333C2.9165 18.076 3.92387 19.0833 5.16651 19.0833H16.8332C18.0758 19.0833 19.0832 18.076 19.0832 16.8333V14.6667V11V8.83333C19.0832 7.59069 18.0758 6.58333 16.8332 6.58333H16.7915V5.16666C16.7915 3.92402 15.7841 2.91666 14.5415 2.91666H5.1665ZM16.0415 8.08333H4.4165V16.8333C4.4165 17.2475 4.75229 17.5833 5.16651 17.5833H16.8332C17.2474 17.5833 17.5832 17.2475 17.5832 16.8333V15.4167H15.479C14.2364 15.4167 13.229 14.4093 13.229 13.1667V12.5C13.229 11.2574 14.2364 10.25 15.479 10.25H17.5832V8.83333C17.5832 8.41912 17.2474 8.08333 16.8332 8.08333H16.0415ZM15.2915 6.58333V5.16666C15.2915 4.75245 14.9557 4.41666 14.5415 4.41666H5.1665C4.75229 4.41666 4.4165 4.75245 4.4165 5.16666V6.58333H15.2915ZM17.5832 11.75V13.9167H15.479C15.0648 13.9167 14.729 13.5809 14.729 13.1667V12.5C14.729 12.0858 15.0648 11.75 15.479 11.75H17.5832Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  Facturation et forfaits
+                </a>
+                <a
+                  href="{{ path('integration_page')}}"
+                  class="group flex gap-2.5 items-center px-10 py-3 text-sm font-medium transition-colors
+                    {% if current_route == 'integration_page' %}
+                        dark:bg-red-600/10 border-l-3 border-red-600 text-red-600
+                    {% else %}
+                        dark:hover:bg-red-600/10 hover:bg-red-100 border-l-3 border-transparent hover:border-l-3 hover:border-red-600 hover:text-red-600 text-gray-700 dark:text-gray-400
+                    {% endif %}
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 22 22"
+                    fill="none"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M10.7207 3.49909C10.8967 3.41112 11.1038 3.41112 11.2797 3.49909L17.0757 6.39701L11.3356 9.26698C11.1245 9.37255 10.876 9.37255 10.6648 9.26698L4.92473 6.39701L10.7207 3.49909ZM3.99756 7.61048L9.99403 10.6086C10.0775 10.6504 10.163 10.6866 10.2498 10.7174L10.2498 18.2657L4.34306 15.3124C4.13131 15.2066 3.99756 14.9901 3.99756 14.7534V7.61048ZM11.7498 18.2661L17.6574 15.3124C17.8692 15.2066 18.0029 14.9901 18.0029 14.7534V7.61048L12.0064 10.6086C11.9227 10.6505 11.837 10.6868 11.7498 10.7176V18.2661ZM3.95531 5.91232L3.67225 5.34619C2.95232 5.70614 2.49756 6.44196 2.49756 7.24686V14.7534C2.49756 15.5583 2.95232 16.2941 3.67225 16.6541L10.0499 19.8428C10.6482 20.1419 11.3523 20.1419 11.9505 19.8428L18.3282 16.6541C19.0481 16.2941 19.5029 15.5583 19.5029 14.7534V7.24686C19.5029 6.44196 19.0481 5.70614 18.3282 5.34619L11.9505 2.15744L11.6151 2.82827L11.9505 2.15744C11.3523 1.85834 10.6482 1.85834 10.0499 2.15744L3.67225 5.34619L3.95531 5.91232Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  Intégrations
+                </a>
+                <a
+                  href="{{ path('faq_page') }}"
+                  class="group flex gap-2.5 items-center px-10 py-3 text-sm font-medium transition-colors
+                    {% if current_route == 'faq_page' %}
+                        dark:bg-red-600/10 border-l-3 border-red-600 text-red-600
+                    {% else %}
+                        dark:hover:bg-red-600/10 hover:bg-red-100 border-l-3 border-transparent hover:border-l-3 hover:border-red-600 hover:text-red-600 text-gray-700 dark:text-gray-400
+                    {% endif %}
+                  "
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.45827 10.0798C3.45827 6.46689 6.38708 3.53809 9.99994 3.53809C13.6128 3.53809 16.5416 6.46689 16.5416 10.0798C16.5416 13.6926 13.6128 16.6214 9.99994 16.6214H4.51893L5.37428 15.7661C5.51494 15.6254 5.59395 15.4347 5.59395 15.2357C5.59395 15.0368 5.51494 14.8461 5.37428 14.7054C4.18965 13.5208 3.45827 11.8864 3.45827 10.0798ZM9.99994 2.03809C5.55865 2.03809 1.95827 5.63846 1.95827 10.0798C1.95827 12.03 2.6533 13.8191 3.80795 15.2111L2.17794 16.8411C1.96345 17.0556 1.89928 17.3782 2.01536 17.6584C2.13145 17.9387 2.40493 18.1214 2.70827 18.1214H9.99994C14.4412 18.1214 18.0416 14.521 18.0416 10.0798C18.0416 5.63846 14.4412 2.03809 9.99994 2.03809ZM6.35411 8.83057C5.66375 8.83057 5.10411 9.39021 5.10411 10.0806C5.10411 10.7709 5.66375 11.3306 6.35411 11.3306H6.35421C7.04456 11.3306 7.60421 10.7709 7.60421 10.0806C7.60421 9.39021 7.04456 8.83057 6.35421 8.83057H6.35411ZM8.74994 10.0806C8.74994 9.39021 9.30959 8.83057 9.99994 8.83057H10C10.6904 8.83057 11.25 9.39021 11.25 10.0806C11.25 10.7709 10.6904 11.3306 10 11.3306H9.99994C9.30959 11.3306 8.74994 10.7709 8.74994 10.0806ZM13.6458 8.83057C12.9554 8.83057 12.3958 9.39021 12.3958 10.0806C12.3958 10.7709 12.9554 11.3306 13.6458 11.3306H13.6459C14.3362 11.3306 14.8959 10.7709 14.8959 10.0806C14.8959 9.39021 14.3362 8.83057 13.6459 8.83057H13.6458Z" fill="currentColor"></path>
+                  </svg>
+                    FAQ
+                </a>
+              </nav>
+            </div>
+          </div>
+        </aside>
+        {% endblock %}
+        <!-- Main Content -->
+        <div class="flex-1 overflow-y-auto">
+            {% block content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+    
+    {% block javascripts_body %}
+      {# <script src="{{ asset('assets/js/glightbox.min.js') }}"></script> #}
+      {# <script src="{{ asset('assets/js/main.js') }}"></script> #}
+    {% endblock %}
+</body>
+</html> 

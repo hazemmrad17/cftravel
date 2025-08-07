@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+	<!-- Mirrored from ai-agent.preview.uideck.com/text-generator by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 10 Jul 2025 08:11:34 GMT -->
+	<!-- Added by HTTrack -->
+	<meta
+	http-equiv="content-type" content="text/html;charset=utf-8"/> <!-- /Added by HTTrack -->
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<link rel="icon" href="{{ asset('assets/images/favicon.png') }}"/>
+		<title>Layla - Agent de Voyage IA | Planification de Voyages Intelligente</title>
+		<link rel="stylesheet" href="{{ asset('assets/css/output.css') }}"/>
+		<style>
+			.line-clamp-2 {
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+			.line-clamp-3 {
+				display: -webkit-box;
+				-webkit-line-clamp: 3;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+			.offer-card {
+				transition: all 0.3s ease;
+			}
+			.offer-card:hover {
+				transform: translateY(-2px);
+			}
+		</style>
+		
+	</head>
+	<body class="dark:bg-dark-primary" x-data="{
+			        sidebarOpen: false,
+						        rightSidebarOpen: window.innerWidth >= 1024 ? true : false, // Always open on desktop
+			        showMoreHistory: false,
+			        activeDropdown: null,
+			        darkMode: localStorage.getItem('darkMode') === 'true',
+			        toggleDarkMode() {
+			            this.darkMode = !this.darkMode;
+			            localStorage.setItem('darkMode', this.darkMode);
+			            if (this.darkMode) {
+			              document.documentElement.classList.add('dark');
+			              document.documentElement.classList.remove('light');
+			            } else {
+			              document.documentElement.classList.add('light');
+			              document.documentElement.classList.remove('dark');
+			            }
+			          },
+			        toggleDropdown(dropdown) {
+			          if (window.innerWidth < 1024) {
+			            this.activeDropdown = this.activeDropdown === dropdown ? null : dropdown;
+			          }
+			        },
+			        closeDropdowns() {
+			          this.activeDropdown = null;
+			        },
+			        init() {
+			          // Apply dark mode on page load if saved in localStorage
+			          const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+			          if (savedDarkMode) {
+			            this.darkMode = true;
+			            document.documentElement.classList.add('dark');
+			            document.documentElement.classList.remove('light');
+			          } else {
+			            this.darkMode = false;
+			            document.documentElement.classList.add('light');
+			            document.documentElement.classList.remove('dark');
+			          }
+			          // Close dropdowns when clicking outside
+			          document.addEventListener('click', (e) => {
+			            if (!e.target.closest('.nav-item') && !e.target.closest('.dropdown-menu') && !e.target.closest('.mobile-dropdown-toggle')) {
+			              this.closeDropdowns();
+			            }
+			          });
+			          // Reset activeDropdown when resizing to desktop
+			          window.addEventListener('resize', () => {
+			            if (window.innerWidth >= 1024) {
+			              this.activeDropdown = null;
+			              this.mobileMenuOpen = false;
+						              this.rightSidebarOpen = true; // Always open on desktop
+						            } else {
+						              this.rightSidebarOpen = false;
+			            }
+			          });
+			        }
+						      }">
+		<!-- Top Navigation Bar -->
+		<header class="bg-white border-b dark:bg-dark-primary dark:border-gray-800 border-gray-100 sticky top-0 z-50">
+			<div class="px-4 sm:px-6 lg:px-8">
+				<div
+					class="flex justify-between h-16">
+					<!-- Logo and Mobile Menu Button -->
+					<div class="flex">
+						<div
+							class="flex-shrink-0 flex items-center">
+							<!-- Mobile menu button -->
+							<button @click="sidebarOpen = !sidebarOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 lg:hidden">
+								<svg class="h-6 w-6" x-show="!sidebarOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+								</svg>
+								<svg class="h-6 w-6" x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+								</svg>
+							</button>
+							<!-- Logo -->
+							<div class="flex items-center justify-center w-full">
+								<a href="{{path('home_page')}}">
+									<img src="{{ asset('assets/images/logo.png') }}" class="block dark:hidden w-12 h-8" alt=""/>
+									<img src="{{ asset('assets/images/logo.png') }}" class="hidden dark:block w-12 h-8" alt=""/>
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- Right side buttons -->
+					<div
+						class="flex items-center">
+						<!-- Dark Mode Toggle Start -->
+						<button @click="toggleDarkMode()" class="inline-flex items-center dark:hover:bg-white/5 dark:hover:text-white/90 hover:bg-gray-100 hover:text-gray-800 text-gray-500 dark:text-gray-400 justify-center border border-gray-200 dark:border-gray-700 rounded-full size-11">
+							<svg x-show="!darkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 20 20" fill="none">
+								<path d="M6.24683 7.08492C6.24683 10.7677 9.23232 13.7532 12.9151 13.7532C14.6687 13.7532 16.2641 13.0764 17.4545 11.9697C16.584 15.2727 13.5765 17.7083 10.0001 17.7083C5.74289 17.7083 2.29175 14.2572 2.29175 9.99996C2.29175 6.42356 4.72736 3.41602 8.03036 2.54558C6.92367 3.73594 6.24683 5.33139 6.24683 7.08492Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+							<svg x-show="darkMode" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+							</svg>
+						</button>
+						<!-- Dark Mode Toggle End -->
+
+						<!-- Account dropdown -->
+						{% if app.user %}
+							<div class="ml-4 relative flex-shrink-0" x-data="{ open: false }">
+								<div>
+									<button @click="open = !open" class="rounded-full text-sm font-medium focus:outline-none">
+										<img src="{{ asset('assets/images/users/user-1.png') }}" class="w-11 h-11 rounded-full" alt=""/>
+									</button>
+								</div>
+								<div x-show="open" @click.away="open = false" class="origin-top-right absolute right-0 mt-2 w-[260px] shadow-lg dark:bg-dark-secondary dark:border-gray-800 py-4 px-3 bg-white border border-gray-200 rounded-2xl">
+									<div class="mb-4 px-3">
+										<span class="text-gray-700 text-sm font-medium dark:text-gray-400">{{ app.user.firstName }}
+											{{ app.user.lastName }}</span>
+										<p class="text-gray-500 text-sm dark:text-gray-400">{{ app.user.email }}</p>
+									</div>
+									<div class="space-y-1">
+										<a href="{{ path('settings_page') }}" class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90">
+											<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewbox="0 0 22 22" fill="none">
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M8.75211 6.7963C8.75211 5.3555 9.92011 4.1875 11.3609 4.1875C12.8017 4.1875 13.9697 5.3555 13.9697 6.7963C13.9697 8.2371 12.8017 9.4051 11.3609 9.4051C9.92011 9.4051 8.75211 8.2371 8.75211 6.7963ZM11.3609 2.6875C9.09168 2.6875 7.25211 4.52707 7.25211 6.7963C7.25211 9.06553 9.09168 10.9051 11.3609 10.9051C13.6301 10.9051 15.4697 9.06553 15.4697 6.7963C15.4697 4.52707 13.6301 2.6875 11.3609 2.6875ZM9.81431 12.208C6.38418 12.208 3.60352 14.9887 3.60352 18.4188V18.7367C3.60352 19.1509 3.9393 19.4867 4.35352 19.4867C4.76773 19.4867 5.10352 19.1509 5.10352 18.7367V18.4188C5.10352 15.8171 7.21261 13.708 9.81431 13.708H12.9088C15.5105 13.708 17.6196 15.8171 17.6196 18.4188V18.7367C17.6196 19.1509 17.9554 19.4867 18.3696 19.4867C18.7838 19.4867 19.1196 19.1509 19.1196 18.7367V18.4188C19.1196 14.9887 16.3389 12.208 12.9088 12.208H9.81431Z" fill="currentColor"></path>
+											</svg>
+											Modifier Profile
+										</a>
+										<a href="{{ path('settings_page') }}" class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90">
+											<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewbox="0 0 22 22" fill="none">
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M9.61304 3.27092L12.3927 3.27092C12.7295 3.27092 13.0027 3.54406 13.0027 3.88104C13.0027 5.50501 14.7607 6.52057 16.1675 5.7084C16.4591 5.54 16.8321 5.63994 17.0005 5.93161L18.3905 8.33918C18.559 8.63101 18.459 9.00417 18.1672 9.17266C16.7604 9.98485 16.7604 12.0153 18.1672 12.8275C18.459 12.996 18.559 13.3692 18.3905 13.661L17.0005 16.0686C16.8321 16.3603 16.4591 16.4602 16.1674 16.2918C14.7607 15.4796 13.0027 16.4952 13.0027 18.1192C13.0027 18.4561 12.7295 18.7293 12.3927 18.7293H9.61303C9.27596 18.7293 9.00271 18.456 9.00271 18.1189C9.00271 16.4942 7.2438 15.4793 5.83708 16.2915C5.54502 16.4601 5.17158 16.36 5.00304 16.0681L3.61337 13.6611C3.44488 13.3692 3.54487 12.9961 3.83671 12.8276C5.2435 12.0154 5.24347 9.98484 3.8367 9.17264C3.54485 9.00414 3.44486 8.63095 3.61335 8.33911L5.00301 5.93215C5.17156 5.64022 5.545 5.54012 5.83706 5.70875C7.24379 6.52092 9.00271 5.50595 9.00271 3.88125C9.00271 3.54417 9.27597 3.27092 9.61304 3.27092ZM12.3927 1.77092L9.61304 1.77092C8.44754 1.77092 7.50271 2.71575 7.50271 3.88125C7.50271 4.3509 6.9941 4.64471 6.58706 4.40971C5.57769 3.82695 4.28681 4.17265 3.70397 5.18215L2.31431 7.58911C1.7316 8.5984 2.07742 9.88897 3.0867 10.4717C3.49349 10.7065 3.49348 11.2937 3.08671 11.5285C2.07743 12.1112 1.73162 13.4018 2.31433 14.4111L3.704 16.8181C4.28684 17.8276 5.57772 18.1732 6.58708 17.5905C6.99411 17.3555 7.50271 17.6493 7.50271 18.1189C7.50271 19.2844 8.44753 20.2293 9.61303 20.2293H12.3927C13.5581 20.2293 14.5027 19.2844 14.5027 18.1192C14.5027 17.6495 15.0111 17.3562 15.4174 17.5908C16.4266 18.1735 17.7169 17.8277 18.2995 16.8186L19.6895 14.411C20.2722 13.4017 19.9264 12.1112 18.9172 11.5285C18.5104 11.2937 18.5104 10.7066 18.9172 10.4717C19.9264 9.889 20.2723 8.59845 19.6896 7.58918L18.2995 5.18161C17.7169 4.1725 16.4266 3.82675 15.4175 4.40936C15.0111 4.644 14.5027 4.35067 14.5027 3.88104C14.5027 2.71579 13.5581 1.77092 12.3927 1.77092ZM8.92395 11C8.92395 9.85242 9.85427 8.9221 11.0019 8.9221C12.1495 8.9221 13.0798 9.85242 13.0798 11C13.0798 12.1476 12.1495 13.0779 11.0019 13.0779C9.85427 13.0779 8.92395 12.1476 8.92395 11ZM11.0019 7.4221C9.02584 7.4221 7.42395 9.02399 7.42395 11C7.42395 12.976 9.02584 14.5779 11.0019 14.5779C12.9779 14.5779 14.5798 12.976 14.5798 11C14.5798 9.02399 12.9779 7.4221 11.0019 7.4221Z" fill="currentColor"></path>
+											</svg>
+											Paramètres du compte
+										</a>
+										<a href="{{ path('faq_page') }}" class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90">
+											<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewbox="0 0 22 22" fill="none">
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M3.27148 11C3.27148 6.7313 6.73195 3.27083 11.0007 3.27083C15.2694 3.27083 18.7298 6.7313 18.7298 11C18.7298 15.2687 15.2694 18.7292 11.0007 18.7292C6.73195 18.7292 3.27148 15.2687 3.27148 11ZM11.0007 1.77083C5.90352 1.77083 1.77148 5.90287 1.77148 11C1.77148 16.0971 5.90352 20.2292 11.0007 20.2292C16.0978 20.2292 20.2298 16.0971 20.2298 11C20.2298 5.90287 16.0978 1.77083 11.0007 1.77083ZM10 7.94734C10 8.49962 10.4478 8.94734 11 8.94734H11.0008C11.5531 8.94734 12.0008 8.49962 12.0008 7.94734C12.0008 7.39505 11.5531 6.94734 11.0008 6.94734H11C10.4478 6.94734 10 7.39505 10 7.94734ZM11 15.3214C10.5858 15.3214 10.25 14.9856 10.25 14.5714L10.25 10.699C10.25 10.2848 10.5858 9.94902 11 9.94902C11.4143 9.94902 11.75 10.2848 11.75 10.699L11.75 14.5714C11.75 14.9856 11.4143 15.3214 11 15.3214Z" fill="currentColor"></path>
+											</svg>
+											Support
+										</a>
+										<div class="my-3 h-px bg-gray-200 dark:bg-gray-800"></div>
+										<form method="post" action="{{ path('app_logout') }}">
+											<button type="submit" class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90 w-full text-left">
+												<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewbox="0 0 22 22" fill="none">
+													<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9679 17.5805C13.5537 17.5805 13.2179 17.2448 13.2179 16.8305L13.2179 13.2454L11.7179 13.2454L11.7179 16.8305C11.7179 18.0732 12.7253 19.0805 13.9679 19.0805H16.8346C18.0773 19.0805 19.0846 18.0732 19.0846 16.8305V5.16309C19.0846 3.92045 18.0773 2.91309 16.8346 2.91309L13.9679 2.91309C12.7253 2.91309 11.7179 3.92045 11.7179 5.16309V8.74543L13.2179 8.74542V5.16309C13.2179 4.74887 13.5537 4.41309 13.9679 4.41309L16.8346 4.41309C17.2488 4.41309 17.5846 4.74887 17.5846 5.16309V16.8305C17.5846 17.2448 17.2488 17.5805 16.8346 17.5805H13.9679ZM2.91797 10.9986C2.91797 11.2142 3.00896 11.4086 3.15464 11.5454L7.37668 15.7701C7.66948 16.0631 8.14436 16.0632 8.43734 15.7704C8.73033 15.4776 8.73048 15.0028 8.43768 14.7098L5.47835 11.7486H14.668C15.0822 11.7486 15.418 11.4128 15.418 10.9986C15.418 10.5844 15.0822 10.2486 14.668 10.2486L5.48212 10.2486L8.4377 7.29092C8.73049 6.99793 8.73032 6.52306 8.43733 6.23026C8.14433 5.93747 7.66946 5.93764 7.37667 6.23064L3.18798 10.4223C3.02297 10.5598 2.91797 10.7669 2.91797 10.9986Z" fill="currentColor"></path>
+												</svg>
+												Déconnexion
+											</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						{% else %}
+							<div class="ml-4 relative flex-shrink-0" x-data="{ open: false }">
+								<div>
+									<button @click="open = !open" class="rounded-full text-sm font-medium focus:outline-none">
+										<img src="{{ asset('assets/images/users/user-1.png') }}" class="w-11 h-11 rounded-full" alt=""/>
+									</button>
+								</div>
+								<div x-show="open" @click.away="open = false" class="origin-top-right absolute right-0 mt-2 w-[260px] shadow-lg dark:bg-dark-secondary dark:border-gray-800 py-4 px-3 bg-white border border-gray-200 rounded-2xl">
+									<div class="mb-4 px-3">
+										<span class="text-gray-700 text-sm font-medium dark:text-gray-400">Invité</span>
+										<p class="text-gray-500 text-sm dark:text-gray-400">Non connecté</p>
+									</div>
+									<div class="space-y-1">
+										<a href="{{ path('settings_page') }}" class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90">
+											<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewbox="0 0 22 22" fill="none">
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M8.75211 6.7963C8.75211 5.3555 9.92011 4.1875 11.3609 4.1875C12.8017 4.1875 13.9697 5.3555 13.9697 6.7963C13.9697 8.2371 12.8017 9.4051 11.3609 9.4051C9.92011 9.4051 8.75211 8.2371 8.75211 6.7963ZM11.3609 2.6875C9.09168 2.6875 7.25211 4.52707 7.25211 6.7963C7.25211 9.06553 9.09168 10.9051 11.3609 10.9051C13.6301 10.9051 15.4697 9.06553 15.4697 6.7963C15.4697 4.52707 13.6301 2.6875 11.3609 2.6875ZM9.81431 12.208C6.38418 12.208 3.60352 14.9887 3.60352 18.4188V18.7367C3.60352 19.1509 3.9393 19.4867 4.35352 19.4867C4.76773 19.4867 5.10352 19.1509 5.10352 18.7367V18.4188C5.10352 15.8171 7.21261 13.708 9.81431 13.708H12.9088C15.5105 13.708 17.6196 15.8171 17.6196 18.4188V18.7367C17.6196 19.1509 17.9554 19.4867 18.3696 19.4867C18.7838 19.4867 19.1196 19.1509 19.1196 18.7367V18.4188C19.1196 14.9887 16.3389 12.208 12.9088 12.208H9.81431Z" fill="currentColor"></path>
+											</svg>
+											Modifier Profile
+										</a>
+										<a href="{{ path('settings_page') }}" class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90">
+											<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewbox="0 0 22 22" fill="none">
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M9.61304 3.27092L12.3927 3.27092C12.7295 3.27092 13.0027 3.54406 13.0027 3.88104C13.0027 5.50501 14.7607 6.52057 16.1675 5.7084C16.4591 5.54 16.8321 5.63994 17.0005 5.93161L18.3905 8.33918C18.559 8.63101 18.459 9.00417 18.1672 9.17266C16.7604 9.98485 16.7604 12.0153 18.1672 12.8275C18.459 12.996 18.559 13.3692 18.3905 13.661L17.0005 16.0686C16.8321 16.3603 16.4591 16.4602 16.1674 16.2918C14.7607 15.4796 13.0027 16.4952 13.0027 18.1192C13.0027 18.4561 12.7295 18.7293 12.3927 18.7293H9.61303C9.27596 18.7293 9.00271 18.456 9.00271 18.1189C9.00271 16.4942 7.2438 15.4793 5.83708 16.2915C5.54502 16.4601 5.17158 16.36 5.00304 16.0681L3.61337 13.6611C3.44488 13.3692 3.54487 12.9961 3.83671 12.8276C5.2435 12.0154 5.24347 9.98484 3.8367 9.17264C3.54485 9.00414 3.44486 8.63095 3.61335 8.33911L5.00301 5.93215C5.17156 5.64022 5.545 5.54012 5.83706 5.70875C7.24379 6.52092 9.00271 5.50595 9.00271 3.88125C9.00271 3.54417 9.27597 3.27092 9.61304 3.27092ZM12.3927 1.77092L9.61304 1.77092C8.44754 1.77092 7.50271 2.71575 7.50271 3.88125C7.50271 4.3509 6.9941 4.64471 6.58706 4.40971C5.57769 3.82695 4.28681 4.17265 3.70397 5.18215L2.31431 7.58911C1.7316 8.5984 2.07742 9.88897 3.0867 10.4717C3.49349 10.7065 3.49348 11.2937 3.08671 11.5285C2.07743 12.1112 1.73162 13.4018 2.31433 14.4111L3.704 16.8181C4.28684 17.8276 5.57772 18.1732 6.58708 17.5905C6.99411 17.3555 7.50271 17.6493 7.50271 18.1189C7.50271 19.2844 8.44753 20.2293 9.61303 20.2293H12.3927C13.5581 20.2293 14.5027 19.2844 14.5027 18.1192C14.5027 17.6495 15.0111 17.3562 15.4174 17.5908C16.4266 18.1735 17.7169 17.8277 18.2995 16.8186L19.6895 14.411C20.2722 13.4017 19.9264 12.1112 18.9172 11.5285C18.5104 11.2937 18.5104 10.7066 18.9172 10.4717C19.9264 9.889 20.2723 8.59845 19.6896 7.58918L18.2995 5.18161C17.7169 4.1725 16.4266 3.82675 15.4175 4.40936C15.0111 4.644 14.5027 4.35067 14.5027 3.88104C14.5027 2.71579 13.5581 1.77092 12.3927 1.77092ZM8.92395 11C8.92395 9.85242 9.85427 8.9221 11.0019 8.9221C12.1495 8.9221 13.0798 9.85242 13.0798 11C13.0798 12.1476 12.1495 13.0779 11.0019 13.0779C9.85427 13.0779 8.92395 12.1476 8.92395 11ZM11.0019 7.4221C9.02584 7.4221 7.42395 9.02399 7.42395 11C7.42395 12.976 9.02584 14.5779 11.0019 14.5779C12.9779 14.5779 14.5798 12.976 14.5798 11C14.5798 9.02399 12.9779 7.4221 11.0019 7.4221Z" fill="currentColor"></path>
+											</svg>
+											Paramètres du compte
+										</a>
+										<a href="{{ path('faq_page') }}" class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90">
+											<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewbox="0 0 22 22" fill="none">
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M3.27148 11C3.27148 6.7313 6.73195 3.27083 11.0007 3.27083C15.2694 3.27083 18.7298 6.7313 18.7298 11C18.7298 15.2687 15.2694 18.7292 11.0007 18.7292C6.73195 18.7292 3.27148 15.2687 3.27148 11ZM11.0007 1.77083C5.90352 1.77083 1.77148 5.90287 1.77148 11C1.77148 16.0971 5.90352 20.2292 11.0007 20.2292C16.0978 20.2292 20.2298 16.0971 20.2298 11C20.2298 5.90287 16.0978 1.77083 11.0007 1.77083ZM10 7.94734C10 8.49962 10.4478 8.94734 11 8.94734H11.0008C11.5531 8.94734 12.0008 8.49962 12.0008 7.94734C12.0008 7.39505 11.5531 6.94734 11.0008 6.94734H11C10.4478 6.94734 10 7.39505 10 7.94734ZM11 15.3214C10.5858 15.3214 10.25 14.9856 10.25 14.5714L10.25 10.699C10.25 10.2848 10.5858 9.94902 11 9.94902C11.4143 9.94902 11.75 10.2848 11.75 10.699L11.75 14.5714C11.75 14.9856 11.4143 15.3214 11 15.3214Z" fill="currentColor"></path>
+											</svg>
+											Support
+										</a>
+										<div class="my-3 h-px bg-gray-200 dark:bg-gray-800"></div>
+										<form method="post" action="{{ path('app_logout') }}">
+											<button type="submit" class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90 w-full text-left">
+												<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewbox="0 0 22 22" fill="none">
+													<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9679 17.5805C13.5537 17.5805 13.2179 17.2448 13.2179 16.8305L13.2179 13.2454L11.7179 13.2454L11.7179 16.8305C11.7179 18.0732 12.7253 19.0805 13.9679 19.0805H16.8346C18.0773 19.0805 19.0846 18.0732 19.0846 16.8305V5.16309C19.0846 3.92045 18.0773 2.91309 16.8346 2.91309L13.9679 2.91309C12.7253 2.91309 11.7179 3.92045 11.7179 5.16309V8.74543L13.2179 8.74542V5.16309C13.2179 4.74887 13.5537 4.41309 13.9679 4.41309L16.8346 4.41309C17.2488 4.41309 17.5846 4.74887 17.5846 5.16309V16.8305C17.5846 17.2448 17.2488 17.5805 16.8346 17.5805H13.9679ZM2.91797 10.9986C2.91797 11.2142 3.00896 11.4086 3.15464 11.5454L7.37668 15.7701C7.66948 16.0631 8.14436 16.0632 8.43734 15.7704C8.73033 15.4776 8.73048 15.0028 8.43768 14.7098L5.47835 11.7486H14.668C15.0822 11.7486 15.418 11.4128 15.418 10.9986C15.418 10.5844 15.0822 10.2486 14.668 10.2486L5.48212 10.2486L8.4377 7.29092C8.73049 6.99793 8.73032 6.52306 8.43733 6.23026C8.14433 5.93747 7.66946 5.93764 7.37667 6.23064L3.18798 10.4223C3.02297 10.5598 2.91797 10.7669 2.91797 10.9986Z" fill="currentColor"></path>
+												</svg>
+												Déconnexion
+											</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						{% endif %}
+						<!-- Mobile right sidebar button -->
+						<button @click="rightSidebarOpen = !rightSidebarOpen" type="button" class="inline-flex ml-4 lg:hidden items-center dark:hover:bg-white/5 dark:hover:text-white/90 hover:bg-gray-100 hover:text-gray-800 text-gray-500 dark:text-gray-400 justify-center border border-gray-200 dark:border-gray-700 rounded-full size-11">
+							<span class="sr-only">Open right sidebar</span>
+							<svg class="size-7" width="32" height="32" viewbox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="rotate(0 0 0)">
+								<path d="M6.3125 13.7558C5.346 13.7559 4.5625 12.9723 4.5625 12.0059V11.9959C4.5625 11.0294 5.346 10.2458 6.3125 10.2458C7.279 10.2458 8.0625 11.0294 8.0625 11.9958V12.0058C8.0625 12.9723 7.279 13.7558 6.3125 13.7558Z" fill="currentColor"/>
+								<path d="M18.3125 13.7558C17.346 13.7558 16.5625 12.9723 16.5625 12.0058V11.9958C16.5625 11.0294 17.346 10.2458 18.3125 10.2458C19.279 10.2458 20.0625 11.0294 20.0625 11.9958V12.0058C20.0625 12.9723 19.279 13.7558 18.3125 13.7558Z" fill="currentColor"/>
+								<path d="M10.5625 12.0058C10.5625 12.9723 11.346 13.7558 12.3125 13.7558C13.279 13.7558 14.0625 12.9723 14.0625 12.0058V11.9958C14.0625 11.0294 13.279 10.2458 12.3125 10.2458C11.346 10.2458 10.5625 11.0294 10.5625 11.9958V12.0058Z" fill="currentColor"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</header>
+			<!-- Top Navigation End -->
+
+			<div
+				class="flex h-[calc(100vh-64px)]">
+				<!-- Left Sidebar -->
+				<aside class="fixed lg:static inset-y-0 top-16 left-0 z-50 w-[288px] bg-white dark:bg-dark-primary border-r border-gray-100 dark:border-gray-800 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:h-auto" :class="{'translate-x-0': sidebarOpen || window.innerWidth >= 1024, '-translate-x-full': !sidebarOpen && window.innerWidth < 1024}">
+					<div
+						class="h-full flex flex-col justify-between overflow-y-auto">
+						<!-- Products section -->
+						<div class="px-5 pt-6">
+							<h2 class="text-xs font-medium text-gray-400 dark:text-gray-400 capitalize tracking-wider">
+								Produits
+							</h2>
+							<nav class="mt-3 space-y-1">
+								{% if mostRecentConversationId %}
+									<a href="{{ path('chat_agent', {'agent': agent, 'conversation_id': mostRecentConversationId}) }}" class="flex items-center bg-gray-100 dark:bg-white/5 dark:text-white/90 h-11 text-gray-800 px-2 py-3 text-sm font-medium rounded-full">
+									<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewbox="0 0 42 42" fill="none">
+										<g filter="url(#filter0_d_11222_4282)">
+											<g filter="url(#filter1_i_11222_4282)">
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M8.65016 30.069L8.65172 30.0672L8.66373 30.0529C8.67509 30.0393 8.69298 30.0176 8.71661 29.9884C8.76388 29.9299 8.83392 29.8415 8.92028 29.727C9.09325 29.4974 9.32961 29.166 9.57857 28.7639C10.0262 28.041 10.4852 27.1362 10.7156 26.2116C9.27786 24.168 8.43335 21.6756 8.43335 18.9882C8.43335 12.0479 14.0596 6.42157 21 6.42157C27.9404 6.42157 33.5667 12.0479 33.5667 18.9882C33.5667 25.9286 27.9404 31.5549 21 31.5549C19.4278 31.5549 17.9211 31.2657 16.5317 30.737C15.1235 31.2652 13.374 31.4628 12.0023 31.5368C11.2414 31.5779 10.5659 31.5822 10.0802 31.5763C9.83698 31.5733 9.6405 31.5678 9.50367 31.5629C9.43523 31.5605 9.38166 31.5582 9.34455 31.5565L9.30143 31.5545L9.2895 31.5539L9.28489 31.5536L9.33335 30.6549C9.28419 31.5536 9.28489 31.5536 9.28489 31.5536C8.94277 31.5349 8.64025 31.3235 8.50567 31.0084C8.37122 30.6936 8.42761 30.3291 8.65016 30.069ZM15.1666 17.4885C14.3381 17.4885 13.6666 18.16 13.6666 18.9885C13.6666 19.8169 14.3381 20.4885 15.1666 20.4885H15.1799C16.0083 20.4885 16.6799 19.8169 16.6799 18.9885C16.6799 18.16 16.0083 17.4885 15.1799 17.4885H15.1666ZM20.9999 17.4885C20.1715 17.4885 19.4999 18.16 19.4999 18.9885C19.4999 19.8169 20.1715 20.4885 20.9999 20.4885H21.0132C21.8417 20.4885 22.5132 19.8169 22.5132 18.9885C22.5132 18.16 21.8417 17.4885 21.0132 17.4885H20.9999ZM26.8332 17.4885C26.0048 17.4885 25.3332 18.16 25.3332 18.9885C25.3332 19.8169 26.0048 20.4885 26.8332 20.4885H26.8466C27.675 20.4885 28.3466 19.8169 28.3466 18.9885C28.3466 18.16 27.675 17.4885 26.8466 17.4885H26.8332Z" fill="url(#paint0_radial_11222_4282)"/>
+											</g>
+										</g>
+										<defs>
+											<filter id="filter0_d_11222_4282" x="-3" y="-3" width="48" height="48" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+												<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+												<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+												<feOffset dy="2"/>
+												<feGaussianBlur stddeviation="4"/>
+												<feComposite in2="hardAlpha" operator="out"/>
+												<feColorMatrix type="matrix" values="0 0 0 0 0.498039 0 0 0 0 0.407843 0 0 0 0 1 0 0 0 0.25 0"/>
+												<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_11222_4282"/>
+												<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_11222_4282" result="shape"/>
+											</filter>
+											<filter id="filter1_i_11222_4282" x="8.43335" y="6.42157" width="26.6571" height="26.6807" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+												<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+												<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+												<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+												<feOffset dx="1.52381" dy="1.52381"/>
+												<feGaussianBlur stddeviation="1.14286"/>
+												<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+												<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"/>
+												<feBlend mode="normal" in2="shape" result="effect1_innerShadow_11222_4282"/>
+											</filter>
+																							<radialGradient id="paint0_radial_11222_4282" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(22.0839 27.1287) rotate(-60.1772) scale(24.8321 24.8204)">
+													<stop stop-color="#8B0000"/>
+													<stop offset="1" stop-color="#DC2626"/>
+												</radialGradient>
+										</defs>
+									</svg>
+									AI Trip Planner
+								</a>
+								{% else %}
+									<span class="flex items-center bg-gray-100 dark:bg-white/5 dark:text-white/90 h-11 text-gray-400 px-2 py-3 text-sm font-medium rounded-full cursor-not-allowed">
+										<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewbox="0 0 42 42" fill="none">
+											<g filter="url(#filter0_d_11222_4282)">
+												<g filter="url(#filter1_i_11222_4282)">
+													<path fill-rule="evenodd" clip-rule="evenodd" d="M8.65016 30.069L8.65172 30.0672L8.66373 30.0529C8.67509 30.0393 8.69298 30.0176 8.71661 29.9884C8.76388 29.9299 8.83392 29.8415 8.92028 29.727C9.09325 29.4974 9.32961 29.166 9.57857 28.7639C10.0262 28.041 10.4852 27.1362 10.7156 26.2116C9.27786 24.168 8.43335 21.6756 8.43335 18.9882C8.43335 12.0479 14.0596 6.42157 21 6.42157C27.9404 6.42157 33.5667 12.0479 33.5667 18.9882C33.5667 25.9286 27.9404 31.5549 21 31.5549C19.4278 31.5549 17.9211 31.2657 16.5317 30.737C15.1235 31.2652 13.374 31.4628 12.0023 31.5368C11.2414 31.5779 10.5659 31.5822 10.0802 31.5763C9.83698 31.5733 9.6405 31.5678 9.50367 31.5629C9.43523 31.5605 9.38166 31.5582 9.34455 31.5565L9.30143 31.5545L9.2895 31.5539L9.28489 31.5536L9.33335 30.6549C9.28419 31.5536 9.28489 31.5536 9.28489 31.5536C8.94277 31.5349 8.64025 31.3235 8.50567 31.0084C8.37122 30.6936 8.42761 30.3291 8.65016 30.069ZM15.1666 17.4885C14.3381 17.4885 13.6666 18.16 13.6666 18.9885C13.6666 19.8169 14.3381 20.4885 15.1666 20.4885H15.1799C16.0083 20.4885 16.6799 19.8169 16.6799 18.9885C16.6799 18.16 16.0083 17.4885 15.1799 17.4885H15.1666ZM20.9999 17.4885C20.1715 17.4885 19.4999 18.16 19.4999 18.9885C19.4999 19.8169 20.1715 20.4885 20.9999 20.4885H21.0132C21.8417 20.4885 22.5132 19.8169 22.5132 18.9885C22.5132 18.16 21.8417 17.4885 21.0132 17.4885H20.9999ZM26.8332 17.4885C26.0048 17.4885 25.3332 18.16 25.3332 18.9885C25.3332 19.8169 26.0048 20.4885 26.8332 20.4885H26.8466C27.675 20.4885 28.3466 19.8169 28.3466 18.9885C28.3466 18.16 27.675 17.4885 26.8466 17.4885H26.8332Z" fill="url(#paint0_radial_11222_4282)"/>
+												</g>
+											</g>
+											<defs>
+												<filter id="filter0_d_11222_4282" x="-3" y="-3" width="48" height="48" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+													<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+													<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+													<feOffset dy="2"/>
+													<feGaussianBlur stddeviation="4"/>
+													<feComposite in2="hardAlpha" operator="out"/>
+													<feColorMatrix type="matrix" values="0 0 0 0 0.498039 0 0 0 0 0.407843 0 0 0 0 1 0 0 0 0.25 0"/>
+													<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_11222_4282"/>
+													<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_11222_4282" result="shape"/>
+												</filter>
+												<filter id="filter1_i_11222_4282" x="8.43335" y="6.42157" width="26.6571" height="26.6807" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+													<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+													<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+													<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+													<feOffset dx="1.52381" dy="1.52381"/>
+													<feGaussianBlur stddeviation="1.14286"/>
+													<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+													<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"/>
+													<feBlend mode="normal" in2="shape" result="effect1_innerShadow_11222_4282"/>
+												</filter>
+												<radialGradient id="paint0_radial_11222_4282" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(22.0839 27.1287) rotate(-60.1772) scale(24.8321 24.8204)">
+													<stop stop-color="#8B0000"/>
+													<stop offset="1" stop-color="#DC2626"/>
+												</radialGradient>
+											</defs>
+										</svg>
+										AI Trip Planner
+									</span>
+								{% endif %}
+							</nav>
+						</div>
+
+						<!-- Bottom section -->
+						<div class="px-3 space-y-7 pb-6">
+							<div class="px-2">
+								<h2 class="text-xs font-medium text-gray-400 dark:text-gray-400 capitalize tracking-wider">
+									Liens importants
+								</h2>
+								<nav class="mt-5 space-y-1">
+									<a href="{{ path('settings_page')}}" class="flex items-center gap-2 px-3 py-2 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition">
+										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 20 20" fill="none">
+											<path fill-rule="evenodd" clip-rule="evenodd" d="M8.73832 3.04175L11.2653 3.04175C11.5338 3.04175 11.7517 3.25953 11.7517 3.52822C11.7517 5.05702 13.4067 6.01309 14.731 5.2485C14.9635 5.11424 15.2609 5.19392 15.3952 5.42647L16.6588 7.61517C16.7931 7.84785 16.7134 8.14539 16.4807 8.27974C15.1564 9.04434 15.1564 10.9558 16.4807 11.7204C16.7134 11.8548 16.7931 12.1523 16.6588 12.385L15.3951 14.5737C15.2609 14.8063 14.9635 14.8859 14.731 14.7517C13.4067 13.9871 11.7517 14.9432 11.7517 16.472C11.7517 16.7406 11.5338 16.9584 11.2653 16.9584H8.73831C8.46954 16.9584 8.25166 16.7405 8.25166 16.4718C8.25166 14.9423 6.59581 13.9868 5.27153 14.7514C5.03863 14.8858 4.74084 14.806 4.60646 14.5732L3.34312 12.3851C3.20877 12.1524 3.2885 11.8548 3.5212 11.7205C4.84555 10.9559 4.84552 9.04432 3.52119 8.27972C3.28848 8.14536 3.20875 7.8478 3.3431 7.61511L4.60643 5.42696C4.74082 5.19419 5.03861 5.11435 5.27152 5.24882C6.5958 6.0134 8.25166 5.05792 8.25166 3.52841C8.25166 3.25963 8.46954 3.04175 8.73832 3.04175ZM11.2653 1.54175H8.73832C7.64112 1.54175 6.75166 2.43121 6.75166 3.52841C6.75166 3.90286 6.34611 4.13719 6.02152 3.94978C5.07131 3.40118 3.85607 3.72661 3.30739 4.67696L2.04406 6.86511C1.4955 7.81525 1.82105 9.03019 2.77119 9.57876C3.09554 9.76602 3.09553 10.2342 2.7712 10.4214C1.82106 10.97 1.49552 12.1849 2.04408 13.1351L3.30742 15.3232C3.8561 16.2736 5.07133 16.599 6.02153 16.0504C6.34613 15.863 6.75166 16.0973 6.75166 16.4718C6.75166 17.569 7.64111 18.4584 8.73831 18.4584H11.2653C12.3624 18.4584 13.2517 17.5689 13.2517 16.472C13.2517 16.0975 13.657 15.8637 13.981 16.0507C14.9309 16.5992 16.1457 16.2737 16.6942 15.3237L17.9578 13.135C18.5064 12.1849 18.1808 10.97 17.2307 10.4214C16.9064 10.2342 16.9064 9.76604 17.2307 9.57878C18.1808 9.03022 18.5064 7.8153 17.9578 6.86516L16.6942 4.67647C16.1457 3.72648 14.931 3.40099 13.981 3.94947C13.657 4.13652 13.2517 3.90269 13.2517 3.52822C13.2517 2.43126 12.3624 1.54175 11.2653 1.54175ZM8.18006 10C8.18006 8.9944 8.99527 8.17919 10.0009 8.17919C11.0065 8.17919 11.8217 8.9944 11.8217 10C11.8217 11.0056 11.0065 11.8209 10.0009 11.8209C8.99527 11.8209 8.18006 11.0056 8.18006 10ZM10.0009 6.67919C8.16684 6.67919 6.68006 8.16597 6.68006 10C6.68006 11.8341 8.16684 13.3209 10.0009 13.3209C11.8349 13.3209 13.3217 11.8341 13.3217 10C13.3217 8.16597 11.8349 6.67919 10.0009 6.67919Z" fill="currentColor"/>
+										</svg>
+										Paramètres
+									</a>
+									<a href="{{ path ('faq_page')}}" class="flex items-center gap-2 px-3 py-2 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition">
+										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 20 20" fill="none">
+											<path fill-rule="evenodd" clip-rule="evenodd" d="M3.45827 10.0798C3.45827 6.46689 6.38708 3.53809 9.99994 3.53809C13.6128 3.53809 16.5416 6.46689 16.5416 10.0798C16.5416 13.6926 13.6128 16.6214 9.99994 16.6214H4.51893L5.37428 15.7661C5.51494 15.6254 5.59395 15.4347 5.59395 15.2357C5.59395 15.0368 5.51494 14.8461 5.37428 14.7054C4.18965 13.5208 3.45827 11.8864 3.45827 10.0798ZM9.99994 2.03809C5.55865 2.03809 1.95827 5.63846 1.95827 10.0798C1.95827 12.03 2.6533 13.8191 3.80795 15.2111L2.17794 16.8411C1.96345 17.0556 1.89928 17.3782 2.01536 17.6584C2.13145 17.9387 2.40493 18.1214 2.70827 18.1214H9.99994C14.4412 18.1214 18.0416 14.521 18.0416 10.0798C18.0416 5.63846 14.4412 2.03809 9.99994 2.03809ZM6.35411 8.83057C5.66375 8.83057 5.10411 9.39021 5.10411 10.0806C5.10411 10.7709 5.66375 11.3306 6.35411 11.3306H6.35421C7.04456 11.3306 7.60421 10.7709 7.60421 10.0806C7.60421 9.39021 7.04456 8.83057 6.35421 8.83057H6.35411ZM8.74994 10.0806C8.74994 9.39021 9.30959 8.83057 9.99994 8.83057H10C10.6904 8.83057 11.25 9.39021 11.25 10.0806C11.25 10.7709 10.6904 11.3306 10 11.3306H9.99994C9.30959 11.3306 8.74994 10.7709 8.74994 10.0806ZM13.6458 8.83057C12.9554 8.83057 12.3958 9.39021 12.3958 10.0806C12.3958 10.7709 12.9554 11.3306 13.6458 11.3306H13.6459C14.3362 11.3306 14.8959 10.7709 14.8959 10.0806C14.8959 9.39021 14.3362 8.83057 13.6459 8.83057H13.6458Z" fill="currentColor"/>
+										</svg>
+										Aide & FAQ
+									</a>
+								</nav>
+							</div>
+
+							<div>
+								<!-- User profile -->
+								<div class="pt-5 pb-3 px-3 rounded-2xl widget-bg">
+									<div class="flex items-center justify-between">
+										<div>
+											<p class="text-sm font-medium text-gray-800 dark:text-white/90">
+												{% if app.user %}
+													{{ app.user.firstName }}
+													{{ app.user.lastName }}
+												{% else %}
+													Invité
+												{% endif %}
+											</p>
+											<p class="text-sm text-gray-500 dark:text-gray-400">
+												{% if app.user %}
+													{{ app.user.email }}
+												{% else %}
+													Non connecté
+												{% endif %}
+											</p>
+										</div>
+										<div>
+											<span class="bg-white dark:bg-white/10 dark:text-white/70 px-2 py-0.5 text-xs font-medium rounded-full">Free</span>
+										</div>
+									</div>
+									<div class="mt-5">
+										<button class="new-chat-btn w-full bg-gray-800 dark:bg-white/15 dark:hover:bg-white/25 font-medium text-sm hover:bg-gray-950 transition text-white py-3 px-5 rounded-full mb-4 flex items-center justify-center	">
+											Mettre à niveau
+											<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewbox="0 0 18 18" fill="none">
+												<path d="M9.61054 2.0625L3.58887 10.5264H8.38943L8.38943 15.9375L14.4111 7.47361L9.61054 7.47361V2.0625Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+											</svg>
+										</button>
+									</div>
+								</div>
+								<div class="mt-3 px-3 text-center tracking-wide text-xs text-gray-400" x-data="{ currentYear: new Date().getFullYear() }">
+									&copy;
+									<span x-text="currentYear"></span>
+									Tous droits réservés
+								</div>
+							</div>
+						</div>
+					</div>
+				</aside>
+
+				<!-- Main Content Area -->
+				<main class="flex-1 bg-gray-50 dark:bg-gray-900 relative">
+					<div
+						class="max-w-full mx-auto overflow-x-hidden">
+						<!-- Chat Messages -->
+						<div
+							class="chat-messages p-5 py-12 md:px-12 max-h-[90vh] overflow-y-auto custom-scrollbar relative z-20"><!-- Chat messages will be dynamically appended here by JS -->
+						</div>
+
+						<!-- Chat Input -->
+						<div class="absolute bottom-0 left-0 z-30 right-0 p-4 md:px-12">
+							<form id="chat-form" class="flex items-center" data-agent="{{ agent|e('js') }}" data-user-id="{{ user_id|default(1) }}">
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.querySelector('.chat-messages');
+    const sendBtn = document.getElementById('chat-send-btn');
+
+    function formatMessage(text) {
+        // Simple formatting for agent messages
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold text
+            .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic text
+            .replace(/\n/g, '<br>') // Line breaks
+            .replace(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-xs">$1</code>'); // Code
+    }
+
+    function displayOfferCards(offers) {
+        const offersContainer = document.createElement('div');
+        offersContainer.className = 'flex justify-start mb-6';
+        offersContainer.innerHTML = `
+            <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg p-4 max-w-4xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    ${offers.map(offer => createOfferCard(offer)).join('')}
+                </div>
+            </div>
+        `;
+        chatMessages.appendChild(offersContainer);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function createOfferCard(offer) {
+        const destinations = offer.destinations.map(d => `${d.city} (${d.country})`).join(', ');
+        const highlights = offer.highlights.map(h => h.text).join(', ');
+        const imageUrl = offer.images && offer.images.length > 0 ? offer.images[0] : '/assets/images/placeholder-travel.svg';
+        
+        return `
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700">
+                <div class="relative">
+                    <img src="${imageUrl}" alt="${offer.product_name}" class="w-full h-48 object-cover" onerror="this.src='/assets/images/placeholder-travel.svg'">
+                    <div class="absolute top-2 right-2">
+                        <span class="bg-red-600 text-white text-xs px-2 py-1 rounded-full font-medium">
+                            ${offer.duration} jours
+                        </span>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 line-clamp-2">
+                        ${offer.product_name}
+                    </h3>
+                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-2">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        ${destinations}
+                    </div>
+                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-3">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        ${offer.departure_city}
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-3">
+                        ${offer.description}
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                            ${offer.offer_type}
+                        </span>
+                        <a href="${offer.price_url || '#'}" target="_blank" class="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded-lg transition-colors duration-200">
+                            Voir l'offre
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function appendMessage(text, from) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'flex ' + (from === 'user' ? 'justify-end' : 'justify-start') + ' mb-6';
+        
+        if (from === 'user') {
+            // User message - right aligned with red background (following chat.js design)
+            msgDiv.innerHTML = `
+                <div class="bg-chat-user shadow-theme-xs rounded-3xl rounded-tr-lg py-4 px-5 max-w-md" style="background-color: #8B0000 !important;">
+                    <p class="text-white dark:text-white/90 font-normal">
+                        ${text}
+                    </p>
+                </div>
+            `;
+        } else {
+            // Agent message - left aligned with white background (following chat.js design)
+            const formattedText = formatMessage(text);
+            msgDiv.innerHTML = `
+                <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl">
+                    <p class="text-gray-800 dark:text-white/90 font-normal">${formattedText}</p>
+                </div>
+            `;
+        }
+        
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function sendMessage() {
+        const userInput = chatInput.value.trim();
+        if (!userInput) return;
+        appendMessage(userInput, 'user');
+        chatInput.value = '';
+        sendBtn.disabled = true;
+        
+        // Show typing indicator
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'flex justify-start mb-6';
+        typingDiv.id = 'typing-indicator';
+        typingDiv.innerHTML = `
+            <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl flex items-center">
+                <span class="loader mr-4"></span>
+                <span class="text-gray-800 dark:text-white/90 font-normal">L'IA rédige...</span>
+            </div>
+        `;
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Try the integrated travel agent first
+        fetch('http://localhost:8000/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                message: userInput,
+                conversation_id: null,
+                user_id: null
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Travel agent not available');
+            }
+        })
+        .then(data => {
+            // Remove typing indicator
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            
+            // Check if we have offers to display
+            if (data.offers && data.offers.length > 0) {
+                appendMessage(data.response || 'Voici quelques offres qui correspondent à votre demande :', 'agent');
+                displayOfferCards(data.offers);
+            } else {
+                appendMessage(data.response || 'Bonjour! Je suis Layla, votre agent de voyage. Comment puis-je vous aider?', 'agent');
+            }
+        })
+        .catch(() => {
+            // Remove typing indicator
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            
+            // Fallback to Symfony chat endpoint
+            fetch('/chat/message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_input: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage(data.response || 'Erreur de l\'agent IA.', 'agent');
+            })
+            .catch(() => {
+                appendMessage('Erreur de connexion à l\'agent IA.', 'agent');
+            });
+        })
+        .finally(() => {
+            sendBtn.disabled = false;
+        });
+    }
+
+    chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        sendMessage();
+    });
+    sendBtn.addEventListener('click', function() {
+        sendMessage();
+    });
+    chatInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+});
+</script>
+								<div class="flex-1 relative">
+									<div class="absolute left-2 z-30 top-1/2 transform -translate-y-1/2 flex space-x-2">
+										<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewbox="0 0 36 36" fill="none">
+											<g filter="url(#filter0_d_11222_3164)">
+												<g filter="url(#filter1_i_11222_3164)">
+													<path fill-rule="evenodd" clip-rule="evenodd" d="M8.375 16C8.375 21.3157 12.6843 25.625 18 25.625C19.4865 25.625 20.8942 25.288 22.1511 24.6863C22.5831 24.4795 23.0725 24.4069 23.5351 24.5306L25.0102 24.9253C26.1728 25.2364 27.2364 24.1728 26.9254 23.0101L26.5307 21.5351C26.4069 21.0724 26.4795 20.583 26.6863 20.151C27.288 18.8942 27.625 17.4864 27.625 16C27.625 10.6842 23.3157 6.37495 18 6.37495C12.6843 6.37495 8.375 10.6842 8.375 16ZM22.2109 17.2031C21.5465 17.2031 21.0078 16.6644 21.0078 16C21.0078 15.3355 21.5465 14.7968 22.2109 14.7968C22.8754 14.7968 23.4141 15.3355 23.4141 16C23.4141 16.6644 22.8754 17.2031 22.2109 17.2031ZM18 17.2031C17.3355 17.2031 16.7969 16.6644 16.7969 16C16.7969 15.3355 17.3355 14.7968 18 14.7968C18.6645 14.7968 19.2031 15.3355 19.2031 16C19.2031 16.6644 18.6645 17.2031 18 17.2031ZM13.7891 17.2031C13.1246 17.2031 12.5859 16.6644 12.5859 16C12.5859 15.3355 13.1246 14.7968 13.7891 14.7968C14.4535 14.7968 14.9922 15.3355 14.9922 16C14.9922 16.6644 14.4535 17.2031 13.7891 17.2031Z" fill="url(#paint0_radial_11222_3164)"/>
+												</g>
+											</g>
+											<defs>
+												<filter id="filter0_d_11222_3164" x="-4" y="-4" width="44" height="44" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+													<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+													<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+													<feOffset dy="2"/>
+													<feGaussianBlur stddeviation="4"/>
+													<feComposite in2="hardAlpha" operator="out"/>
+													<feColorMatrix type="matrix" values="0 0 0 0 0.498039 0 0 0 0 0.407843 0 0 0 0 1 0 0 0 0.25 0"/>
+													<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_11222_3164"/>
+													<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_11222_3164" result="shape"/>
+												</filter>
+												<filter id="filter1_i_11222_3164" x="8.375" y="6.37495" width="20.7738" height="20.7738" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+													<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+													<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+													<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+													<feOffset dx="1.52381" dy="1.52381"/>
+													<feGaussianBlur stddeviation="1.14286"/>
+													<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+													<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"/>
+													<feBlend mode="normal" in2="shape" result="effect1_innerShadow_11222_3164"/>
+												</filter>
+												<radialGradient id="paint0_radial_11222_3164" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(17.1698 22.2201) rotate(-119.846) scale(19.0059)">
+													<stop stop-color="#8B0000"/>
+													<stop offset="1" stop-color="#DC2626"/>
+												</radialGradient>
+											</defs>
+										</svg>
+									</div>
+									<input id="chat-input" type="text" placeholder="Dites-moi où vous voulez partir ou ce que vous cherchez..." class="w-full p-4 pl-12 dark:text-white/90 focus:outline-0 placeholder:text-sm dark:placeholder:text-white/50 pr-28 backdrop-blur-[10px] dark:bg-white/5 dark:border-gray-600 rounded-full bg-white"/>
+									<div class="absolute right-2 top-1/2 transform -translate-y-1/2 flex space-x-2">
+										<button type="button" id="chat-send-btn" class="ml-2 w-10 h-10 flex hover:bg-primary-500 transition items-center justify-center dark:bg-white/30 bg-gray-800 rounded-full text-white">
+											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 20 20" fill="none">
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M17.4175 9.9986C17.4178 10.1909 17.3446 10.3832 17.198 10.53L12.2013 15.5301C11.9085 15.8231 11.4337 15.8233 11.1407 15.5305C10.8477 15.2377 10.8475 14.7629 11.1403 14.4699L14.8604 10.7472L3.33301 10.7472C2.91879 10.7472 2.58301 10.4114 2.58301 9.99715C2.58301 9.58294 2.91879 9.24715 3.33301 9.24715L14.8549 9.24715L11.1403 5.53016C10.8475 5.23717 10.8477 4.7623 11.1407 4.4695C11.4336 4.1767 11.9085 4.17685 12.2013 4.46984L17.1588 9.43049C17.3173 9.568 17.4175 9.77087 17.4175 9.99715C17.4175 9.99763 17.4175 9.99812 17.4175 9.9986Z" fill="currentColor"/>
+											</svg>
+										</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="overflow-hidden">
+						<img src="{{ asset('assets/images/gen-glow.png') }}" class="absolute bottom-0 w-full left-1/2 z-10 -translate-x-1/2" alt=""/>
+					</div>
+				</main>
+
+				<!-- Right Sidebar -->
+				{% set today = date('today') %}
+				{% set yesterday = date('yesterday') %}
+				{% set sevenDaysAgo = date('-7 days') %}
+				{% set conversationsToday = [] %}
+				{% set conversationsYesterday = [] %}
+				{% set conversationsPrevious = [] %}
+				{% for conv in conversations %}
+				  {% set startedAt = conv.startedAt %}
+				  {% if startedAt >= today %}
+				    {% set conversationsToday = conversationsToday|merge([conv]) %}
+				  {% elseif startedAt >= yesterday and startedAt < today %}
+				    {% set conversationsYesterday = conversationsYesterday|merge([conv]) %}
+				  {% elseif startedAt >= sevenDaysAgo and startedAt < yesterday %}
+				    {% set conversationsPrevious = conversationsPrevious|merge([conv]) %}
+				  {% endif %}
+				{% endfor %}
+				{% include 'chat/_sidebar.html.twig' with {
+				  'conversationsToday': conversationsToday,
+				  'conversationsYesterday': conversationsYesterday,
+				  'conversationsPrevious': conversationsPrevious,
+				  'agent': agent,
+				  'currentConversationId': currentConversationId
+				} %}
+			</div>
+
+			<!-- Backdrop for mobile sidebar -->
+			<div @click="sidebarOpen = false; rightSidebarOpen = false" class="fixed inset-0 z-30 bg-gray-900/50 transition-opacity lg:hidden" :class="{'opacity-100': sidebarOpen || rightSidebarOpen, 'opacity-0 pointer-events-none': !sidebarOpen && !rightSidebarOpen}"></div>
+		</main>
+
+
+		<script defer src="{{ asset('assets/js/alpine.min.js') }}"></script>
+		<script defer src="{{ asset('assets/js/glightbox.min.js') }}"></script>
+		<script defer src="{{ asset('assets/js/app.js') }}"></script>
+		<script defer src="{{ asset('assets/js/chat.js') }}"></script>
+	</body>
+
+	<!-- Mirrored from ai-agent.preview.uideck.com/text-generator by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 10 Jul 2025 08:11:36 GMT -->
+</html>

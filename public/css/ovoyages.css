@@ -1,0 +1,17 @@
+/* Ovoyages Theme */
+:root {
+    --primary-color: #00A699; /* A teal/turquoise color */
+    --user-message-bg: #E0F2F1; /* Lighter shade of primary */
+}
+
+body.ovoyages-theme .bg-primary-100 {
+    background-color: var(--user-message-bg);
+}
+
+body.ovoyages-theme .bg-primary-500 {
+    background-color: var(--primary-color);
+}
+
+body.ovoyages-theme .text-primary-500 {
+    color: var(--primary-color);
+} 

@@ -1,0 +1,118 @@
+{% extends 'base_auth.html.twig' %}
+{% block body %}
+        <section class="py-28 relative">
+          <div class="wrapper">
+            <div class="relative max-w-[600px] mx-auto">
+        <div class="contact-wrapper border p-14 relative z-30 bg-white dark:bg-dark-primary dark:border-dark-primary border-gray-100">
+                <div class="text-center mb-8">
+            <h3 class="text-gray-800 dark:text-white/90 font-bold text-3xl mb-2">Se connecter</h3>
+            <p class="text-gray-500 dark:text-gray-400">Entrez votre email et mot de passe pour vous connecter</p>
+                </div>
+          {% for message in app.flashes('notice') %}
+            <div class="mb-6 flex items-center justify-center">
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 text-red-700 text-sm font-medium shadow-sm border border-red-200">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M12 17a5 5 0 100-10 5 5 0 000 10z"/></svg>
+                {{ message }}
+              </div>
+            </div>
+          {% endfor %}
+          {% if error %}
+            <div class="mb-4 flex items-center justify-center">
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 text-red-700 text-sm font-medium shadow-sm border border-red-200">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M12 17a5 5 0 100-10 5 5 0 000 10z"/></svg>
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+              </div>
+            </div>
+          {% endif %}
+          <div class="flex flex-col sm:flex-row justify-center gap-5 mb-6">
+            <button class="bg-gray-100 w-full h-12 justify-center dark:hover:bg-white/10 dark:hover:text-white/90 dark:bg-white/5 transition dark:text-gray-400 font-normal text-sm hover:bg-gray-200 rounded-full text-gray-700 hover:text-gray-800 flex items-center gap-3 px-8 py-2.5">
+              <img src="{{ asset('assets/images/google.svg') }}" alt="Google" class="h-5 w-5" />
+                    Se connecter avec Google
+                  </button>
+            <button class="bg-gray-100 w-full h-12 justify-center dark:hover:bg-white/10 dark:hover:text-white/90 dark:bg-white/5 transition dark:text-gray-400 font-normal text-sm hover:bg-gray-200 rounded-full text-gray-700 hover:text-gray-800 flex items-center gap-3 px-8 py-2.5">
+              <img src="{{ asset('assets/images/x.svg') }}" alt="X" class="h-5 w-5" />
+              Se connecter avec X
+                  </button>
+                </div>
+                <div class="relative py-3 sm:py-5">
+                  <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-200 dark:border-gray-800"></div>
+                  </div>
+                  <div class="relative flex justify-center text-sm">
+              <span class="p-2 text-gray-400 bg-white dark:bg-dark-primary sm:px-5 sm:py-2">Ou</span>
+                  </div>
+                </div>
+          <form method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <div class="grid grid-cols-1 gap-5">
+                      <!-- Email -->
+      <div x-data="{ touched: false, valid: false, error: false, value: '{{ last_username|default('')|e('js') }}' }">
+        <label for="inputEmail" class="mb-1 block dark:text-gray-400 text-gray-700 font-medium text-sm">Adresse email</label>
+        <input type="email" id="inputEmail" name="email" required autofocus
+          x-model="value"
+          class="border w-full text-left text-sm dark:text-white/90 dark:placeholder:text-white/30 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:outline-0 h-12 shadow-theme-xs border-gray-300 rounded-full px-5 py-2.5"
+                        placeholder="Entrez votre adresse email"
+          @blur="touched = true"
+          @input="valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($event.target.value); error = !valid; value = $event.target.value;"
+          :class="{
+            'border-gray-300': !touched,
+            'border-green-500': touched && valid,
+            'border-red-500 bg-red-50 dark:bg-red-900': touched && error,
+            'focus:border-primary-500': true
+          }"
+          :aria-invalid="touched && error"
+          :aria-describedby="'login-email-error'"
+        >
+        <template x-if="touched && error && !valid">
+          <p id="login-email-error" class="text-xs text-red-500 mt-2">
+            Veuillez entrer une adresse email valide.
+          </p>
+        </template>
+      </div>
+      <!-- Password -->
+      <div x-data="{ touched: false, valid: false, error: false, value: '' }">
+        <label for="inputPassword" class="mb-1 block dark:text-gray-400 text-gray-700 font-medium text-sm">Mot de passe</label>
+        <input type="password" id="inputPassword" name="password" required
+          x-model="value"
+          class="border w-full text-sm pr-10 dark:text-white/90 dark:placeholder:text-white/30 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:outline-0 text-left h-12 shadow-theme-xs border-gray-300 rounded-full px-5 py-2.5"
+                          placeholder="Entrez votre mot de passe"
+          @blur="touched = true"
+          @input="valid = $event.target.value.length >= 6; error = !valid; value = $event.target.value;"
+          :class="{
+            'border-gray-300': !touched,
+            'border-green-500': touched && valid,
+            'border-red-500 bg-red-50 dark:bg-red-900': touched && error,
+            'focus:border-primary-500': true
+          }"
+          :aria-invalid="touched && error"
+          :aria-describedby="'login-password-error'"
+        >
+        <template x-if="touched && error && !valid">
+          <p id="login-password-error" class="text-xs text-red-500 mt-2">
+            Le mot de passe doit contenir au moins 6 caractères.
+          </p>
+        </template>
+                      </div>
+      <div class="flex justify-end mb-2">
+        <a href="{{ path('app_forgot_password') }}" class="text-sm text-primary-500 font-semibold hover:underline">Mot de passe oublié ?</a>
+                    </div>
+              <div class="flex items-center gap-2">
+                <input type="checkbox" id="remember_me" name="_remember_me" />
+                <label for="remember_me" class="text-sm text-gray-700 dark:text-gray-400">Remember me</label>
+                        </div>
+                      <div>
+                <button class="bg-primary-500 hover:bg-primary-600 transition py-3 px-6 w-full font-medium text-white text-sm rounded-full">Sign In</button>
+                    </div>
+                  </div>
+                </form>
+                <div class="mt-5">
+            <p class="text-gray-700 dark:text-gray-400 font-normal text-sm">
+              Don't have an account?
+              <a href="{{ path('app_register') }}" class="text-sm font-semibold text-primary-500">Sign Up</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+{% endblock %}

@@ -1,0 +1,82 @@
+<aside id="chat-sidebar" class="fixed inset-y-0 top-16 right-0 z-40 w-[288px] bg-[#e5e7eb] dark:bg-dark-primary border-l border-gray-100 dark:border-gray-800 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-auto translate-x-full" :class="{'translate-x-0': rightSidebarOpen, 'translate-x-full': !rightSidebarOpen}">
+    <div class="h-full flex flex-col p-6">
+        <div>
+            <!-- New Chat Button -->
+            <a href="{{ path('create_conversation_route') }}" class="new-chat-btn w-full bg-gray-800 dark:bg-white/15 dark:hover:bg-white/25 font-medium text-sm hover:bg-gray-950 transition text-white py-3 px-5 rounded-full mb-4 flex items-center justify-center">
+                Nouvelle Discussion
+            </a>
+
+            <!-- Search Bar -->
+            <div class="pb-6">
+                <div class="relative">
+                    <input type="text" placeholder="Rechercher" class="w-full py-2.5 px-4 pr-12 dark:text-white dark:focus:border-gray-600 border border-gray-200 rounded-full dark:bg-dark-primary bg-white focus:outline-none focus:border focus:border-gray-300 text-sm placeholder:text-sm placeholder:text-gray-500 dark:border-gray-700 dark:placeholder:text-white/30">
+                    <div class="absolute right-3.5 top-1/2 transform -translate-y-1/2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M2.58347 7.49905C2.58347 4.78457 4.78456 2.58374 7.50013 2.58374C10.2157 2.58374 12.4168 4.78457 12.4168 7.49905C12.4168 10.2135 10.2157 12.4144 7.50013 12.4144C4.78456 12.4144 2.58347 10.2135 2.58347 7.49905ZM7.50013 1.08374C3.95647 1.08374 1.08347 3.9558 1.08347 7.49905C1.08347 11.0423 3.95647 13.9144 7.50013 13.9144C9.00119 13.9144 10.3819 13.399 11.4749 12.5357L13.6356 14.6966C13.9285 14.9895 14.4034 14.9895 14.6963 14.6966C14.9892 14.4037 14.9892 13.9289 14.6963 13.636L12.5359 11.4754C13.4006 10.3823 13.9168 9.00095 13.9168 7.49905C13.9168 3.9558 11.0438 1.08374 7.50013 1.08374Z" fill="#98A2B3"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversation List -->
+        <div class="pb-5 overflow-y-auto custom-scrollbar pr-3">
+            {% for group in [
+              {'label': 'Aujourd\'hui', 'convs': conversationsToday},
+              {'label': 'Hier', 'convs': conversationsYesterday},
+              {'label': '7 derniers jours', 'convs': conversationsPrevious}
+            ] %}
+                {% if group.convs|length > 0 %}
+                    <div class="py-6 border-b dark:border-gray-800 border-gray-200">
+                        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 px-3">{{ group.label }}</h3>
+                        <div class="space-y-1 w-full">
+                            {% for conv in group.convs %}
+                                <div class="px-2">
+                                    <div class="chat-sidebar-item group flex items-center relative w-[calc(100%-4px)] mx-auto p-3 rounded-full transition z-0
+                                      {% if conv.id == currentConversationId %}bg-gray-200 text-gray-800{% else %}dark:hover:bg-white/5 hover:bg-gray-100 text-gray-800 dark:text-white/90{% endif %}" data-conversation-id="{{ conv.id }}">
+                                      <a href="{{ path('chat_agent', {'agent': agent, 'conversation_id': conv.id}) }}" class="flex-1 min-w-0 truncate font-medium text-sm block w-full h-full chat-title">
+                                        {{ conv.title ?? conv.preview|default('(Aucun message)') }}
+                                      </a>
+                                      <button type="button"
+                                        class="conv-menu-btn ml-2 p-1 rounded hover:bg-gray-300 dark:hover:bg-gray-700 transition z-20 relative"
+                                        data-action="menu"
+                                        tabindex="-1" style="pointer-events:auto;">
+                                        <svg width="20" height="20" fill="none"><circle cx="4" cy="10" r="2" fill="#888"/><circle cx="10" cy="10" r="2" fill="#888"/><circle cx="16" cy="10" r="2" fill="#888"/></svg>
+                                      </button>
+                                      <div class="menu-dropdown absolute right-0 top-10 bg-white border border-gray-200 rounded-xl shadow-lg min-w-[140px] z-50 flex-col py-2 hidden">
+                                        <button class="conv-menu-action flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-action="rename">
+                                          <svg width="16" height="16" class="mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                            <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                          </svg> Renommer
+                                        </button>
+                                        <button class="conv-menu-action flex items-center w-full px-4 py-2 text-sm text-red-700 dark:text-red-500 hover:bg-gray-100 hover:text-red-700 dark:hover:text-gray-100" data-action="delete" style="color: #dc2626 !important;">
+                                          <svg width="16" height="16" class="mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                            <path d="M3 6h18"/>
+                                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                            <line x1="10" y1="11" x2="10" y2="17"/>
+                                            <line x1="14" y1="11" x2="14" y2="17"/>
+                                          </svg> Supprimer
+                                        </button>
+                                      </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <!-- Show More Button -->
+            <div class="px-3 mt-5">
+                <button @click="showMoreHistory = !showMoreHistory" class="flex justify-between items-center text-primary-500 font-medium text-sm">
+                    <span x-text="showMoreHistory ? 'Afficher moins...' : 'Afficher plus...'">Afficher plus...</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3.83334 5.91673L8.00001 10.0834L12.1667 5.91673" stroke="#7A5AF8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</aside>
