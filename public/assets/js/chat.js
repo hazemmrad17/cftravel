@@ -5,6 +5,29 @@ let isSending = false;
 let eventListenersAttached = false;
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Cache input and button elements
+  const chatInputEl = document.querySelector('#chat-input');
+  const sendButtonEl = document.querySelector('#send-button');
+
+  // Add a visual indicator for the sending state
+  function updateSendStateIndicator() {
+    if (!sendButtonEl || !chatInputEl) {
+      console.warn('[DEBUG] DOM elements not found for updateSendStateIndicator');
+      return;
+    }
+    if (isSending) {
+      sendButtonEl.innerHTML = '<svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+      sendButtonEl.disabled = true;
+      chatInputEl.disabled = true;
+      chatInputEl.placeholder = 'En attente de la réponse...';
+    } else {
+      sendButtonEl.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>';
+      sendButtonEl.disabled = false;
+      chatInputEl.disabled = false;
+      chatInputEl.placeholder = 'Tapez votre message...';
+    }
+  }
+
   // Add custom styling for chat messages
   const style = document.createElement('style');
   style.innerHTML = `
@@ -168,8 +191,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!chatForm) return;
 
   const agent = chatForm.dataset.agent;
-  const chatInput = document.getElementById('chat-input');
-  const sendButton = document.getElementById('chat-send-btn');
   const chatArea = document.querySelector('.p-5.py-12');
   if (chatArea) {
     chatArea.classList.add('chat-area');
@@ -276,8 +297,8 @@ document.addEventListener('DOMContentLoaded', function() {
     showWelcomeMessage();
     
     // Focus on input
-    if (chatInput) {
-      chatInput.focus();
+    if (chatInputEl) {
+      chatInputEl.focus();
     }
   }
 
@@ -509,8 +530,8 @@ document.addEventListener('DOMContentLoaded', function() {
       console.warn('Failed to get welcome message from agent:', error);
       // Focus on input as fallback
       setTimeout(() => {
-        if (chatInput) {
-          chatInput.focus();
+        if (chatInputEl) {
+          chatInputEl.focus();
         }
       }, 500);
     });
@@ -587,67 +608,62 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // Update sendMessage to remove isSending logic and use cached elements
   async function sendMessage() {
-    const message = chatInput.value.trim();
-    if (!message) return;
-    
-    // Prevent multiple simultaneous sends with more robust checking
-    if (isSending) {
-      console.log('🚫 Message already being sent, ignoring new request');
+    const message = chatInputEl.value.trim();
+    console.log("[DEBUG] sendMessage called, message:", message, "this:", this);
+    if (!message) {
+      console.log("[DEBUG] Empty message, ignoring");
+      isSending = false;
+      sendButtonEl.disabled = false;
+      chatInputEl.disabled = false;
+      updateSendStateIndicator();
       return;
     }
-    
     console.log('🚀 Starting to send message:', message);
-    isSending = true;
     
-    // Add a safety timeout to reset the flag if something goes wrong
+    // Safety timeout to prevent permanent blocking
     const safetyTimeout = setTimeout(() => {
-      if (isSending) {
-        console.warn('⚠️ Safety timeout triggered, resetting send state');
-        isSending = false;
-        chatInput.disabled = false;
-        sendButton.disabled = false;
-        hideLoading();
-      }
-    }, 30000); // 30 seconds timeout
+      console.warn('⚠️ Safety timeout triggered, resetting send state');
+      resetSendState();
+    }, 60000); // 60 seconds timeout
     
-    // Disable input and button while sending
-    chatInput.disabled = true;
-    sendButton.disabled = true;
-    
-    const conversationId = getCurrentConversationId();
-    if (!conversationId) {
-      console.error('❌ No conversation ID available');
+    // Helper function to reset send state
+    function resetSendState() {
       isSending = false;
-      chatInput.disabled = false;
-      sendButton.disabled = false;
-      return;
+      sendButtonEl.disabled = false;
+      chatInputEl.disabled = false;
+      updateSendStateIndicator();
+      hideLoading();
+      clearTimeout(safetyTimeout);
     }
-    
-    // Save user message to database
-    const userMessageSaved = await saveMessageToDatabase(conversationId, message, 'user', 'user');
-    if (!userMessageSaved) {
-      console.error('❌ Failed to save user message');
-      isSending = false;
-      chatInput.disabled = false;
-      sendButton.disabled = false;
-      return;
-    }
-    
-    appendMessage(message, true, false, [], false); // No streaming for user messages
-    chatInput.value = '';
-    
-    // Remove any existing loading indicators before showing new one
-    hideLoading();
-    showLoading();
-    
-    // Clear input and focus for next message
-    setTimeout(() => {
-      chatInput.focus();
-    }, 100);
     
     try {
+      const conversationId = getCurrentConversationId();
+      if (!conversationId) {
+        console.error('❌ No conversation ID available');
+        resetSendState();
+        return;
+      }
+      
+      // Save user message to database
+      const userMessageSaved = await saveMessageToDatabase(conversationId, message, 'user', 'user');
+      if (!userMessageSaved) {
+        console.error('❌ Failed to save user message');
+        resetSendState();
+        return;
+      }
+      
+      // Display user message immediately
+      appendMessage(message, true, false, [], false);
+      chatInputEl.value = '';
+      
+      // Show loading indicator
+      hideLoading(); // Clear any existing
+      showLoading();
+      
       console.log('📡 Attempting streaming request...');
+      
       // Try streaming first, fallback to regular API
       const streamResponse = await fetch(`/chat/stream`, {
         method: 'POST',
@@ -663,14 +679,14 @@ document.addEventListener('DOMContentLoaded', function() {
       
       if (streamResponse.ok) {
         console.log('✅ Streaming response received, processing...');
-        // Use streaming response
-        const reader = streamResponse.body.getReader();
-        const decoder = new TextDecoder();
-        let assistantMessage = '';
         
         // Remove loading indicator and create assistant message element for streaming
         hideLoading();
         const assistantMessageElement = appendMessage('', false, false, [], true);
+        
+        const reader = streamResponse.body.getReader();
+        const decoder = new TextDecoder();
+        let assistantMessage = '';
         
         try {
           while (true) {
@@ -689,10 +705,8 @@ document.addEventListener('DOMContentLoaded', function() {
                   
                   if (data.type === 'content' && data.chunk) {
                     assistantMessage += data.chunk;
-                    // Update the message element with new content
                     updateStreamingMessage(assistantMessageElement, assistantMessage);
                   } else if (data.type === 'end') {
-                    // Streaming finished
                     console.log('✅ Streaming completed');
                     finalizeStreamingMessage(assistantMessageElement, assistantMessage);
                     
@@ -701,10 +715,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (!assistantMessageSaved) {
                       console.error('❌ Failed to save assistant message');
                     }
+                    
+                    // UNBLOCK UI ONLY AFTER COMPLETE RESPONSE
+                    resetSendState();
+                    chatInputEl && chatInputEl.focus();
                     return;
                   } else if (data.type === 'error') {
                     console.error('❌ Streaming error:', data.error);
                     appendMessage('Désolé, je rencontre des difficultés techniques. Veuillez réessayer.', false, true, [], false);
+                    resetSendState();
                     return;
                   }
                 } catch (e) {
@@ -718,6 +737,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       } else {
         console.log('⚠️ Streaming failed, falling back to regular API');
+        
         // Fallback to regular API
         const resp = await fetch(`/chat/message`, {
           method: 'POST',
@@ -732,6 +752,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         hideLoading();
+        
         if (resp.ok) {
           const data = await resp.json();
           
@@ -746,28 +767,23 @@ document.addEventListener('DOMContentLoaded', function() {
           
           // Check if we have offers to display
           if (data.offers && data.offers.length > 0) {
-            appendMessage(assistantMessage, false, false, [], false); // No streaming for offer messages
+            appendMessage(assistantMessage, false, false, [], false);
             displayOfferCards(data.offers);
           } else {
-            appendMessage(assistantMessage, false, false, [], false); // No streaming for fallback responses
+            appendMessage(assistantMessage, false, false, [], false);
           }
         } else {
           appendMessage('Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants.', false, true, [], false);
         }
+        
+        // UNBLOCK UI ONLY AFTER COMPLETE RESPONSE
+        resetSendState();
+        chatInputEl && chatInputEl.focus();
       }
     } catch (e) {
       console.error('❌ Error in sendMessage:', e);
-      hideLoading();
       appendMessage('Désolé, il y a eu un problème de connexion. Veuillez vérifier votre connexion internet et réessayer.', false, true, [], false);
-    } finally {
-      console.log('🔄 Resetting send state');
-      // Clear the safety timeout
-      clearTimeout(safetyTimeout);
-      // Re-enable input and button and reset sending flag
-      isSending = false;
-      chatInput.disabled = false;
-      sendButton.disabled = false;
-      chatInput.focus();
+      resetSendState();
     }
   }
 
@@ -780,8 +796,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add some initial focus and setup
     setTimeout(() => {
-      if (chatInput && !getCurrentConversationId()) {
-        chatInput.focus();
+      if (chatInputEl && !getCurrentConversationId()) {
+        chatInputEl.focus();
       }
     }, 1000);
   })();
@@ -794,43 +810,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Only attach event listeners once
   if (!eventListenersAttached) {
+    console.log("[DEBUG] Attaching chat event listeners");
     chatForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      if (!isSending) {
-        sendMessage();
-      } else {
-        console.log('🚫 Send blocked - message already being processed');
-        // Add visual feedback
-        sendButton.style.opacity = '0.5';
-        setTimeout(() => {
-          sendButton.style.opacity = '1';
-        }, 500);
-      }
+      if (isSending) return;
+      isSending = true;
+      sendButtonEl.disabled = true;
+      chatInputEl.disabled = true;
+      updateSendStateIndicator();
+      sendMessage();
     });
 
-    sendButton.addEventListener('click', function(e) {
+    sendButtonEl.addEventListener('click', function(e) {
       e.preventDefault();
-      if (!isSending) {
-        sendMessage();
-      } else {
-        console.log('🚫 Send blocked - message already being processed');
-        // Add visual feedback
-        sendButton.style.opacity = '0.5';
-        setTimeout(() => {
-          sendButton.style.opacity = '1';
-        }, 500);
-      }
+      if (isSending) return;
+      isSending = true;
+      sendButtonEl.disabled = true;
+      chatInputEl.disabled = true;
+      updateSendStateIndicator();
+      sendMessage();
     });
 
-    // Add keyboard shortcuts
-    chatInput.addEventListener('keydown', function(e) {
+    chatInputEl.addEventListener('keydown', function(e) {
+      // HARD BLOCK: Prevent Enter if sending or input is disabled
+      if (isSending || chatInputEl.disabled) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+      }
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        if (!isSending) {
-          sendMessage();
-        } else {
-          console.log('🚫 Send blocked - message already being processed');
-        }
+        if (isSending) return;
+        isSending = true;
+        sendButtonEl.disabled = true;
+        chatInputEl.disabled = true;
+        updateSendStateIndicator();
+        sendMessage();
       }
     });
     
