@@ -8,7 +8,7 @@
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<link rel="icon" href="{{ asset('assets/images/favicon.png') }}"/>
-		<title>Layla - Agent de Voyage IA | Planification de Voyages Intelligente</title>
+		<title>ASIA.fr Agent - Spécialiste de Voyages Asiatiques | Planification Intelligente</title>
 		<link rel="stylesheet" href="{{ asset('assets/css/output.css') }}"/>
 		<style>
 			.line-clamp-2 {
@@ -399,205 +399,13 @@
 
 						<!-- Chat Input -->
 						<div class="absolute bottom-0 left-0 z-30 right-0 p-4 md:px-12">
+							<!-- Temporary Reset Button for Debugging -->
+							<div class="mb-2 text-center">
+								<button type="button" onclick="resetChatState()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm">
+									🔄 Reset Chat State
+								</button>
+							</div>
 							<form id="chat-form" class="flex items-center" data-agent="{{ agent|e('js') }}" data-user-id="{{ user_id|default(1) }}">
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const chatForm = document.getElementById('chat-form');
-    const chatInput = document.getElementById('chat-input');
-    const chatMessages = document.querySelector('.chat-messages');
-    const sendBtn = document.getElementById('chat-send-btn');
-
-    function formatMessage(text) {
-        // Simple formatting for agent messages
-        return text
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold text
-            .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic text
-            .replace(/\n/g, '<br>') // Line breaks
-            .replace(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-xs">$1</code>'); // Code
-    }
-
-    function displayOfferCards(offers) {
-        const offersContainer = document.createElement('div');
-        offersContainer.className = 'flex justify-start mb-6';
-        offersContainer.innerHTML = `
-            <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg p-4 max-w-4xl">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    ${offers.map(offer => createOfferCard(offer)).join('')}
-                </div>
-            </div>
-        `;
-        chatMessages.appendChild(offersContainer);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function createOfferCard(offer) {
-        const destinations = offer.destinations.map(d => `${d.city} (${d.country})`).join(', ');
-        const highlights = offer.highlights.map(h => h.text).join(', ');
-        const imageUrl = offer.images && offer.images.length > 0 ? offer.images[0] : '/assets/images/placeholder-travel.svg';
-        
-        return `
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700">
-                <div class="relative">
-                    <img src="${imageUrl}" alt="${offer.product_name}" class="w-full h-48 object-cover" onerror="this.src='/assets/images/placeholder-travel.svg'">
-                    <div class="absolute top-2 right-2">
-                        <span class="bg-red-600 text-white text-xs px-2 py-1 rounded-full font-medium">
-                            ${offer.duration} jours
-                        </span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 line-clamp-2">
-                        ${offer.product_name}
-                    </h3>
-                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-2">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        ${destinations}
-                    </div>
-                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-3">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        ${offer.departure_city}
-                    </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-3">
-                        ${offer.description}
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                            ${offer.offer_type}
-                        </span>
-                        <a href="${offer.price_url || '#'}" target="_blank" class="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded-lg transition-colors duration-200">
-                            Voir l'offre
-                        </a>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    function appendMessage(text, from) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'flex ' + (from === 'user' ? 'justify-end' : 'justify-start') + ' mb-6';
-        
-        if (from === 'user') {
-            // User message - right aligned with red background (following chat.js design)
-            msgDiv.innerHTML = `
-                <div class="bg-chat-user shadow-theme-xs rounded-3xl rounded-tr-lg py-4 px-5 max-w-md" style="background-color: #8B0000 !important;">
-                    <p class="text-white dark:text-white/90 font-normal">
-                        ${text}
-                    </p>
-                </div>
-            `;
-        } else {
-            // Agent message - left aligned with white background (following chat.js design)
-            const formattedText = formatMessage(text);
-            msgDiv.innerHTML = `
-                <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl">
-                    <p class="text-gray-800 dark:text-white/90 font-normal">${formattedText}</p>
-                </div>
-            `;
-        }
-        
-        chatMessages.appendChild(msgDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function sendMessage() {
-        const userInput = chatInput.value.trim();
-        if (!userInput) return;
-        appendMessage(userInput, 'user');
-        chatInput.value = '';
-        sendBtn.disabled = true;
-        
-        // Show typing indicator
-        const typingDiv = document.createElement('div');
-        typingDiv.className = 'flex justify-start mb-6';
-        typingDiv.id = 'typing-indicator';
-        typingDiv.innerHTML = `
-            <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl flex items-center">
-                <span class="loader mr-4"></span>
-                <span class="text-gray-800 dark:text-white/90 font-normal">L'IA rédige...</span>
-            </div>
-        `;
-        chatMessages.appendChild(typingDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-
-        // Try the integrated travel agent first
-        fetch('http://localhost:8000/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                message: userInput,
-                conversation_id: null,
-                user_id: null
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Travel agent not available');
-            }
-        })
-        .then(data => {
-            // Remove typing indicator
-            const typingIndicator = document.getElementById('typing-indicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
-            }
-            
-            // Check if we have offers to display
-            if (data.offers && data.offers.length > 0) {
-                appendMessage(data.response || 'Voici quelques offres qui correspondent à votre demande :', 'agent');
-                displayOfferCards(data.offers);
-            } else {
-                appendMessage(data.response || 'Bonjour! Je suis Layla, votre agent de voyage. Comment puis-je vous aider?', 'agent');
-            }
-        })
-        .catch(() => {
-            // Remove typing indicator
-            const typingIndicator = document.getElementById('typing-indicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
-            }
-            
-            // Fallback to Symfony chat endpoint
-            fetch('/chat/message', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_input: userInput })
-            })
-            .then(response => response.json())
-            .then(data => {
-                appendMessage(data.response || 'Erreur de l\'agent IA.', 'agent');
-            })
-            .catch(() => {
-                appendMessage('Erreur de connexion à l\'agent IA.', 'agent');
-            });
-        })
-        .finally(() => {
-            sendBtn.disabled = false;
-        });
-    }
-
-    chatForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        sendMessage();
-    });
-    sendBtn.addEventListener('click', function() {
-        sendMessage();
-    });
-    chatInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-        }
-    });
-});
-</script>
 								<div class="flex-1 relative">
 									<div class="absolute left-2 z-30 top-1/2 transform -translate-y-1/2 flex space-x-2">
 										<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewbox="0 0 36 36" fill="none">
@@ -634,9 +442,9 @@ document.addEventListener('DOMContentLoaded', function() {
 											</defs>
 										</svg>
 									</div>
-									<input id="chat-input" type="text" placeholder="Dites-moi où vous voulez partir ou ce que vous cherchez..." class="w-full p-4 pl-12 dark:text-white/90 focus:outline-0 placeholder:text-sm dark:placeholder:text-white/50 pr-28 backdrop-blur-[10px] dark:bg-white/5 dark:border-gray-600 rounded-full bg-white"/>
+									<input id="chat-input" type="text" placeholder="Dites-moi où vous voulez partir ou ce que vous cherchez..." class="w-full p-4 pl-12 dark:text-white/90 focus:outline-0 placeholder:text-sm dark:placeholder:text-white/50 pr-28 backdrop-blur-[10px] dark:bg-white/5 dark:border-gray-600 rounded-full bg-white" autocomplete="off"/>
 									<div class="absolute right-2 top-1/2 transform -translate-y-1/2 flex space-x-2">
-										<button type="button" id="chat-send-btn" class="ml-2 w-10 h-10 flex hover:bg-primary-500 transition items-center justify-center dark:bg-white/30 bg-gray-800 rounded-full text-white">
+										<button type="submit" id="chat-send-btn" class="ml-2 w-10 h-10 flex hover:bg-primary-500 transition items-center justify-center dark:bg-white/30 bg-gray-800 rounded-full text-white">
 											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 20 20" fill="none">
 												<path fill-rule="evenodd" clip-rule="evenodd" d="M17.4175 9.9986C17.4178 10.1909 17.3446 10.3832 17.198 10.53L12.2013 15.5301C11.9085 15.8231 11.4337 15.8233 11.1407 15.5305C10.8477 15.2377 10.8475 14.7629 11.1403 14.4699L14.8604 10.7472L3.33301 10.7472C2.91879 10.7472 2.58301 10.4114 2.58301 9.99715C2.58301 9.58294 2.91879 9.24715 3.33301 9.24715L14.8549 9.24715L11.1403 5.53016C10.8475 5.23717 10.8477 4.7623 11.1407 4.4695C11.4336 4.1767 11.9085 4.17685 12.2013 4.46984L17.1588 9.43049C17.3173 9.568 17.4175 9.77087 17.4175 9.99715C17.4175 9.99763 17.4175 9.99812 17.4175 9.9986Z" fill="currentColor"/>
 											</svg>

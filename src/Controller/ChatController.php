@@ -20,7 +20,7 @@ class ChatController extends AbstractController
     {
         $this->httpClient = $httpClient;
         $this->logger = $logger;
-        $this->agentApiUrl = $_ENV['AGENT_API_URL'] ?? 'http://localhost:8000';
+        $this->agentApiUrl = $_ENV['AGENT_API_URL'] ?? 'http://localhost:8001';
     }
 
     #[Route('/', name: 'app_home')]

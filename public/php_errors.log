@@ -1,0 +1,2 @@
+[08-Aug-2025 12:42:29 Europe/Berlin] Attempting to connect to: http://127.0.0.1:8000/welcome
+[08-Aug-2025 12:42:31 Europe/Berlin] Error connecting to API: Failed to connect to 127.0.0.1 port 8000 after 2043 ms: Couldn't connect to server for "http://127.0.0.1:8000/welcome".

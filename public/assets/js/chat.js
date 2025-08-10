@@ -1,30 +1,106 @@
 // Chat logic with session and conversation state management
 
-// Global flag to prevent multiple simultaneous sends
-let isSending = false;
+  // API Configuration
+  const API_BASE_URL = 'http://localhost:8001'; // Python API directly
+
+// Global flags to track message states
+let isSending = false;         // User is sending a message
+let isAITyping = false;        // AI is currently streaming a response
 let eventListenersAttached = false;
+
+// Global reset function (will be defined inside DOMContentLoaded)
+let resetChatState = null;
 
 document.addEventListener('DOMContentLoaded', function() {
   // Cache input and button elements
-  const chatInputEl = document.querySelector('#chat-input');
-  const sendButtonEl = document.querySelector('#send-button');
-
-  // Add a visual indicator for the sending state
-  function updateSendStateIndicator() {
-    if (!sendButtonEl || !chatInputEl) {
-      console.warn('[DEBUG] DOM elements not found for updateSendStateIndicator');
-      return;
+  let chatInputEl = document.querySelector('#chat-input');
+  let sendButtonEl = document.querySelector('#chat-send-btn');
+  
+  // Function to reset chat state (for debugging)
+  resetChatState = function() {
+    console.log('[DEBUG] Resetting chat state');
+    isSending = false;
+    isAITyping = false;
+    updateSendStateIndicator();
+    hideLoading();
+  };
+  
+  // Make reset function available globally for debugging
+  window.resetChatState = resetChatState;
+  
+  // Function to safely get DOM elements with error handling
+  function getChatElements() {
+    if (!chatInputEl) chatInputEl = document.querySelector('#chat-input');
+    if (!sendButtonEl) sendButtonEl = document.querySelector('#chat-send-btn');
+    
+    if (!chatInputEl || !sendButtonEl) {
+      console.error('Could not find chat input or send button elements');
+      return false;
     }
-    if (isSending) {
-      sendButtonEl.innerHTML = '<svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
-      sendButtonEl.disabled = true;
+    return true;
+  }
+
+    // Update the visual state of the chat interface
+  function updateSendStateIndicator() {
+    if (!getChatElements()) return;
+    
+    // Block input and show appropriate state when AI is typing
+    if (isAITyping || isSending) {
+      // Disable the input field completely
       chatInputEl.disabled = true;
-      chatInputEl.placeholder = 'En attente de la réponse...';
+      chatInputEl.readOnly = true;
+      chatInputEl.style.pointerEvents = 'none';
+      chatInputEl.style.opacity = '0.6';
+      chatInputEl.placeholder = 'Veuillez patienter...';
+      
+      // Add overlay to block any clicks
+      if (!document.getElementById('chat-input-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.id = 'chat-input-overlay';
+        overlay.style.position = 'absolute';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.right = '0';
+        overlay.style.bottom = '0';
+        overlay.style.zIndex = '1000';
+        overlay.style.cursor = 'not-allowed';
+        overlay.style.backgroundColor = 'transparent';
+        chatInputEl.parentNode.style.position = 'relative';
+        chatInputEl.parentNode.appendChild(overlay);
+      }
+      
+      // Disable the send button
+      if (sendButtonEl) {
+        sendButtonEl.disabled = true;
+        sendButtonEl.style.pointerEvents = 'none';
+        sendButtonEl.style.opacity = '0.6';
+      }
+      
+      // Update button state
+      updateButtonIcon();
     } else {
-      sendButtonEl.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>';
-      sendButtonEl.disabled = false;
+      // Re-enable input when AI is not typing
       chatInputEl.disabled = false;
-      chatInputEl.placeholder = 'Tapez votre message...';
+      chatInputEl.readOnly = false;
+      chatInputEl.style.pointerEvents = 'auto';
+      chatInputEl.style.opacity = '1';
+      chatInputEl.placeholder = 'Dites-moi où vous voulez partir ou ce que vous cherchez...';
+      
+      // Re-enable the send button
+      if (sendButtonEl) {
+        sendButtonEl.disabled = false;
+        sendButtonEl.style.pointerEvents = 'auto';
+        sendButtonEl.style.opacity = '1';
+      }
+      
+      // Remove overlay if it exists
+      const overlay = document.getElementById('chat-input-overlay');
+      if (overlay && overlay.parentNode) {
+        overlay.parentNode.removeChild(overlay);
+      }
+      
+      // Update button state
+      updateButtonIcon();
     }
   }
 
@@ -33,37 +109,70 @@ document.addEventListener('DOMContentLoaded', function() {
   style.innerHTML = `
     .loader { 
       border: 3px solid #f3f3f3; 
-      border-top: 3px solid #7F68FF; 
+      border-top: 3px solid #dc2626; 
       border-radius: 50%; 
       width: 18px; 
       height: 18px; 
       animation: spin 1s linear infinite; 
       display: inline-block; 
     } 
-    @keyframes spin { 
-      0% { transform: rotate(0deg); } 
-      100% { transform: rotate(360deg); } 
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-
-    .chat-area {
-      scroll-behavior: smooth;
+    
+    .line-clamp-1 {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
-
-    .chat-messages {
-      scroll-behavior: smooth;
+    
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
-    .chat-messages::-webkit-scrollbar {
-      width: 6px;
+    
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
-    .chat-messages::-webkit-scrollbar-track {
-      background: transparent;
+    
+    .backdrop-blur-sm {
+      backdrop-filter: blur(4px);
     }
-    .chat-messages::-webkit-scrollbar-thumb {
-      background: rgba(156, 163, 175, 0.5);
-      border-radius: 3px;
+    
+    .transform {
+      transform: translateZ(0);
     }
-    .chat-messages::-webkit-scrollbar-thumb:hover {
-      background: rgba(156, 163, 175, 0.8);
+    
+    .hover\\:-translate-y-1:hover {
+      transform: translateY(-0.25rem);
+    }
+    
+    .hover\\:scale-105:hover {
+      transform: scale(1.05);
+    }
+    
+    .hover\\:scale-110:hover {
+      transform: scale(1.1);
+    }
+    
+    .group:hover .group-hover\\:opacity-30 {
+      opacity: 0.3;
+    }
+    
+    .group:hover .group-hover\\:text-blue-600 {
+      color: #2563eb;
+    }
+    
+    .dark .group:hover .group-hover\\:text-blue-400 {
+      color: #60a5fa;
     }
   `;
   document.head.appendChild(style);
@@ -304,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   async function clearMemory() {
     try {
-      const response = await fetch('/chat/memory/clear', {
+      const response = await fetch(`${API_BASE_URL}/memory/clear`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -370,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <strong style="font-size: 1.1em;">${offer.product_name || ''}</strong><br>
             ${highlightsHtml}
             <span>${offer.description || ''}</span><br>
-            <a href="${offer.price_url || '#'}" target="_blank" style="color: #7F68FF; text-decoration: none; font-weight: 500;">Voir l'offre</a>
+                            <a href="${offer.price_url || '#'}" target="_blank" style="color: #dc2626; text-decoration: none; font-weight: 500;">Voir l'offre</a>
           </div>
         `;
         chatArea.appendChild(offerDiv);
@@ -462,9 +571,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const offersContainer = document.createElement('div');
     offersContainer.className = 'flex justify-start mb-6';
     offersContainer.innerHTML = `
-      <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg p-4 max-w-4xl">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          ${offers.map(offer => createOfferCard(offer)).join('')}
+      <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg p-6 max-w-6xl">
+        <div class="mb-6">
+          <div class="flex items-center mb-3">
+            <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mr-3">
+              <span class="text-white text-sm font-bold">ASIA</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Voyages recommandés</h3>
+          </div>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Voici les 3 meilleures offres qui correspondent parfaitement à vos préférences</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          ${offers.map((offer, index) => createOfferCard(offer, index)).join('')}
         </div>
       </div>
     `;
@@ -472,90 +590,495 @@ document.addEventListener('DOMContentLoaded', function() {
     chatArea.scrollTop = chatArea.scrollHeight;
   }
 
-  function createOfferCard(offer) {
+  function createOfferCard(offer, index) {
     const destinations = offer.destinations.map(d => `${d.city} (${d.country})`).join(', ');
     const highlights = offer.highlights.map(h => h.text).join(', ');
     const imageUrl = offer.images && offer.images.length > 0 ? offer.images[0] : '/assets/images/placeholder-travel.svg';
     
+    // Generate a beautiful gradient based on index
+    const gradients = [
+      'from-blue-500 to-purple-600',
+      'from-green-500 to-blue-600', 
+      'from-orange-500 to-red-600',
+      'from-purple-500 to-pink-600',
+      'from-teal-500 to-green-600'
+    ];
+    const gradient = gradients[index % gradients.length];
+    
     return `
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700">
+      <div class="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 hover:scale-105">
         <div class="relative">
-          <img src="${imageUrl}" alt="${offer.product_name}" class="w-full h-48 object-cover" onerror="this.src='/assets/images/placeholder-travel.svg'">
-          <div class="absolute top-2 right-2">
-            <span class="bg-red-600 text-white text-xs px-2 py-1 rounded-full font-medium">
+          <div class="absolute inset-0 bg-gradient-to-br ${gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
+          <img src="${imageUrl}" alt="${offer.product_name}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.src='/assets/images/placeholder-travel.svg'">
+          
+          <!-- Duration badge -->
+          <div class="absolute top-4 right-4">
+            <span class="bg-white/95 backdrop-blur-sm text-gray-900 text-sm px-4 py-2 rounded-full font-bold shadow-xl">
               ${offer.duration} jours
             </span>
           </div>
+          
+          <!-- Rating -->
+          <div class="absolute bottom-4 left-4">
+            <div class="flex items-center bg-white/95 backdrop-blur-sm px-3 py-2 rounded-full shadow-xl">
+              <div class="flex text-yellow-400 text-sm">
+                ${'★'.repeat(4)}${'☆'.repeat(1)}
+              </div>
+              <span class="text-sm text-gray-700 ml-2 font-bold">4.8</span>
+            </div>
+          </div>
+          
+          <!-- ASIA.fr Badge -->
+          <div class="absolute top-4 left-4">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs px-3 py-1 rounded-full font-bold shadow-xl">
+              ASIA.fr
+            </div>
+          </div>
         </div>
-        <div class="p-4">
-          <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 line-clamp-2">
+        
+        <div class="p-6">
+          <!-- Title -->
+          <h3 class="font-bold text-xl text-gray-900 dark:text-white mb-4 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
             ${offer.product_name}
           </h3>
-          <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-2">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          
+          <!-- Destinations -->
+          <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-4">
+            <svg class="w-5 h-5 mr-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
             </svg>
-            ${destinations}
+            <span class="line-clamp-1 font-medium">${destinations}</span>
           </div>
-          <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-3">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          
+          <!-- Departure -->
+          <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-4">
+            <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
-            ${offer.departure_city}
+            <span class="font-medium">Départ: ${offer.departure_city}</span>
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-3">
+          
+          <!-- Description -->
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-5 line-clamp-3 leading-relaxed">
             ${offer.description}
           </p>
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-              ${offer.offer_type}
-            </span>
-            <a href="${offer.price_url || '#'}" target="_blank" class="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded-lg transition-colors duration-200">
-              Voir l'offre
-            </a>
+          
+          <!-- Highlights -->
+          <div class="mb-5">
+            <div class="flex flex-wrap gap-2">
+              ${offer.highlights.slice(0, 3).map(highlight => `
+                <span class="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-800 dark:text-blue-300 text-xs px-3 py-2 rounded-full font-medium shadow-sm">
+                  ${highlight.text}
+                </span>
+              `).join('')}
+            </div>
+          </div>
+          
+          <!-- AI Reasoning (if available) -->
+          ${offer.ai_reasoning ? `
+            <div class="mb-5 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border-l-4 border-blue-400">
+              <div class="flex items-center mb-3">
+                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+                <span class="text-sm font-bold text-blue-800 dark:text-blue-200">Pourquoi cette offre vous convient</span>
+              </div>
+              <p class="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">${offer.ai_reasoning}</p>
+              ${offer.match_score ? `
+                <div class="mt-3 flex items-center">
+                  <div class="flex-1 bg-blue-200 dark:bg-blue-700 rounded-full h-2">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-500" style="width: ${offer.match_score * 100}%"></div>
+                  </div>
+                  <span class="ml-3 text-xs text-blue-800 dark:text-blue-200 font-bold">${Math.round(offer.match_score * 100)}% match</span>
+                </div>
+              ` : ''}
+            </div>
+          ` : ''}
+          
+          <!-- Features -->
+          <div class="mb-5">
+            <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="font-medium">Inclus: Transport, Hôtel, Guide, Repas</span>
+            </div>
+          </div>
+          
+          <!-- Price and Action -->
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              <span class="font-bold text-green-600 text-lg">€€€</span>
+              <span class="ml-2">Petit groupe • Premium</span>
+            </div>
+            <div class="flex gap-3">
+              <button onclick="showDetailedProgram('${offer.reference}')" class="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-sm px-4 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
+                Programme détaillé
+              </button>
+              <button onclick="showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm px-5 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
+                Voir détails
+              </button>
+            </div>
           </div>
         </div>
       </div>
     `;
   }
 
-  function showWelcomeMessage() {
-    // Get welcome message from agent and display it
-    getWelcomeMessageFromAgent().then(welcomeMessage => {
-      if (welcomeMessage) {
-        appendMessage(welcomeMessage, false, false, [], false);
-      }
-    }).catch(error => {
-      console.warn('Failed to get welcome message from agent:', error);
-      // Focus on input as fallback
-      setTimeout(() => {
-        if (chatInputEl) {
-          chatInputEl.focus();
-        }
-      }, 500);
-    });
+  function showOfferDetails(offerReference) {
+    // Create a modal with detailed offer information
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+    modal.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">Détails de l'offre</h2>
+          <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="space-y-4">
+          <p class="text-gray-600 dark:text-gray-400">Référence: ${offerReference}</p>
+          <p class="text-gray-600 dark:text-gray-400">Cette fonctionnalité sera bientôt disponible pour afficher tous les détails de l'offre.</p>
+        </div>
+        <div class="mt-6 flex justify-end space-x-3">
+          <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
+            Fermer
+          </button>
+          <button onclick="bookOffer('${offerReference}')" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-200">
+            Réserver
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
   }
 
-  async function getWelcomeMessageFromAgent() {
+  function bookOffer(offerReference) {
+    // Placeholder for booking functionality
+    alert(`Réservation pour l'offre ${offerReference} - Cette fonctionnalité sera bientôt disponible!`);
+  }
+
+  function showDetailedProgram(offerReference) {
+    // Send a message to get the detailed program
+    const message = `Montrez-moi le programme détaillé de l'offre ${offerReference}`;
+    
+    // Add the message to the chat
+    appendMessage(message, true);
+    
+    // Send the message to get detailed program
+    sendMessageWithDetailedProgram(message, offerReference);
+  }
+
+  async function sendMessageWithDetailedProgram(message, offerReference) {
+    const { chatInput, sendButton } = getChatElements();
+    
     try {
-      const response = await fetch('/chat/welcome', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
+      // Disable input and show loading
+      chatInput.disabled = true;
+      sendButton.disabled = true;
       
-      if (response.ok) {
-        const data = await response.json();
-        return data.message;
+      const response = await fetch(`${API_BASE_URL}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+          message: message,
+          conversation_id: getCurrentConversationId()
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.status === 'success') {
+        // Add AI response
+        appendMessage(data.response, false);
+        
+        // Display detailed program if available
+        if (data.detailed_program) {
+          displayDetailedProgram(data.detailed_program);
+        }
       } else {
-        console.warn('Failed to get welcome message:', response.status);
-        return null;
+        appendMessage('Désolé, je rencontre des difficultés techniques. Veuillez réessayer.', false, true);
       }
     } catch (error) {
-      console.warn('Error getting welcome message:', error);
-      return null;
+      console.error('Error:', error);
+      appendMessage('Désolé, je rencontre des difficultés techniques. Veuillez réessayer.', false, true);
+    } finally {
+      // Re-enable input
+      chatInput.disabled = false;
+      sendButton.disabled = false;
+      chatInput.focus();
     }
   }
+
+  function displayDetailedProgram(program) {
+    const programContainer = document.createElement('div');
+    programContainer.className = 'flex justify-start mb-6';
+    programContainer.innerHTML = `
+      <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg p-6 max-w-6xl">
+        <div class="mb-6">
+          <div class="flex items-center mb-4">
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mr-4">
+              <span class="text-white text-sm font-bold">ASIA</span>
+            </div>
+            <div>
+              <h3 class="text-3xl font-bold text-gray-900 dark:text-white">Programme détaillé</h3>
+              <h4 class="text-xl font-semibold text-blue-600 dark:text-blue-400">${program.product_name}</h4>
+            </div>
+          </div>
+          
+          <!-- Overview -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-700">
+              <h5 class="font-bold text-blue-800 dark:text-blue-200 mb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Durée
+              </h5>
+              <p class="text-blue-700 dark:text-blue-300 font-medium">${program.overview.duration} jours</p>
+            </div>
+            <div class="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 p-4 rounded-xl border border-green-200 dark:border-green-700">
+              <h5 class="font-bold text-green-800 dark:text-green-200 mb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                </svg>
+                Groupe
+              </h5>
+              <p class="text-green-700 dark:text-green-300 font-medium">${program.overview.group_size}</p>
+            </div>
+            <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-4 rounded-xl border border-purple-200 dark:border-purple-700">
+              <h5 class="font-bold text-purple-800 dark:text-purple-200 mb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Niveau
+              </h5>
+              <p class="text-purple-700 dark:text-purple-300 font-medium">${program.overview.physical_level}</p>
+            </div>
+          </div>
+          
+          <!-- Map Section -->
+          <div class="mb-8">
+            <h5 class="font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+              <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"></path>
+              </svg>
+              Itinéraire sur la carte
+            </h5>
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-6 border border-blue-200 dark:border-blue-700">
+              <div class="flex items-center justify-center h-64 bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-blue-300 dark:border-blue-600">
+                <div class="text-center">
+                  <svg class="w-16 h-16 mx-auto text-blue-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"></path>
+                  </svg>
+                  <p class="text-gray-600 dark:text-gray-400 font-medium">Carte interactive en cours de développement</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Visualisation de l'itinéraire avec connexions entre destinations</p>
+                </div>
+              </div>
+              <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                ${program.itinerary.slice(0, 3).map((day, index) => `
+                  <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                      <span class="text-white text-xs font-bold">${index + 1}</span>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-gray-900 dark:text-white">${day.location}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">Jour ${day.day}</p>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Highlights -->
+          <div class="mb-8">
+            <h5 class="font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+              <svg class="w-6 h-6 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+              </svg>
+              Points forts du voyage
+            </h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              ${program.highlights.map((highlight, index) => `
+                <div class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-4 rounded-xl border border-yellow-200 dark:border-yellow-700">
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mr-3">
+                      <span class="text-white text-lg">${highlight.icon}</span>
+                    </div>
+                    <div>
+                      <p class="font-medium text-yellow-800 dark:text-yellow-200">${highlight.text}</p>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <!-- Included/Not Included -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <h5 class="font-semibold text-green-800 dark:text-green-200 mb-3">✅ Inclus</h5>
+              <ul class="space-y-2">
+                ${program.included.map(item => `
+                  <li class="flex items-center text-sm text-green-700 dark:text-green-300">
+                    <svg class="w-4 h-4 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    ${item}
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+            <div>
+              <h5 class="font-semibold text-red-800 dark:text-red-200 mb-3">❌ Non inclus</h5>
+              <ul class="space-y-2">
+                ${program.not_included.map(item => `
+                  <li class="flex items-center text-sm text-red-700 dark:text-red-300">
+                    <svg class="w-4 h-4 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    ${item}
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          </div>
+          
+          <!-- Itinerary -->
+          <div class="mb-8">
+            <h5 class="font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+              <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"></path>
+              </svg>
+              Itinéraire détaillé jour par jour
+            </h5>
+            <div class="space-y-6">
+              ${program.itinerary.map((day, index) => `
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-6 border border-blue-200 dark:border-blue-700">
+                  <div class="flex items-start mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                      <span class="text-white text-sm font-bold">${day.day}</span>
+                    </div>
+                    <div class="flex-1">
+                      <h6 class="text-lg font-bold text-gray-900 dark:text-white mb-2">${day.location}</h6>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Activités:</p>
+                          <div class="flex flex-wrap gap-2">
+                            ${day.activities.map(activity => `
+                              <span class="bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 text-xs px-3 py-1 rounded-full border border-blue-200 dark:border-blue-700">
+                                ${activity}
+                              </span>
+                            `).join('')}
+                          </div>
+                        </div>
+                        <div>
+                          <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Détails:</p>
+                          <div class="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+                            <div class="flex items-center">
+                              <svg class="w-3 h-3 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                              </svg>
+                              ${day.accommodation}
+                            </div>
+                            <div class="flex items-center">
+                              <svg class="w-3 h-3 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                              </svg>
+                              ${day.meals}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <!-- Practical Info -->
+          <div class="mb-6">
+            <h5 class="font-semibold text-gray-900 dark:text-white mb-3">ℹ️ Informations pratiques</h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="text-sm">
+                <span class="font-medium">Meilleure période:</span> ${program.practical_info.best_time}
+              </div>
+              <div class="text-sm">
+                <span class="font-medium">Climat:</span> ${program.practical_info.weather}
+              </div>
+              <div class="text-sm">
+                <span class="font-medium">Devise:</span> ${program.practical_info.currency}
+              </div>
+              <div class="text-sm">
+                <span class="font-medium">Langue:</span> ${program.practical_info.language}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Pricing -->
+          <div class="bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900/20 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 mb-8">
+            <h5 class="font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+              <svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+              Tarifs et conditions
+            </h5>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div class="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                <span class="font-bold text-green-600">Acompte:</span>
+                <p class="text-gray-700 dark:text-gray-300 mt-1">${program.pricing.deposit}</p>
+              </div>
+              <div class="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                <span class="font-bold text-blue-600">Paiement:</span>
+                <p class="text-gray-700 dark:text-gray-300 mt-1">${program.pricing.payment_terms}</p>
+              </div>
+              <div class="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                <span class="font-bold text-orange-600">Annulation:</span>
+                <p class="text-gray-700 dark:text-gray-300 mt-1">${program.pricing.cancellation}</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Call to Action -->
+          <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 text-center">
+            <h5 class="text-2xl font-bold text-white mb-4">Prêt à réserver votre voyage ?</h5>
+            <p class="text-blue-100 mb-6">Contactez-nous pour obtenir un devis personnalisé et réserver votre place</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <button onclick="bookOffer('${program.reference}')" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg">
+                Réserver maintenant
+              </button>
+              <button onclick="showOfferDetails('${program.reference}')" class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105">
+                Plus d'informations
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    chatArea.appendChild(programContainer);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  function showWelcomeMessage() {
+    // Don't show any welcome message - let the AI respond naturally
+    // Just focus on the input field
+    setTimeout(() => {
+      if (chatInputEl) {
+        chatInputEl.focus();
+      }
+    }, 500);
+  }
+
+
 
   function updateStreamingMessage(messageElement, content) {
     // Update the message content with streaming text
@@ -589,7 +1112,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const conversationId = getCurrentConversationId();
     
     if (!conversationId) {
-      showWelcomeMessage();
+      // Just focus on input, no welcome message
+      setTimeout(() => {
+        if (chatInputEl) {
+          chatInputEl.focus();
+        }
+      }, 500);
       return;
     }
     
@@ -604,23 +1132,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     } else {
-      showWelcomeMessage();
+      // Just focus on input, no welcome message
+      setTimeout(() => {
+        if (chatInputEl) {
+          chatInputEl.focus();
+        }
+      }, 500);
     }
   }
 
   // Update sendMessage to remove isSending logic and use cached elements
   async function sendMessage() {
-    const message = chatInputEl.value.trim();
-    console.log("[DEBUG] sendMessage called, message:", message, "this:", this);
-    if (!message) {
-      console.log("[DEBUG] Empty message, ignoring");
-      isSending = false;
-      sendButtonEl.disabled = false;
-      chatInputEl.disabled = false;
-      updateSendStateIndicator();
+    // Note: isSending is already set to true by handleSendMessage
+    // We only need to check isAITyping here
+    if (isAITyping) {
+      console.log("[DEBUG] AI is already typing, ignoring send request");
       return;
     }
+    
+    const message = chatInputEl.value.trim();
+    console.log("[DEBUG] sendMessage called, message:", message);
+    
+    // Validate message
+    if (!message) {
+      console.log("[DEBUG] Empty message, ignoring");
+      resetSendState();
+      return;
+    }
+    
+    // Clear input now that we have the message
+    chatInputEl.value = '';
+    
     console.log('🚀 Starting to send message:', message);
+    
+    // Helper function to reset send state
+    function resetSendState() {
+      console.log('[DEBUG] resetSendState called - isSending:', isSending, 'isAITyping:', isAITyping);
+      isSending = false;
+      isAITyping = false; // Also reset AI typing state
+      updateSendStateIndicator();
+      hideLoading();
+      console.log('[DEBUG] resetSendState completed - isSending:', isSending, 'isAITyping:', isAITyping);
+    }
     
     // Safety timeout to prevent permanent blocking
     const safetyTimeout = setTimeout(() => {
@@ -628,44 +1181,37 @@ document.addEventListener('DOMContentLoaded', function() {
       resetSendState();
     }, 60000); // 60 seconds timeout
     
-    // Helper function to reset send state
-    function resetSendState() {
-      isSending = false;
-      sendButtonEl.disabled = false;
-      chatInputEl.disabled = false;
-      updateSendStateIndicator();
-      hideLoading();
-      clearTimeout(safetyTimeout);
-    }
-    
     try {
-      const conversationId = getCurrentConversationId();
+      // Generate a simple conversation ID if none exists
+      let conversationId = getCurrentConversationId();
       if (!conversationId) {
-        console.error('❌ No conversation ID available');
-        resetSendState();
-        return;
+        conversationId = 'conv_' + Date.now();
+        console.log('[DEBUG] Created new conversation ID:', conversationId);
       }
-      
-      // Save user message to database
-      const userMessageSaved = await saveMessageToDatabase(conversationId, message, 'user', 'user');
-      if (!userMessageSaved) {
-        console.error('❌ Failed to save user message');
-        resetSendState();
-        return;
-      }
-      
+    
       // Display user message immediately
       appendMessage(message, true, false, [], false);
       chatInputEl.value = '';
       
       // Show loading indicator
       hideLoading(); // Clear any existing
-      showLoading();
-      
+    showLoading();
+    
       console.log('📡 Attempting streaming request...');
       
+      // Set AI typing state
+      isAITyping = true;
+      updateSendStateIndicator();
+      
       // Try streaming first, fallback to regular API
-      const streamResponse = await fetch(`/chat/stream`, {
+      console.log('[DEBUG] Making API request to:', `${API_BASE_URL}/chat/stream`);
+      console.log('[DEBUG] Request body:', JSON.stringify({
+        message: message,
+        conversation_id: conversationId,
+        user_id: "1"
+      }));
+      
+      const streamResponse = await fetch(`${API_BASE_URL}/chat/stream`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -673,7 +1219,7 @@ document.addEventListener('DOMContentLoaded', function() {
         body: JSON.stringify({
           message: message,
           conversation_id: conversationId,
-          user_id: 1
+          user_id: "1"
         }),
       });
       
@@ -706,23 +1252,30 @@ document.addEventListener('DOMContentLoaded', function() {
                   if (data.type === 'content' && data.chunk) {
                     assistantMessage += data.chunk;
                     updateStreamingMessage(assistantMessageElement, assistantMessage);
+                    } else if (data.type === 'offers' && data.offers) {
+                    console.log('🎯 Received offers via streaming:', data.offers);
+                    // Display the offers in beautiful cards
+                    displayOfferCards(data.offers);
+                  } else if (data.type === 'detailed_program' && data.detailed_program) {
+                    console.log('📋 Received detailed program via streaming:', data.detailed_program);
+                    // Display the detailed program
+                    displayDetailedProgram(data.detailed_program);
                   } else if (data.type === 'end') {
                     console.log('✅ Streaming completed');
                     finalizeStreamingMessage(assistantMessageElement, assistantMessage);
                     
-                    // Save assistant message to database
-                    const assistantMessageSaved = await saveMessageToDatabase(conversationId, assistantMessage, 'assistant', 'agent');
-                    if (!assistantMessageSaved) {
-                      console.error('❌ Failed to save assistant message');
-                    }
+                    // Assistant message received successfully
+                    console.log('✅ Assistant message received:', assistantMessage);
                     
-                    // UNBLOCK UI ONLY AFTER COMPLETE RESPONSE
+                    // Reset AI typing state and unblock UI
+                    isAITyping = false;
                     resetSendState();
                     chatInputEl && chatInputEl.focus();
                     return;
                   } else if (data.type === 'error') {
                     console.error('❌ Streaming error:', data.error);
                     appendMessage('Désolé, je rencontre des difficultés techniques. Veuillez réessayer.', false, true, [], false);
+                    isAITyping = false;
                     resetSendState();
                     return;
                   }
@@ -737,33 +1290,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       } else {
         console.log('⚠️ Streaming failed, falling back to regular API');
+        isAITyping = true; // Still waiting for AI response
+        updateSendStateIndicator();
         
         // Fallback to regular API
-        const resp = await fetch(`/chat/message`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: message,
+        const resp = await fetch(`${API_BASE_URL}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: message,
             conversation_id: conversationId,
-            user_id: 1
-          }),
-        });
+            user_id: "1"
+        }),
+      });
         
-        hideLoading();
+      hideLoading();
         
-        if (resp.ok) {
-          const data = await resp.json();
-          
-          // Get assistant response
-          const assistantMessage = data.response || data.conversation_state?.conversation?.slice(-1)[0]?.content || 'No response';
-          
-          // Save assistant message to database
-          const assistantMessageSaved = await saveMessageToDatabase(conversationId, assistantMessage, 'assistant', 'agent');
-          if (!assistantMessageSaved) {
-            console.error('❌ Failed to save assistant message');
-          }
+      if (resp.ok) {
+        const data = await resp.json();
+        
+        // Get assistant response
+        const assistantMessage = data.response || data.conversation_state?.conversation?.slice(-1)[0]?.content || 'No response';
+        
+        // Assistant message received successfully
+        console.log('✅ Assistant message received:', assistantMessage);
           
           // Check if we have offers to display
           if (data.offers && data.offers.length > 0) {
@@ -772,18 +1324,35 @@ document.addEventListener('DOMContentLoaded', function() {
           } else {
             appendMessage(assistantMessage, false, false, [], false);
           }
-        } else {
+          
+          // Check if we have a detailed program to display
+          if (data.detailed_program) {
+            displayDetailedProgram(data.detailed_program);
+          }
+      } else {
           appendMessage('Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants.', false, true, [], false);
         }
         
-        // UNBLOCK UI ONLY AFTER COMPLETE RESPONSE
+        // Reset AI typing state and unblock UI
+        isAITyping = false;
         resetSendState();
         chatInputEl && chatInputEl.focus();
       }
     } catch (e) {
       console.error('❌ Error in sendMessage:', e);
-      appendMessage('Désolé, il y a eu un problème de connexion. Veuillez vérifier votre connexion internet et réessayer.', false, true, [], false);
-      resetSendState();
+      
+      // Don't hide loading or reset state on timeout - keep spinner visible
+      if (e.name === 'TypeError' && e.message.includes('fetch')) {
+        // Network error - keep spinner and show timeout message
+        appendMessage('Le serveur prend plus de temps que prévu. Veuillez patienter...', false, true, [], false);
+        // Keep isAITyping = true to maintain spinner
+        // Don't call resetSendState() to keep input blocked
+      } else {
+        // Other errors - reset state
+        appendMessage('Désolé, il y a eu un problème de connexion. Veuillez vérifier votre connexion internet et réessayer.', false, true, [], false);
+        isAITyping = false;
+        resetSendState();
+      }
     }
   }
 
@@ -811,43 +1380,233 @@ document.addEventListener('DOMContentLoaded', function() {
   // Only attach event listeners once
   if (!eventListenersAttached) {
     console.log("[DEBUG] Attaching chat event listeners");
-    chatForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      if (isSending) return;
-      isSending = true;
-      sendButtonEl.disabled = true;
-      chatInputEl.disabled = true;
-      updateSendStateIndicator();
-      sendMessage();
-    });
-
-    sendButtonEl.addEventListener('click', function(e) {
-      e.preventDefault();
-      if (isSending) return;
-      isSending = true;
-      sendButtonEl.disabled = true;
-      chatInputEl.disabled = true;
-      updateSendStateIndicator();
-      sendMessage();
-    });
-
-    chatInputEl.addEventListener('keydown', function(e) {
-      // HARD BLOCK: Prevent Enter if sending or input is disabled
-      if (isSending || chatInputEl.disabled) {
-        e.preventDefault();
+    
+    // Unified message sending handler
+    const handleSendMessage = (e) => {
+      if (e) {
+    e.preventDefault();
+        e.stopPropagation();
         e.stopImmediatePropagation();
-        return;
       }
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        if (isSending) return;
-        isSending = true;
+      
+      // Direct check to prevent any possibility of sending while AI is typing
+      if (isAITyping || isSending) {
+        console.log('Message sending blocked - AI is typing or sending');
+        showBlockedNotification();
+        return false;
+      }
+      
+      if (!getChatElements()) return;
+      
+      const message = chatInputEl.value.trim();
+      if (message === '') return;
+      
+      // Set sending state
+      isSending = true;
+      updateSendStateIndicator();
+      
+      // Send message (don't clear input yet, let sendMessage handle it)
+    sendMessage();
+    };
+    
+    // Form submit handler (Enter key or button click)
+    const chatForm = document.querySelector('.chat-form');
+    if (chatForm) {
+      chatForm.addEventListener('submit', handleSendMessage);
+    }
+    
+    function updateButtonIcon() {
+      if (!sendButtonEl) return;
+    
+      if (isAITyping) {
+        // Show clock icon when AI is responding
+        sendButtonEl.innerHTML = `
+          <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        `;
         sendButtonEl.disabled = true;
-        chatInputEl.disabled = true;
-        updateSendStateIndicator();
-        sendMessage();
+        sendButtonEl.style.cursor = 'not-allowed';
+        sendButtonEl.title = 'Layla est en train de répondre...';
+    
+      } else if (isSending) {
+        // Show loading spinner when sending
+        sendButtonEl.innerHTML = `
+          <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        `;
+        sendButtonEl.disabled = true;
+        sendButtonEl.style.cursor = 'wait';
+        sendButtonEl.title = 'Envoi en cours...';
+    
+      } else {
+        // Show send icon when ready
+        sendButtonEl.innerHTML = `
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+          </svg>
+        `;
+        sendButtonEl.disabled = false;
+        sendButtonEl.style.cursor = 'pointer';
+        sendButtonEl.title = 'Envoyer le message';
       }
-    });
+    }
+    
+    
+    // Initialize button state
+    updateButtonIcon();
+    
+    // Set up input event listeners if elements exist
+    if (getChatElements()) {
+      // Send button click handler
+      sendButtonEl.addEventListener('click', handleSendMessage);
+      
+      // Global keydown handler to block all input when AI is typing
+      function handleGlobalKeydown(e) {
+        // Block all Enter keys in the document when AI is typing or sending
+        if ((isAITyping || isSending) && e.key === 'Enter') {
+          console.log('[DEBUG] Blocked Enter key - AI is typing or sending');
+    e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          return false;
+        }
+      }
+
+      // Remove any existing listeners to prevent duplicates
+      document.removeEventListener('keydown', handleGlobalKeydown, true);
+      // Add the listener with capture phase
+      document.addEventListener('keydown', handleGlobalKeydown, true);
+
+      // Input field keydown handler for normal operation
+      function handleInputKeydown(e) {
+        // Always block if AI is typing or sending
+        if (isAITyping || isSending) {
+          // For Enter key, completely block it
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            return false;
+          }
+        }
+        
+        // Handle Enter key for normal operation
+    if (e.key === 'Enter' && !e.shiftKey) {
+          // Prevent default form submission and handle with our function
+      e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          
+          // Only proceed if not already sending and AI is not typing
+          if (!isSending && !isAITyping) {
+            handleSendMessage(e);
+          }
+          return false;
+        }
+      }
+      
+      // Set up input event listeners
+      chatInputEl.addEventListener('keydown', handleInputKeydown);
+      
+      // Block paste and other events when AI is typing
+      function blockInputEvents(e) {
+        if (isAITyping || isSending) {
+          // Block all input events
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          
+          // For keydown events, also prevent the default browser behavior
+          if (e.type === 'keydown' || e.type === 'keypress' || e.key === 'Enter') {
+            e.returnValue = false;
+            // Special handling for Enter key
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              // Show notification for blocked input
+              showBlockedNotification();
+              return false;
+            }
+          }
+          
+          // Show notification for blocked input
+          showBlockedNotification();
+          
+          return false;
+        }
+      }
+      
+      // Block all input events when AI is typing
+      ['paste', 'cut', 'copy', 'keypress', 'keyup', 'input', 'keydown'].forEach(event => {
+        chatInputEl.addEventListener(event, blockInputEvents, { capture: true, passive: false });
+      });
+      
+      // Add a global form submit handler to catch all submission attempts
+      function handleFormSubmit(e) {
+        // Only handle our chat form submissions
+        const form = e.target;
+        if (!form.matches('form') || !chatInputEl || !form.contains(chatInputEl)) return;
+        
+        if (isAITyping || isSending) {
+          console.log('Form submission blocked - AI is typing or sending');
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          showBlockedNotification();
+          return false;
+        }
+      }
+      
+      // Add the submit handler with capture phase
+      document.addEventListener('submit', handleFormSubmit, true);
+      
+      // Also handle any programmatic form submissions
+      if (typeof HTMLFormElement !== 'undefined') {
+        const originalSubmit = HTMLFormElement.prototype.submit;
+        HTMLFormElement.prototype.submit = function() {
+          if (chatInputEl && this.contains(chatInputEl) && (isAITyping || isSending)) {
+            console.log('Programmatic form submission blocked - AI is typing or sending');
+            showBlockedNotification();
+            return false;
+          }
+          return originalSubmit.apply(this, arguments);
+        };
+      }
+      
+      // Function to show blocked input notification
+      function showBlockedNotification() {
+        let notification = document.getElementById('typing-notification');
+        if (!notification) {
+          notification = document.createElement('div');
+          notification.id = 'typing-notification';
+          notification.textContent = 'Veuillez attendre que Layla ait fini de répondre...';
+          notification.style.position = 'fixed';
+          notification.style.bottom = '100px';
+          notification.style.left = '50%';
+          notification.style.transform = 'translateX(-50%)';
+          notification.style.backgroundColor = 'rgba(0,0,0,0.8)';
+          notification.style.color = 'white';
+          notification.style.padding = '10px 20px';
+          notification.style.borderRadius = '5px';
+          notification.style.zIndex = '10000';
+          notification.style.fontSize = '14px';
+          notification.style.transition = 'opacity 0.3s';
+          document.body.appendChild(notification);
+          
+          // Remove notification after 2 seconds
+          setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => {
+              if (notification && notification.parentNode && document.body.contains(notification)) {
+                document.body.removeChild(notification);
+              }
+            }, 300);
+          }, 2000);
+        }
+      }
+    }
     
     eventListenersAttached = true;
   }
