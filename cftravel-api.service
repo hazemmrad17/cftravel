@@ -1,0 +1,15 @@
+[Unit]
+Description=CFTravel Python API Server
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/path/to/your/cftravel3/cftravel_py
+ExecStart=/usr/bin/python -m api.server
+Restart=always
+RestartSec=10
+Environment=PYTHONPATH=/path/to/your/cftravel3/cftravel_py
+
+[Install]
+WantedBy=multi-user.target 

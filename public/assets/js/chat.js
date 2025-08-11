@@ -1,7 +1,11 @@
 // Chat logic with session and conversation state management
 
   // API Configuration
-  const API_BASE_URL = 'http://localhost:8001'; // Python API directly
+  // Detect if we're on production or local development
+const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+const API_BASE_URL = isProduction 
+  ? `${window.location.protocol}//${window.location.hostname}:8001` 
+  : 'http://localhost:8001'; // Python API directly
 
 // Global flags to track message states
 let isSending = false;         // User is sending a message
@@ -401,6 +405,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   async function clearMemory() {
     try {
+      console.log('🔄 Attempting to clear memory at:', `${API_BASE_URL}/memory/clear`);
+      
       const response = await fetch(`${API_BASE_URL}/memory/clear`, {
         method: 'POST',
         headers: {
@@ -411,10 +417,12 @@ document.addEventListener('DOMContentLoaded', function() {
       if (response.ok) {
         console.log('✅ Memory cleared successfully');
       } else {
-        console.warn('⚠️ Failed to clear memory:', response.status);
+        console.warn('⚠️ Failed to clear memory:', response.status, response.statusText);
       }
     } catch (error) {
       console.warn('⚠️ Error clearing memory:', error);
+      // Don't throw the error - just log it and continue
+      // This prevents the page from breaking if the API is unavailable
     }
   }
 
@@ -1688,7 +1696,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Clear memory when page is about to be unloaded (refresh/close)
   window.addEventListener('beforeunload', function() {
-    // Use synchronous request to ensure it completes before page unloads
-    navigator.sendBeacon(`${API_BASE_URL}/memory/clear`, JSON.stringify({}));
+    try {
+      console.log('🔄 Clearing memory on page unload at:', `${API_BASE_URL}/memory/clear`);
+      // Use synchronous request to ensure it completes before page unloads
+      navigator.sendBeacon(`${API_BASE_URL}/memory/clear`, JSON.stringify({}));
+    } catch (error) {
+      console.warn('⚠️ Error clearing memory on page unload:', error);
+      // Don't throw - this is just cleanup
+    }
   });
 }); 
