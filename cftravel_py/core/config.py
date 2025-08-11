@@ -54,7 +54,7 @@ class Config:
         temp_env_var = f"{model_type.upper()}_TEMPERATURE"
         tokens_env_var = f"{model_type.upper()}_MAX_TOKENS"
         
-        # Default values for each model type
+        # Default values for each model type - Kimia K2 for French responses
         defaults = {
             "reasoning": {
                 "model": "deepseek-r1-distill-llama-70b",
@@ -62,17 +62,17 @@ class Config:
                 "max_tokens": 2048
             },
             "generation": {
-                "model": "llama-3.1-8b-instant",
+                "model": "moonshotai/kimi-k2-instruct",
                 "temperature": 0.7,
                 "max_tokens": 2048
             },
             "matcher": {
-                "model": "llama-3.1-8b-instant",
+                "model": "moonshotai/kimi-k2-instruct",
                 "temperature": 0.3,
                 "max_tokens": 2048
             },
             "extractor": {
-                "model": "llama-3.1-8b-instant",
+                "model": "moonshotai/kimi-k2-instruct",
                 "temperature": 0.1,
                 "max_tokens": 1024
             }

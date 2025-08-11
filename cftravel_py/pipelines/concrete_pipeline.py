@@ -152,10 +152,10 @@ class IntelligentPipeline:
         """Setup fallback models if environment configuration fails"""
         debug_print("🔄 Setting up fallback models...")
         
-        # Fallback to hardcoded models
+        # Fallback to Kimia K2 models
         self.orchestrator = self._safe_setup_model("REASONING_MODEL", "deepseek-r1-distill-llama-70b", 0.1, "orchestration")
-        self.generator = self._safe_setup_model("GENERATION_MODEL", "llama-3.1-8b-instant", 0.7, "generation")
-        self.matcher = self._safe_setup_model("MATCHING_MODEL", "llama-3.1-8b-instant", 0.3, "matching")
+        self.generator = self._safe_setup_model("GENERATION_MODEL", "moonshotai/kimi-k2-instruct", 0.7, "generation")
+        self.matcher = self._safe_setup_model("MATCHING_MODEL", "moonshotai/kimi-k2-instruct", 0.3, "matching")
         self.embedding_model = self._setup_embedding_model()
     
     def _safe_setup_model(self, env_var: str, default_model: str, temperature: float, purpose: str):
@@ -278,7 +278,9 @@ class IntelligentPipeline:
         Use the orchestrator model to make intelligent decisions about the conversation
         """
         prompt = f"""
-You are ASIA.fr Agent, an intelligent travel specialist. Analyze this user input and decide the best course of action.
+You are ASIA.fr Agent, an intelligent travel specialist. You MUST ALWAYS RESPOND IN FRENCH. Analyze this user input and decide the best course of action.
+
+LANGUAGE REQUIREMENT: You are a French travel agent. All your responses, reasoning, and analysis must be in French.
 
 CONVERSATION CONTEXT:
 - Turn count: {self.conversation_context.turn_count}
@@ -302,15 +304,15 @@ CONFIRMATION FLOW RULES:
 - Sufficient details = at least 2 key preferences (destination, duration, style, budget, travelers)
 - NEVER show offers immediately when user has sufficient details - ALWAYS ask for confirmation first
 - Only show offers after user explicitly confirms
-- If user says "yes", "confirm", "perfect", "sounds good", "show me", treat as confirmation
-- If user says "no", "modify", "change", "different", treat as modification request
+- If user says "yes", "confirm", "perfect", "sounds good", "show me", "oui", "parfait", "c'est bon", treat as confirmation
+- If user says "no", "modify", "change", "different", "non", "modifier", "changer", treat as modification request
 
 CRITICAL RULES:
 - Set intent to "recommend_place" when user asks for recommendations, suggestions, or wants to see places
 - Show exactly 3 offers ONLY when user explicitly confirms they want to see offers
 - NEVER show offers immediately when user has sufficient preferences - ALWAYS ask for confirmation first
 - Never show more than 3 offers
-- Be natural and conversational
+- Be natural and conversational in French
 - Build on previous context
 - Ask one question at a time
 - Use Layla.ai style - charismatic, knowledgeable, friendly
@@ -325,7 +327,7 @@ INTENT DETECTION RULES:
 - "confirmation": User confirms or agrees to something
 - "modification": User wants to change or modify preferences
 
-YOU MUST RESPOND WITH VALID JSON ONLY. NO OTHER TEXT.
+YOU MUST RESPOND WITH VALID JSON ONLY. NO OTHER TEXT. ALL REASONING AND ANALYSIS MUST BE IN FRENCH.
 
 RESPOND IN THIS EXACT JSON FORMAT:
 {{
@@ -335,7 +337,7 @@ RESPOND IN THIS EXACT JSON FORMAT:
     "should_show_offers": true,
     "offer_count": 3,
     "response_type": "type of response to give",
-    "reasoning": "step-by-step reasoning for the decision",
+    "reasoning": "step-by-step reasoning for the decision in French",
     "next_action": "what to do next",
     "needs_confirmation": false,
     "has_sufficient_details": false
@@ -368,7 +370,9 @@ JSON Response:
         Use AI to intelligently extract preferences from user input
         """
         prompt = f"""
-You are an expert travel preference extractor. Extract ALL travel-related information from this user message.
+You are an expert travel preference extractor. Extract ALL travel-related information from this user message. You MUST RESPOND IN FRENCH.
+
+LANGUAGE REQUIREMENT: You are a French travel agent. All your analysis and reasoning must be in French.
 
 USER INPUT: {user_input}
 ORCHESTRATION CONTEXT: {json.dumps(orchestration_result, indent=2)}
@@ -390,7 +394,7 @@ EXAMPLES:
 CRITICAL: If the user mentions ANY destination (like "Japan", "Tokyo", etc.), extract it as destination.
 If they mention ANY travel style (like "cultural", "adventure", etc.), extract it as style.
 
-YOU MUST RESPOND WITH VALID JSON ONLY. NO OTHER TEXT.
+YOU MUST RESPOND WITH VALID JSON ONLY. NO OTHER TEXT. ALL ANALYSIS MUST BE IN FRENCH.
 
 Return ONLY valid JSON in this format:
 {{
@@ -510,30 +514,30 @@ JSON Response:
         return preference_count >= 2
     
     def _generate_confirmation_summary(self) -> str:
-        """Generate a summary of preferences for confirmation"""
+        """Generate a summary of preferences for confirmation in French"""
         preferences = self.conversation_context.user_preferences
         
         summary_parts = []
         
         if preferences.get('destination'):
-            summary_parts.append(f"Destination: {preferences['destination']}")
+            summary_parts.append(f"Destination : {preferences['destination']}")
         
         if preferences.get('duration'):
-            summary_parts.append(f"Duration: {preferences['duration']} days")
+            summary_parts.append(f"Durée : {preferences['duration']} jours")
         
         if preferences.get('style'):
-            summary_parts.append(f"Style: {preferences['style']}")
+            summary_parts.append(f"Style : {preferences['style']}")
         
         if preferences.get('budget'):
-            summary_parts.append(f"Budget: {preferences['budget']}")
+            summary_parts.append(f"Budget : {preferences['budget']}")
         
         if preferences.get('travelers'):
-            summary_parts.append(f"Travelers: {preferences['travelers']}")
+            summary_parts.append(f"Voyageurs : {preferences['travelers']}")
         
         if preferences.get('timing'):
-            summary_parts.append(f"Timing: {preferences['timing']}")
+            summary_parts.append(f"Période : {preferences['timing']}")
         
-        return " | ".join(summary_parts) if summary_parts else "No preferences set"
+        return " | ".join(summary_parts) if summary_parts else "Aucune préférence définie"
     
     def _generate_intelligent_response(self, user_input: str, orchestration_result: Dict, preferences: Dict) -> Dict[str, Any]:
         """
@@ -600,7 +604,9 @@ JSON Response:
         Generate natural response text using the generator model
         """
         prompt = f"""
-You are ASIA.fr Agent, a charismatic and knowledgeable travel specialist specializing in Asian travel.
+You are ASIA.fr Agent, a charismatic and knowledgeable travel specialist specializing in Asian travel. You MUST ALWAYS RESPOND IN FRENCH.
+
+LANGUAGE REQUIREMENT: You are a French travel agent. All your responses must be in French. Be natural, friendly, and professional in French.
 
 CONVERSATION CONTEXT:
 - User preferences: {json.dumps(preferences, indent=2)}
@@ -610,9 +616,9 @@ CONVERSATION CONTEXT:
 
 USER INPUT: {user_input}
 
-GENERATE A NATURAL RESPONSE following these rules:
-1. Be charismatic, knowledgeable, and friendly
-2. Use casual, engaging language with emojis sparingly
+GENERATE A NATURAL RESPONSE IN FRENCH following these rules:
+1. Be charismatic, knowledgeable, and friendly in French
+2. Use casual, engaging French language with emojis sparingly
 3. Ask ONE question at a time, not multiple questions
 4. Build on what users say, don't repeat yourself
 5. Be professional but friendly, knowledgeable but approachable
@@ -630,7 +636,7 @@ CONFIRMATION FLOW:
 
 RESPONSE TYPE: {orchestration_result.get("response_type", "question")}
 
-Generate a natural, conversational response:
+Generate a natural, conversational response in French:
 """
         
         try:
@@ -638,7 +644,7 @@ Generate a natural, conversational response:
             return response.strip()
         except Exception as e:
             debug_print(f"❌ Response generation failed: {e}")
-            return "I'm here to help you plan your perfect Asian adventure! What kind of trip are you dreaming of?"
+            return "Je suis là pour vous aider à planifier votre parfait voyage en Asie ! Quel type de voyage rêvez-vous de faire ?"
     
     def _get_intelligent_offers(self, preferences: Dict, max_offers: int = 3) -> List[Dict]:
         """
@@ -1007,22 +1013,22 @@ class ASIAConcreteAgent:
         """Get welcome message"""
         try:
             prompt = """
-You are ASIA.fr Agent, a charismatic and knowledgeable travel specialist specializing in Asian travel.
+You are ASIA.fr Agent, a charismatic and knowledgeable travel specialist specializing in Asian travel. You MUST RESPOND IN FRENCH.
 
-Generate a warm, welcoming message that:
+Generate a warm, welcoming message in French that:
 1. Introduces yourself as ASIA.fr Agent
 2. Shows personality and expertise
 3. Mentions your specialization in Asian travel
 4. Invites the user to share their travel dreams
-5. Uses casual, engaging language with emojis sparingly
+5. Uses casual, engaging French language with emojis sparingly
 6. Is professional but friendly, knowledgeable but approachable
 
-Keep it under 100 words and make it feel natural and conversational.
+Keep it under 100 words and make it feel natural and conversational in French.
 
-Welcome message:
+Welcome message in French:
 """
             response = self.pipeline._call_llm_with_retry(self.pipeline.generator, prompt)
             return response.strip()
         except Exception as e:
             debug_print(f"❌ Welcome message generation failed: {e}")
-            return "🌏 Hi there! 👋 I'm ASIA.fr Agent, your travel specialist! 😊 I'm here to help you plan your perfect Asian adventure! What kind of trip are you dreaming of? 🎉"
+            return "🌏 Bonjour ! 👋 Je suis ASIA.fr Agent, votre spécialiste de voyage ! 😊 Je suis là pour vous aider à planifier votre parfait voyage en Asie ! Quel type de voyage rêvez-vous de faire ? 🎉"
