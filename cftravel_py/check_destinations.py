@@ -10,7 +10,7 @@ with open('data/asia/data.json', 'r', encoding='utf-8') as f:
 
 # Collect all destinations
 all_destinations = set()
-japan_destinations = set()
+japan_destinations = set()          
 
 for offer in data:
     for dest in offer.get('destinations', []):          
@@ -19,7 +19,7 @@ for offer in data:
             country = dest.get('country', '').strip()
             if city:
                 all_destinations.add(f"{city} ({country})")
-                if country == 'JP':
+                if country == 'JPA':
                     japan_destinations.add(f"{city} ({country})")
             elif country:
                 all_destinations.add(country)
