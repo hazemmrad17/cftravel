@@ -1,7 +1,7 @@
 # Frontend Assets - Modular Structure
 
 ## 📁 Proposed Directory Structure
-
+        
 ```
 public/assets/
 ├── README.md
