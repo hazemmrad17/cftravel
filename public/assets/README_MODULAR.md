@@ -6,7 +6,7 @@
 public/assets/
 ├── README.md
 ├── 
-├── 📁 js/
+├── 📁 js/              
 │   ├── 📁 core/
 │   │   ├── app.js             # Main application entry point
 │   │   ├── config.js          # Configuration and constants
