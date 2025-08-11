@@ -8,25 +8,10 @@ let isSending = false;         // User is sending a message
 let isAITyping = false;        // AI is currently streaming a response
 let eventListenersAttached = false;
 
-// Global reset function (will be defined inside DOMContentLoaded)
-let resetChatState = null;
-
 document.addEventListener('DOMContentLoaded', function() {
   // Cache input and button elements
   let chatInputEl = document.querySelector('#chat-input');
   let sendButtonEl = document.querySelector('#chat-send-btn');
-  
-  // Function to reset chat state (for debugging)
-  resetChatState = function() {
-    console.log('[DEBUG] Resetting chat state');
-    isSending = false;
-    isAITyping = false;
-    updateSendStateIndicator();
-    hideLoading();
-  };
-  
-  // Make reset function available globally for debugging
-  window.resetChatState = resetChatState;
   
   // Function to safely get DOM elements with error handling
   function getChatElements() {
@@ -1256,6 +1241,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log('🎯 Received offers via streaming:', data.offers);
                     // Display the offers in beautiful cards
                     displayOfferCards(data.offers);
+                  } else if (data.type === 'confirmation' && data.needs_confirmation) {
+                    console.log('📋 Received confirmation request:', data);
+                    // Display confirmation request
+                    if (typeof confirmationFlow !== 'undefined') {
+                      confirmationFlow.displayConfirmationRequest(data.preferences, data.confirmation_summary);
+                    }
                   } else if (data.type === 'detailed_program' && data.detailed_program) {
                     console.log('📋 Received detailed program via streaming:', data.detailed_program);
                     // Display the detailed program
@@ -1317,8 +1308,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Assistant message received successfully
         console.log('✅ Assistant message received:', assistantMessage);
           
+          // Check if we need confirmation
+          if (data.needs_confirmation && data.confirmation_summary) {
+            appendMessage(assistantMessage, false, false, [], false);
+            // Display confirmation request
+            if (typeof confirmationFlow !== 'undefined') {
+              confirmationFlow.displayConfirmationRequest(data.conversation_state.user_preferences, data.confirmation_summary);
+            }
+          }
           // Check if we have offers to display
-          if (data.offers && data.offers.length > 0) {
+          else if (data.offers && data.offers.length > 0) {
             appendMessage(assistantMessage, false, false, [], false);
             displayOfferCards(data.offers);
           } else {
@@ -1358,8 +1357,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // On page load, render conversation history if present or show welcome
   (async function() {
-    // Clear memory on page load/refresh to ensure fresh start
-    await clearMemory();
+    // Don't clear memory on page load/refresh - preserve conversation state
+    // Memory will only be cleared when explicitly clicking "New Conversation"
     
     await renderConversationHistory();
     

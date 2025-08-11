@@ -19,8 +19,8 @@ sys.path.append(str(Path(__file__).parent.parent))
 # Import from new modular structure
 from core.config import config
 from core.constants import API_TITLE, API_DESCRIPTION, API_VERSION
-from models.data_models import ChatRequest, OfferCard, DetailedProgram, PreferenceRequest
-from models.response_models import ChatResponse, AgentStatusResponse, HealthResponse, MemoryResponse, WelcomeResponse
+from models.data_models import ChatRequest, OfferCard, DetailedProgram, PreferenceRequest, ConfirmationRequest
+from models.response_models import ChatResponse, AgentStatusResponse, HealthResponse, MemoryResponse, WelcomeResponse, ConfirmationFlowResponse
 # from pipelines.concrete_pipeline import ASIAConcreteAgent  # Moved to lazy import in startup
 from services.data_service import DataService
 from services.memory_service import MemoryService
@@ -299,8 +299,19 @@ async def chat_stream(request: ChatRequest):
                 # Use the regular chat method to get structured data
                 response_data = agent.chat(request.message)
                 
+                # Send confirmation request if needed
+                if isinstance(response_data, dict) and response_data.get("needs_confirmation"):
+                    confirmation_data = {
+                        "type": "confirmation",
+                        "needs_confirmation": True,
+                        "confirmation_summary": response_data.get("confirmation_summary"),
+                        "preferences": response_data.get("conversation_state", {}).get("user_preferences", {})
+                    }
+                    yield f"data: {json.dumps(confirmation_data)}\n\n"
+                    logger.info("📋 Sent confirmation request via streaming")
+                
                 # Send offers if available
-                if isinstance(response_data, dict) and "offers" in response_data and response_data["offers"]:
+                elif isinstance(response_data, dict) and "offers" in response_data and response_data["offers"]:
                     offers = response_data["offers"]
                     # Convert to OfferCard format if needed
                     if isinstance(offers, list) and len(offers) > 0 and not isinstance(offers[0], OfferCard):
@@ -528,6 +539,73 @@ async def get_offers(limit: int = 10, page: int = 1):
             "status": "error",
             "message": str(e)
         }
+
+@app.post("/confirmation", response_model=ConfirmationFlowResponse)
+async def handle_confirmation(request: ConfirmationRequest):
+    """Handle confirmation flow for travel preferences"""
+    if agent is None:
+        raise HTTPException(status_code=500, detail="Agent not initialized")
+    
+    try:
+        logger.info(f"📋 Confirmation request: {request.action}")
+        
+        if request.action == "confirm":
+            # User confirmed preferences, show offers
+            logger.info(f"📋 Confirming preferences: {request.preferences}")
+            logger.info(f"📋 Offer service available: {offer_service is not None}")
+            
+            offers = []
+            if offer_service:
+                try:
+                    offers = offer_service.match_offers(request.preferences, max_offers=3)
+                    logger.info(f"📋 Found {len(offers)} matching offers")
+                except Exception as e:
+                    logger.error(f"❌ Error matching offers: {e}")
+                    raise
+            else:
+                logger.warning("⚠️ Offer service not available")
+            
+            return ConfirmationFlowResponse(
+                status="success",
+                message="Perfect! Here are your personalized travel offers.",
+                needs_confirmation=False,
+                preferences=request.preferences,
+                offers=offers,
+                conversation_state={
+                    "conversation_id": request.conversation_id,
+                    "user_preferences": request.preferences,
+                    "current_state": "showing_offers",
+                    "needs_confirmation": False,
+                    "confirmation_summary": None,
+                    "turn_count": 0,
+                    "last_response_type": "offer_display"
+                }
+            )
+        
+        elif request.action == "modify":
+            # User wants to modify preferences
+            return ConfirmationFlowResponse(
+                status="success",
+                message="No problem! Let's adjust your preferences. What would you like to change?",
+                needs_confirmation=False,
+                preferences=request.preferences,
+                conversation_state={
+                    "conversation_id": request.conversation_id,
+                    "user_preferences": request.preferences,
+                    "current_state": "gathering_preferences",
+                    "needs_confirmation": False,
+                    "confirmation_summary": None,
+                    "turn_count": 0,
+                    "last_response_type": "preference_gathering"
+                }
+            )
+        
+        else:
+            raise HTTPException(status_code=400, detail="Invalid action")
+            
+    except Exception as e:
+        logger.error(f"❌ Error handling confirmation: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to handle confirmation: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

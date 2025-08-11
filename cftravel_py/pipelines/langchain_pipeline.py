@@ -14,9 +14,9 @@ from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field
 import json
 
-from cftravel_py.core.config import config
-from cftravel_py.services.llm_service import LLMFactory, ReasoningLLM
-from cftravel_py.data.data_processor import DataProcessor, TravelOffer
+from core.config import config
+from services.llm_service import LLMFactory, ReasoningLLM
+from data.data_processor import DataProcessor, TravelOffer
 
 class PreferenceParser(BaseModel):
     """Structured output for preference parsing"""

@@ -5,8 +5,8 @@ Memory service for ASIA.fr Agent
 import logging
 from typing import Dict, Any, List, Optional
 from datetime import datetime
-from cftravel_py.core.exceptions import MemoryError
-from cftravel_py.models.llm_models import Conversation, ConversationMessage
+from core.exceptions import MemoryError
+from models.llm_models import Conversation, ConversationMessage
 
 logger = logging.getLogger(__name__)
 

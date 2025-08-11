@@ -72,4 +72,29 @@ class TravelOffer(BaseModel):
     highlights: List[str]
     images: List[str]
     rating: Optional[float] = None
-    reviews_count: Optional[int] = None 
+    reviews_count: Optional[int] = None
+
+class ConfirmationRequest(BaseModel):
+    """Request model for confirmation flow"""
+    preferences: Dict[str, Any]
+    conversation_id: Optional[str] = None
+    action: str  # "confirm", "modify", "show_offers"
+
+class ConfirmationResponse(BaseModel):
+    """Response model for confirmation flow"""
+    status: str
+    message: str
+    preferences: Dict[str, Any]
+    offers: Optional[List[OfferCard]] = None
+    needs_confirmation: bool = False
+    confirmation_summary: Optional[str] = None
+
+class ConversationState(BaseModel):
+    """Model for conversation state including confirmation flow"""
+    conversation_id: str
+    user_preferences: Dict[str, Any]
+    current_state: str  # "gathering_preferences", "confirmation", "showing_offers", "completed"
+    needs_confirmation: bool = False
+    confirmation_summary: Optional[str] = None
+    turn_count: int = 0
+    last_response_type: str = "" 

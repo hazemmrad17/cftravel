@@ -49,7 +49,7 @@ DEFAULT_TEMPERATURE = 0.7
 DEFAULT_MAX_OFFERS = 3
 
 # File Paths
-DEFAULT_DATA_PATH = "data/asia/data.json"
+DEFAULT_DATA_PATH = "cftravel_py/data/asia/data.json"
 DEFAULT_CONFIG_PATH = ".env"
 
 # HTTP Status Codes

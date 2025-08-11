@@ -4,9 +4,9 @@ Offer service for ASIA.fr Agent
 
 import logging
 from typing import Dict, Any, List, Optional
-from cftravel_py.core.exceptions import OfferError
-from cftravel_py.models.data_models import OfferCard, DetailedProgram
-from cftravel_py.services.data_service import DataService
+from core.exceptions import OfferError
+from models.data_models import OfferCard, DetailedProgram
+from services.data_service import DataService
 
 logger = logging.getLogger(__name__)
 
@@ -19,25 +19,41 @@ class OfferService:
     def match_offers(self, user_preferences: Dict[str, Any], max_offers: int = 3) -> List[OfferCard]:
         """Match offers based on user preferences"""
         try:
+            import logging
+            logger = logging.getLogger(__name__)
+            
+            logger.info(f"🔍 Matching offers with preferences: {user_preferences}")
+            
             # Extract preferences
             destination = user_preferences.get('destination')
             duration = user_preferences.get('duration')
             budget = user_preferences.get('budget')
-            travel_style = user_preferences.get('travel_style')
+            travel_style = user_preferences.get('travel_style') or user_preferences.get('style')  # Handle both field names
+            
+            logger.info(f"🔍 Extracted: dest={destination}, duration={duration}, budget={budget}, style={travel_style}")
             
             # Get all offers
             all_offers = self.data_service.get_offers()
+            logger.info(f"🔍 Processing {len(all_offers)} offers")
+            
             matched_offers = []
             
-            for offer in all_offers:
-                score = self._calculate_match_score(offer, user_preferences)
-                if score > 0.5:  # Minimum match threshold
-                    offer_card = self._convert_to_offer_card(offer, score, user_preferences)
-                    matched_offers.append(offer_card)
+            for i, offer in enumerate(all_offers):
+                try:
+                    score = self._calculate_match_score(offer, user_preferences)
+                    if score > 0.5:  # Minimum match threshold
+                        offer_card = self._convert_to_offer_card(offer, score, user_preferences)
+                        matched_offers.append(offer_card)
+                except Exception as e:
+                    logger.error(f"❌ Error processing offer {i}: {e}")
+                    logger.error(f"❌ Offer data: {offer}")
+                    raise
             
             # Sort by match score and limit results
             matched_offers.sort(key=lambda x: x.match_score or 0, reverse=True)
-            return matched_offers[:max_offers]
+            result = matched_offers[:max_offers]
+            logger.info(f"🔍 Found {len(result)} matching offers")
+            return result
             
         except Exception as e:
             raise OfferError(f"Failed to match offers: {e}")
@@ -107,11 +123,65 @@ class OfferService:
         
         # Destination match (weight: 0.4)
         if preferences.get('destination'):
-            offer_destinations = [d.lower() for d in offer.get('destinations', [])]
+            # Country name to country code mapping
+            country_mapping = {
+                'japan': 'jp',
+                'japon': 'jp',
+                'vietnam': 'vn',
+                'thailand': 'th',
+                'thailande': 'th',
+                'cambodia': 'kh',
+                'cambodge': 'kh',
+                'laos': 'la',
+                'myanmar': 'mm',
+                'singapore': 'sg',
+                'malaysia': 'my',
+                'indonesia': 'id',
+                'philippines': 'ph',
+                'china': 'cn',
+                'chine': 'cn',
+                'india': 'in',
+                'nepal': 'np',
+                'bhutan': 'bt',
+                'sri lanka': 'lk',
+                'maldives': 'mv',
+                'jordan': 'jo',
+                'jordanie': 'jo',
+                'lebanon': 'lb',
+                'syria': 'sy',
+                'iraq': 'iq',
+                'iran': 'ir',
+                'oman': 'om',
+                'yemen': 'ye',
+                'saudi arabia': 'sa',
+                'arabie saoudite': 'sa',
+                'kuwait': 'kw',
+                'qatar': 'qa',
+                'bahrain': 'bh',
+                'uae': 'ae',
+                'emirates': 'ae'
+            }
+            
+            # Destinations are dictionaries with 'city' and 'country' fields
+            offer_destinations = []
+            for dest in offer.get('destinations', []):
+                if isinstance(dest, dict):
+                    offer_destinations.append(dest.get('city', '').lower())
+                    offer_destinations.append(dest.get('country', '').lower())
+                else:
+                    offer_destinations.append(str(dest).lower())
+            
             pref_destination = preferences['destination'].lower()
             
+            # Check if preference matches country code directly
             if pref_destination in offer_destinations:
                 score += 0.4
+            # Check if preference matches country name (mapped to country code)
+            elif pref_destination in country_mapping:
+                country_code = country_mapping[pref_destination]
+                if country_code in offer_destinations:
+                    score += 0.4
+            # Check for partial matches
             elif any(pref_destination in dest for dest in offer_destinations):
                 score += 0.2
             total_weight += 0.4
@@ -119,29 +189,57 @@ class OfferService:
         # Duration match (weight: 0.3)
         if preferences.get('duration'):
             offer_duration = offer.get('duration', 0)
-            pref_duration = int(preferences['duration'])
+            pref_duration = preferences['duration']
             
-            if offer_duration == pref_duration:
+            # Handle duration as string or numeric
+            if isinstance(pref_duration, str):
+                try:
+                    duration_value = int(pref_duration)
+                except ValueError:
+                    duration_value = 7  # Default to 7 days
+            else:
+                duration_value = int(pref_duration)
+            
+            if offer_duration == duration_value:
                 score += 0.3
-            elif abs(offer_duration - pref_duration) <= 2:
+            elif abs(offer_duration - duration_value) <= 2:
                 score += 0.15
             total_weight += 0.3
         
         # Budget match (weight: 0.2)
         if preferences.get('budget'):
             offer_price = offer.get('price', 0)
-            pref_budget = float(preferences['budget'])
+            pref_budget = preferences['budget']
             
-            if offer_price <= pref_budget:
+            # Handle budget as string (low, medium, high) or numeric
+            if isinstance(pref_budget, str):
+                pref_budget_lower = pref_budget.lower()
+                if pref_budget_lower == 'low':
+                    budget_value = 1000
+                elif pref_budget_lower == 'medium':
+                    budget_value = 2500
+                elif pref_budget_lower == 'high':
+                    budget_value = 5000
+                else:
+                    # Try to convert to float if it's a numeric string
+                    try:
+                        budget_value = float(pref_budget)
+                    except ValueError:
+                        budget_value = 2500  # Default to medium
+            else:
+                budget_value = float(pref_budget)
+            
+            if offer_price <= budget_value:
                 score += 0.2
-            elif offer_price <= pref_budget * 1.2:
+            elif offer_price <= budget_value * 1.2:
                 score += 0.1
             total_weight += 0.2
         
         # Travel style match (weight: 0.1)
-        if preferences.get('travel_style'):
+        travel_style = preferences.get('travel_style') or preferences.get('style')
+        if travel_style:
             offer_type = offer.get('offer_type', '').lower()
-            pref_style = preferences['travel_style'].lower()
+            pref_style = travel_style.lower()
             
             if offer_type == pref_style:
                 score += 0.1
@@ -165,15 +263,15 @@ class OfferService:
         why_perfect = self._generate_why_perfect(offer, match_score, preferences) if preferences else ""
         
         return OfferCard(
-            product_name=offer.get('title', ''),
+            product_name=offer.get('product_name', ''),
             reference=offer.get('reference', ''),
-            destinations=[{'city': dest} for dest in offer.get('destinations', [])],
+            destinations=offer.get('destinations', []),
             departure_city=offer.get('departure_city', ''),
             dates=offer.get('dates', []),
             duration=offer.get('duration', 0),
             offer_type=offer.get('offer_type', ''),
             description=offer.get('description', ''),
-            highlights=[{'text': highlight} for highlight in offer.get('highlights', [])],
+            highlights=offer.get('highlights', []),
             images=offer.get('images', []),
             price_url=offer.get('price_url'),
             ai_reasoning=ai_reasoning,
@@ -186,14 +284,14 @@ class OfferService:
         """Convert raw offer to DetailedProgram"""
         return DetailedProgram(
             offer_reference=offer.get('reference', ''),
-            product_name=offer.get('title', ''),
+            product_name=offer.get('product_name', ''),
             overview={
                 'description': offer.get('description', ''),
                 'duration': offer.get('duration', 0),
                 'destinations': offer.get('destinations', []),
                 'departure_city': offer.get('departure_city', '')
             },
-            highlights=[{'text': highlight} for highlight in offer.get('highlights', [])],
+            highlights=offer.get('highlights', []),
             included=offer.get('included', []),
             not_included=offer.get('not_included', []),
             itinerary=offer.get('itinerary', []),
@@ -208,7 +306,23 @@ class OfferService:
         if preferences.get('destination'):
             destinations = offer.get('destinations', [])
             if destinations:
-                reasoning_parts.append(f"Destination parfaite: {', '.join(destinations)}")
+                # Destinations are dictionaries with 'city' and 'country' fields
+                dest_names = []
+                for dest in destinations:
+                    if isinstance(dest, dict):
+                        city = dest.get('city', '')
+                        country = dest.get('country', '')
+                        if city and country:
+                            dest_names.append(f"{city} ({country})")
+                        elif city:
+                            dest_names.append(city)
+                        elif country:
+                            dest_names.append(country)
+                    else:
+                        dest_names.append(str(dest))
+                
+                if dest_names:
+                    reasoning_parts.append(f"Destination parfaite: {', '.join(dest_names)}")
         
         if preferences.get('duration'):
             duration = offer.get('duration', 0)
@@ -246,7 +360,23 @@ class OfferService:
         # Add destination highlight
         destinations = offer.get('destinations', [])
         if destinations:
-            highlights.append(f"🌍 Destinations: {', '.join(destinations)}")
+            # Destinations are dictionaries with 'city' and 'country' fields
+            dest_names = []
+            for dest in destinations:
+                if isinstance(dest, dict):
+                    city = dest.get('city', '')
+                    country = dest.get('country', '')
+                    if city and country:
+                        dest_names.append(f"{city} ({country})")
+                    elif city:
+                        dest_names.append(city)
+                    elif country:
+                        dest_names.append(country)
+                else:
+                    dest_names.append(str(dest))
+            
+            if dest_names:
+                highlights.append(f"🌍 Destinations: {', '.join(dest_names)}")
         
         return highlights
     

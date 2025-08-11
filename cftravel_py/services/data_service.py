@@ -6,15 +6,15 @@ import json
 import logging
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-from cftravel_py.core.exceptions import DataError
-from cftravel_py.models.data_models import TravelOffer
+from core.exceptions import DataError
+from models.data_models import TravelOffer
 
 logger = logging.getLogger(__name__)
 
 class DataService:
     """Service for handling data operations"""
     
-    def __init__(self, data_path: str = "data/asia/data.json"):
+    def __init__(self, data_path: str = "cftravel_py/data/asia/data.json"):
         self.data_path = Path(data_path)
         self._data = None
         self._offers = None
@@ -44,7 +44,11 @@ class DataService:
     def get_offers(self) -> List[Dict[str, Any]]:
         """Get all offers from data"""
         data = self.get_data()
-        return data.get('offers', [])
+        # Data is a list of offers, not a dictionary with 'offers' key
+        if isinstance(data, list):
+            return data
+        else:
+            return data.get('offers', [])
     
     def get_offer_by_id(self, offer_id: str) -> Optional[Dict[str, Any]]:
         """Get specific offer by ID"""

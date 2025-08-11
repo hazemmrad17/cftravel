@@ -97,7 +97,7 @@ const OfferDisplay = {
                         <div class="flex text-yellow-400">
                             ${this.generateStars(offer.match_score || 0.8)}
                         </div>
-                        <span class="text-xs text-gray-700 ml-1 font-medium">${Math.round((offer.match_score || 0.8) * 5 * 10) / 10}</span>
+                        <span class="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">${Math.round((offer.match_score || 0.8) * 5 * 10) / 10}</span>
                     </div>
                 </div>
             </div>
@@ -110,7 +110,7 @@ const OfferDisplay = {
                 
                 <!-- Destinations -->
                 <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 mr-2 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
@@ -119,41 +119,22 @@ const OfferDisplay = {
                 
                 <!-- Departure -->
                 <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-4">
-                    <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 mr-2 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                     <span>Départ: ${offer.departure_city}</span>
                 </div>
                 
-                <!-- Description -->
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
-                    ${offer.description}
-                </p>
-                
-                <!-- Highlights -->
+                <!-- Highlights (simplified) -->
                 <div class="mb-4">
                     <div class="flex flex-wrap gap-1">
-                        ${offer.highlights.slice(0, 3).map(highlight => `
+                        ${offer.highlights.slice(0, 2).map(highlight => `
                             <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs px-2 py-1 rounded-full">
                                 ${highlight.text}
                             </span>
                         `).join('')}
                     </div>
                 </div>
-                
-                <!-- AI Recommendation -->
-                ${offer.why_perfect ? `
-                <div class="mb-4 p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-100 dark:border-purple-800/30">
-                    <div class="flex items-start">
-                        <svg class="w-4 h-4 text-purple-600 dark:text-purple-400 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                        </svg>
-                        <p class="text-xs text-purple-700 dark:text-purple-300 line-clamp-2">
-                            <span class="font-semibold">Recommandation IA:</span> ${offer.why_perfect}
-                        </p>
-                    </div>
-                </div>
-                ` : ''}
                 
                 <!-- Features -->
                 <div class="mb-4">
@@ -171,7 +152,7 @@ const OfferDisplay = {
                         <span class="font-semibold text-green-600">€€€</span>
                         <span class="ml-1">Petit groupe</span>
                     </div>
-                    <button onclick="OfferDisplay.showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm px-4 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
+                    <button onclick="OfferDisplay.showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm px-4 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
                         Voir détails
                     </button>
                 </div>
@@ -364,7 +345,7 @@ const OfferDisplay = {
                 <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 rounded-xl border border-blue-100 dark:border-blue-800/30 text-center">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Intéressé par ce voyage?</h3>
                     <p class="text-gray-600 dark:text-gray-400 mb-4">Contactez-nous pour plus d'informations ou pour réserver</p>
-                    <button class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg font-medium">
+                    <button class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg font-medium">
                         Demander un devis
                     </button>
                 </div>

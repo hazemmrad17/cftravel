@@ -5,7 +5,7 @@ Only supports Groq models
 
 from typing import Optional
 from langchain_openai import ChatOpenAI
-from cftravel_py.core.config import LLMConfig
+from core.config import LLMConfig
 
 class LLMFactory:
     """Factory for creating Groq LLM instances"""

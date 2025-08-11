@@ -4,7 +4,7 @@ Response models for ASIA.fr Agent API
 
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
-from .data_models import OfferCard, DetailedProgram
+from .data_models import OfferCard, DetailedProgram, ConfirmationResponse, ConversationState
 
 class ChatResponse(BaseModel):
     """Response model for chat endpoint"""
@@ -14,6 +14,9 @@ class ChatResponse(BaseModel):
     error: Optional[str] = None
     offers: Optional[List[OfferCard]] = None
     detailed_program: Optional[DetailedProgram] = None
+    needs_confirmation: bool = False
+    confirmation_summary: Optional[str] = None
+    conversation_state: Optional[ConversationState] = None
 
 class AgentStatusResponse(BaseModel):
     """Response model for status endpoint"""
@@ -56,4 +59,14 @@ class ErrorResponse(BaseModel):
     error: str
     message: str
     status: str = "error"
-    timestamp: str 
+    timestamp: str
+
+class ConfirmationFlowResponse(BaseModel):
+    """Response model for confirmation flow endpoints"""
+    status: str
+    message: str
+    needs_confirmation: bool = False
+    confirmation_summary: Optional[str] = None
+    preferences: Dict[str, Any]
+    offers: Optional[List[OfferCard]] = None
+    conversation_state: Optional[ConversationState] = None 

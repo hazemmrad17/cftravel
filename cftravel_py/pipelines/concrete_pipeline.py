@@ -18,11 +18,11 @@ from pydantic import BaseModel, Field
 from sentence_transformers import SentenceTransformer
 import numpy as np
 
-from cftravel_py.core.config import config
-from cftravel_py.core.constants import LLMProvider
-from cftravel_py.core.config import LLMConfig
-from cftravel_py.services.llm_service import LLMFactory
-from cftravel_py.data.data_processor import DataProcessor, TravelOffer
+from core.config import config
+from core.constants import LLMProvider
+from core.config import LLMConfig
+from services.llm_service import LLMFactory
+from data.data_processor import DataProcessor, TravelOffer
 
 # Suppress HTTP warnings and logging
 logging.getLogger("httpx").setLevel(logging.ERROR)
@@ -56,6 +56,9 @@ class ConversationContext:
     turn_count: int
     last_response_type: str = ""
     confidence_score: float = 0.0
+    current_state: str = "gathering_preferences"  # "gathering_preferences", "confirmation", "showing_offers", "completed"
+    needs_confirmation: bool = False
+    confirmation_summary: str = ""
 
 class IntelligentPipeline:
     """
@@ -280,27 +283,47 @@ You are ASIA.fr Agent, an intelligent travel specialist. Analyze this user input
 CONVERSATION CONTEXT:
 - Turn count: {self.conversation_context.turn_count}
 - Current preferences: {json.dumps(self.conversation_context.user_preferences, indent=2)}
+- Current state: {self.conversation_context.current_state}
 - Chat history: {self.conversation_context.chat_history[-500:] if self.conversation_context.chat_history else "None"}
 - Last response type: {self.conversation_context.last_response_type}
 
 USER INPUT: {user_input}
 
 ANALYZE AND DECIDE:
-1. What is the user's intent? (greeting, preference_sharing, offer_request, question, confirmation, etc.)
+1. What is the user's intent? (greeting, preference_sharing, recommend_place, offer_request, question, confirmation, modification, etc.)
 2. What information do we need to gather?
 3. Should we show offers now? (yes/no)
 4. How many offers should we show? (0-3)
-5. What type of response should we give? (greeting, question, offer_display, detailed_info, etc.)
+5. What type of response should we give? (greeting, question, offer_display, detailed_info, confirmation_request, etc.)
+6. Do we need confirmation before showing offers? (yes/no)
+
+CONFIRMATION FLOW RULES:
+- When user provides sufficient details (destination + duration OR destination + style + budget), ALWAYS ask for confirmation FIRST
+- Sufficient details = at least 2 key preferences (destination, duration, style, budget, travelers)
+- NEVER show offers immediately when user has sufficient details - ALWAYS ask for confirmation first
+- Only show offers after user explicitly confirms
+- If user says "yes", "confirm", "perfect", "sounds good", "show me", treat as confirmation
+- If user says "no", "modify", "change", "different", treat as modification request
 
 CRITICAL RULES:
-- Show exactly 3 offers when user has sufficient preferences (destination + style OR destination + duration)
-- Show exactly 3 offers when user confirms they want to see offers
+- Set intent to "recommend_place" when user asks for recommendations, suggestions, or wants to see places
+- Show exactly 3 offers ONLY when user explicitly confirms they want to see offers
+- NEVER show offers immediately when user has sufficient preferences - ALWAYS ask for confirmation first
 - Never show more than 3 offers
 - Be natural and conversational
 - Build on previous context
 - Ask one question at a time
 - Use Layla.ai style - charismatic, knowledgeable, friendly
 - If user mentions "Japan" and "cultural experience" together, show offers immediately
+
+INTENT DETECTION RULES:
+- "recommend_place": User asks for recommendations, suggestions, "show me places", "what should I visit", etc.
+- "offer_request": User specifically asks for offers, deals, packages
+- "preference_sharing": User shares travel preferences
+- "greeting": Hello, hi, how are you, etc.
+- "question": General questions about travel
+- "confirmation": User confirms or agrees to something
+- "modification": User wants to change or modify preferences
 
 YOU MUST RESPOND WITH VALID JSON ONLY. NO OTHER TEXT.
 
@@ -313,7 +336,9 @@ RESPOND IN THIS EXACT JSON FORMAT:
     "offer_count": 3,
     "response_type": "type of response to give",
     "reasoning": "step-by-step reasoning for the decision",
-    "next_action": "what to do next"
+    "next_action": "what to do next",
+    "needs_confirmation": false,
+    "has_sufficient_details": false
 }}
 
 JSON Response:
@@ -390,6 +415,56 @@ JSON Response:
                 if value and str(value).lower() not in ['null', 'none', 'unknown', '']:
                     cleaned_prefs[key] = str(value).strip()
             
+            # Map specific cities to countries for better matching
+            if cleaned_prefs.get('destination'):
+                dest = cleaned_prefs['destination'].lower()
+                city_to_country = {
+                    'tokyo': 'japan',
+                    'kyoto': 'japan',
+                    'osaka': 'japan',
+                    'hanoi': 'vietnam',
+                    'ho chi minh': 'vietnam',
+                    'bangkok': 'thailand',
+                    'phuket': 'thailand',
+                    'siem reap': 'cambodia',
+                    'phnom penh': 'cambodia',
+                    'vientiane': 'laos',
+                    'luang prabang': 'laos',
+                    'yangon': 'myanmar',
+                    'mandalay': 'myanmar',
+                    'singapore': 'singapore',
+                    'kuala lumpur': 'malaysia',
+                    'jakarta': 'indonesia',
+                    'bali': 'indonesia',
+                    'manila': 'philippines',
+                    'beijing': 'china',
+                    'shanghai': 'china',
+                    'mumbai': 'india',
+                    'delhi': 'india',
+                    'kathmandu': 'nepal',
+                    'thimphu': 'bhutan',
+                    'colombo': 'sri lanka',
+                    'male': 'maldives',
+                    'amman': 'jordan',
+                    'beirut': 'lebanon',
+                    'damascus': 'syria',
+                    'baghdad': 'iraq',
+                    'tehran': 'iran',
+                    'muscat': 'oman',
+                    'sanaa': 'yemen',
+                    'riyadh': 'saudi arabia',
+                    'jeddah': 'saudi arabia',
+                    'kuwait city': 'kuwait',
+                    'doha': 'qatar',
+                    'manama': 'bahrain',
+                    'dubai': 'uae',
+                    'abu dhabi': 'uae'
+                }
+                
+                if dest in city_to_country:
+                    cleaned_prefs['destination'] = city_to_country[dest]
+                    debug_print(f"🔄 Mapped city '{dest}' to country '{city_to_country[dest]}'")
+            
             debug_print(f"📊 Extracted preferences: {cleaned_prefs}")
             return cleaned_prefs
             
@@ -409,7 +484,56 @@ JSON Response:
         self.conversation_context.confidence_score = orchestration_result.get("confidence", 0.0)
         self.conversation_context.last_response_type = orchestration_result.get("response_type", "")
         
-        debug_print(f"🔄 Updated context: {self.conversation_context.user_preferences}")
+        # Check if we have sufficient details for confirmation
+        has_sufficient_details = self._check_sufficient_details()
+        needs_confirmation = orchestration_result.get("needs_confirmation", False)
+        
+        if has_sufficient_details and needs_confirmation:
+            self.conversation_context.current_state = "confirmation"
+            self.conversation_context.needs_confirmation = True
+            self.conversation_context.confirmation_summary = self._generate_confirmation_summary()
+        elif orchestration_result.get("should_show_offers", False):
+            self.conversation_context.current_state = "showing_offers"
+            self.conversation_context.needs_confirmation = False
+        
+        debug_print(f"🔄 Updated context: {self.conversation_context.user_preferences}, State: {self.conversation_context.current_state}")
+    
+    def _check_sufficient_details(self) -> bool:
+        """Check if we have sufficient details to ask for confirmation"""
+        preferences = self.conversation_context.user_preferences
+        
+        # Count how many key preferences we have
+        key_preferences = ['destination', 'duration', 'style', 'budget', 'travelers']
+        preference_count = sum(1 for pref in key_preferences if preferences.get(pref))
+        
+        # We need at least 2 key preferences to ask for confirmation
+        return preference_count >= 2
+    
+    def _generate_confirmation_summary(self) -> str:
+        """Generate a summary of preferences for confirmation"""
+        preferences = self.conversation_context.user_preferences
+        
+        summary_parts = []
+        
+        if preferences.get('destination'):
+            summary_parts.append(f"Destination: {preferences['destination']}")
+        
+        if preferences.get('duration'):
+            summary_parts.append(f"Duration: {preferences['duration']} days")
+        
+        if preferences.get('style'):
+            summary_parts.append(f"Style: {preferences['style']}")
+        
+        if preferences.get('budget'):
+            summary_parts.append(f"Budget: {preferences['budget']}")
+        
+        if preferences.get('travelers'):
+            summary_parts.append(f"Travelers: {preferences['travelers']}")
+        
+        if preferences.get('timing'):
+            summary_parts.append(f"Timing: {preferences['timing']}")
+        
+        return " | ".join(summary_parts) if summary_parts else "No preferences set"
     
     def _generate_intelligent_response(self, user_input: str, orchestration_result: Dict, preferences: Dict) -> Dict[str, Any]:
         """
@@ -429,12 +553,45 @@ JSON Response:
             "status": "success"
         }
         
+        # Add confirmation information if needed
+        if self.conversation_context.needs_confirmation:
+            response_data["needs_confirmation"] = True
+            response_data["confirmation_summary"] = self.conversation_context.confirmation_summary
+        
+        # Add conversation state
+        response_data["conversation_state"] = {
+            "conversation_id": self.conversation_context.conversation_id,
+            "user_preferences": self.conversation_context.user_preferences,
+            "current_state": self.conversation_context.current_state,
+            "needs_confirmation": self.conversation_context.needs_confirmation,
+            "confirmation_summary": self.conversation_context.confirmation_summary,
+            "turn_count": self.conversation_context.turn_count,
+            "last_response_type": self.conversation_context.last_response_type
+        }
+        
         # Add offers if needed
         if should_show_offers and offer_count > 0:
-            offers = self._get_intelligent_offers(preferences, offer_count)
-            if offers:
-                response_data["offers"] = offers
-                debug_print(f"🎯 Added {len(offers)} offers to response")
+            # Use the OfferService instead of our own offer matching
+            try:
+                from services.offer_service import OfferService
+                from services.data_service import DataService
+                
+                # Initialize services
+                ds = DataService()
+                os = OfferService(ds)
+                
+                # Get offers using our tested OfferService
+                offers = os.match_offers(preferences, max_offers=offer_count)
+                if offers:
+                    response_data["offers"] = offers
+                    debug_print(f"🎯 Added {len(offers)} offers using OfferService")
+            except Exception as e:
+                debug_print(f"❌ Error using OfferService: {e}")
+                # Fallback to our own method
+                offers = self._get_intelligent_offers(preferences, offer_count)
+                if offers:
+                    response_data["offers"] = offers
+                    debug_print(f"🎯 Added {len(offers)} offers using fallback method")
         
         return response_data
     
@@ -449,6 +606,7 @@ CONVERSATION CONTEXT:
 - User preferences: {json.dumps(preferences, indent=2)}
 - Orchestration result: {json.dumps(orchestration_result, indent=2)}
 - Chat history: {self.conversation_context.chat_history[-300:] if self.conversation_context.chat_history else "None"}
+- Current state: {self.conversation_context.current_state}
 
 USER INPUT: {user_input}
 
@@ -464,6 +622,12 @@ GENERATE A NATURAL RESPONSE following these rules:
 9. If asking for preferences, be specific and helpful
 10. If user mentions Japan + cultural experience, show excitement and offer to show relevant offers
 
+CONFIRMATION FLOW:
+- If asking for confirmation, summarize their preferences and ask if they want to proceed
+- Be enthusiastic about their choices and make them feel confident
+- Offer to show them the best 3 offers that match their preferences
+- If they want to modify, be helpful and ask what they'd like to change
+
 RESPONSE TYPE: {orchestration_result.get("response_type", "question")}
 
 Generate a natural, conversational response:
@@ -478,45 +642,171 @@ Generate a natural, conversational response:
     
     def _get_intelligent_offers(self, preferences: Dict, max_offers: int = 3) -> List[Dict]:
         """
-        Use AI to intelligently match and rank offers
+        Use AI and vector search to intelligently match and rank offers
         """
         try:
-            # Get available offers
-            available_offers = self.data_processor.offers[:50]  # Limit for performance
+            # Build search query from preferences
+            search_query = self._build_search_query(preferences)
+            debug_print(f"🔍 Search query: {search_query}")
+            
+            # Use vector search for semantic matching
+            vector_results = self._vector_search_offers(search_query, max_offers * 2)
+            
+            # Use AI to refine and rank the vector results
+            refined_offers = self._ai_refine_offers(vector_results, preferences, max_offers)
+            
+            return refined_offers
+            
+        except Exception as e:
+            debug_print(f"❌ Intelligent offer matching failed: {e}")
+            return []
+    
+    def _build_search_query(self, preferences: Dict) -> str:
+        """Build a semantic search query from user preferences"""
+        query_parts = []
+        
+        if preferences.get('destination'):
+            query_parts.append(f"travel to {preferences['destination']}")
+        
+        if preferences.get('style'):
+            query_parts.append(f"{preferences['style']} experience")
+        
+        if preferences.get('duration'):
+            query_parts.append(f"{preferences['duration']} days")
+        
+        if preferences.get('budget'):
+            query_parts.append(f"{preferences['budget']} budget")
+        
+        # Add context from conversation
+        if self.conversation_context.chat_history:
+            # Extract key terms from recent conversation
+            recent_context = self.conversation_context.chat_history[-200:]
+            query_parts.append(recent_context)
+        
+        return " ".join(query_parts) if query_parts else "travel offers"
+    
+    def _vector_search_offers(self, query: str, top_k: int = 6) -> List[Dict]:
+        """Use Sentence Transformers for semantic search"""
+        try:
+            # Use the data processor's semantic search
+            search_results = self.data_processor.semantic_search(query, top_k=top_k)
+            
+            # Convert to structured format
+            structured_results = []
+            for result in search_results:
+                offer = result.get('offer')
+                if offer:
+                    structured_result = {
+                        "product_name": offer.product_name,
+                        "reference": offer.reference,
+                        "destinations": offer.destinations,
+                        "departure_city": offer.departure_city,
+                        "dates": offer.dates,
+                        "duration": offer.duration,
+                        "offer_type": offer.offer_type,
+                        "description": offer.description,
+                        "highlights": offer.highlights,
+                        "images": getattr(offer, 'images', []),
+                        "price_url": f"https://example.com/offer/{offer.reference}",
+                        "vector_score": result.get('score', 0.0),
+                        "semantic_match": result.get('semantic_match', "")
+                    }
+                    structured_results.append(structured_result)
+            
+            return structured_results
+            
+        except Exception as e:
+            debug_print(f"❌ Vector search failed: {e}")
+            # Fallback to basic search
+            return self._basic_search_offers(query, top_k)
+    
+    def _basic_search_offers(self, query: str, top_k: int = 6) -> List[Dict]:
+        """Basic text-based search fallback"""
+        try:
+            available_offers = self.data_processor.offers[:50]
+            query_lower = query.lower()
+            
+            scored_offers = []
+            for offer in available_offers:
+                score = 0
+                offer_text = offer.get_semantic_text().lower()
+                
+                # Simple keyword matching
+                if query_lower in offer_text:
+                    score += 1
+                
+                # Destination matching
+                for dest in offer.destinations:
+                    if query_lower in dest.get('city', '').lower() or query_lower in dest.get('country', '').lower():
+                        score += 2
+                
+                if score > 0:
+                    structured_offer = {
+                        "product_name": offer.product_name,
+                        "reference": offer.reference,
+                        "destinations": offer.destinations,
+                        "departure_city": offer.departure_city,
+                        "dates": offer.dates,
+                        "duration": offer.duration,
+                        "offer_type": offer.offer_type,
+                        "description": offer.description,
+                        "highlights": offer.highlights,
+                        "images": getattr(offer, 'images', []),
+                        "price_url": f"https://example.com/offer/{offer.reference}",
+                        "vector_score": score,
+                        "semantic_match": "Basic text match"
+                    }
+                    scored_offers.append(structured_offer)
+            
+            # Sort by score and return top_k
+            scored_offers.sort(key=lambda x: x['vector_score'], reverse=True)
+            return scored_offers[:top_k]
+            
+        except Exception as e:
+            debug_print(f"❌ Basic search failed: {e}")
+            return []
+    
+    def _ai_refine_offers(self, vector_results: List[Dict], preferences: Dict, max_offers: int = 3) -> List[Dict]:
+        """Use AI to refine and rank vector search results"""
+        try:
+            if not vector_results:
+                return []
             
             # Create offers summary for AI
             offers_summary = []
-            for offer in available_offers:
+            for offer in vector_results:
                 offers_summary.append({
-                    "reference": offer.reference,
-                    "product_name": offer.product_name,
-                    "destinations": offer.destinations,
-                    "duration": offer.duration,
-                    "offer_type": offer.offer_type,
-                    "description": offer.description,
-                    "highlights": offer.highlights
+                    "reference": offer.get("reference"),
+                    "product_name": offer.get("product_name"),
+                    "destinations": offer.get("destinations"),
+                    "duration": offer.get("duration"),
+                    "offer_type": offer.get("offer_type"),
+                    "description": offer.get("description"),
+                    "highlights": offer.get("highlights"),
+                    "vector_score": offer.get("vector_score", 0.0)
                 })
 
-            # Use AI to match offers
+            # Use AI to refine and rank
             prompt = f"""
-You are an expert travel offer matcher. Find the BEST {max_offers} matches from the available offers.
+You are an expert travel offer matcher. Refine and rank the BEST {max_offers} matches from these vector search results.
 
 USER PREFERENCES: {json.dumps(preferences, indent=2)}
-AVAILABLE OFFERS: {json.dumps(offers_summary, indent=2)}
+VECTOR SEARCH RESULTS: {json.dumps(offers_summary, indent=2)}
 
-MATCHING RULES:
-1. Focus on semantic similarity and user preferences
-2. Consider destination, style, duration, and budget
-3. Prioritize offers that match multiple preferences
+REFINEMENT RULES:
+1. Consider both vector scores and user preferences
+2. Prioritize offers that match multiple preferences
+3. Consider destination, style, duration, and budget
 4. Provide detailed reasoning for each match
-5. If user mentions "Japan" and "cultural", prioritize Japan cultural tours
-6. If user mentions specific destinations, prioritize those exact destinations
+5. If user mentions specific destinations, prioritize those exact destinations
+6. Consider the conversation context and user's intent
 
 For each selected offer, provide:
 - offer_reference: exact reference from available offers
-- match_score: 0-1 score based on similarity
-- reasoning: why this offer matches
+- match_score: 0-1 score based on overall similarity
+- reasoning: why this offer matches the user's preferences
 - highlights: key highlights for this offer
+- why_perfect: why this offer is perfect for the user
 
 YOU MUST RESPOND WITH VALID JSON ONLY. NO OTHER TEXT.
 
@@ -527,7 +817,8 @@ RESPOND IN JSON FORMAT:
             "offer_reference": "REF123",
             "match_score": 0.95,
             "reasoning": "Perfect match for cultural experience in Japan",
-            "highlights": ["Cultural tours", "Traditional experiences", "Local guides"]
+            "highlights": ["Cultural tours", "Traditional experiences", "Local guides"],
+            "why_perfect": "This offer perfectly matches your desire for cultural experiences in Japan"
         }}
     ]
 }}
@@ -542,33 +833,35 @@ Select exactly {max_offers} offers:
             structured_offers = []
             for match in match_result.get("matches", [])[:max_offers]:
                 offer_ref = match.get("offer_reference")
-                offer = next((o for o in available_offers if o.reference == offer_ref), None)
+                original_offer = next((o for o in vector_results if o.get("reference") == offer_ref), None)
 
-                if offer:
+                if original_offer:
                     structured_offer = {
-                        "product_name": offer.product_name,
-                        "reference": offer.reference,
-                        "destinations": offer.destinations,
-                        "departure_city": offer.departure_city,
-                        "dates": offer.dates,
-                        "duration": offer.duration,
-                        "offer_type": offer.offer_type,
-                        "description": offer.description,
-                        "highlights": offer.highlights,
-                        "images": getattr(offer, 'images', []),
-                        "price_url": f"https://example.com/offer/{offer.reference}",
+                        "product_name": original_offer.get("product_name"),
+                        "reference": original_offer.get("reference"),
+                        "destinations": original_offer.get("destinations"),
+                        "departure_city": original_offer.get("departure_city"),
+                        "dates": original_offer.get("dates"),
+                        "duration": original_offer.get("duration"),
+                        "offer_type": original_offer.get("offer_type"),
+                        "description": original_offer.get("description"),
+                        "highlights": original_offer.get("highlights"),
+                        "images": original_offer.get("images", []),
+                        "price_url": original_offer.get("price_url"),
                         "ai_reasoning": match.get("reasoning", ""),
                         "ai_highlights": match.get("highlights", []),
                         "match_score": match.get("match_score", 0.8),
-                        "why_perfect": match.get("reasoning", "")
+                        "why_perfect": match.get("why_perfect", ""),
+                        "vector_score": original_offer.get("vector_score", 0.0)
                     }
                     structured_offers.append(structured_offer)
             
             return structured_offers
             
         except Exception as e:
-            debug_print(f"❌ Intelligent offer matching failed: {e}")
-            return []
+            debug_print(f"❌ AI refinement failed: {e}")
+            # Return vector results as fallback
+            return vector_results[:max_offers]
 
     def _add_to_memory(self, user_input: str, response: str):
         """Add conversation to memory"""
