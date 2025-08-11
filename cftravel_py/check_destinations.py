@@ -13,7 +13,7 @@ all_destinations = set()
 japan_destinations = set()
 
 for offer in data:
-    for dest in offer.get('destinations', []):
+    for dest in offer.get('destinations', []):          
         if isinstance(dest, dict):
             city = dest.get('city', '').strip()
             country = dest.get('country', '').strip()
