@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class DataService:
     """Service for handling data operations"""
     
-    def __init__(self, data_path: str = "cftravel_py/data/asia/data.json"):
+    def __init__(self, data_path: str = "data/asia/data.json"):
         self.data_path = Path(data_path)
         self._data = None
         self._offers = None

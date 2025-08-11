@@ -29,8 +29,8 @@ class ConfirmationFlow {
                              </svg>
                          </div>
                          <div>
-                             <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Perfect! Let's confirm your preferences</h3>
-                             <p class="text-gray-600 dark:text-gray-300">I've gathered all the details I need to find your perfect travel offers</p>
+                             <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Parfait ! Confirmons vos préférences</h3>
+                             <p class="text-gray-600 dark:text-gray-300">J'ai rassemblé tous les détails nécessaires pour trouver vos offres de voyage parfaites</p>
                          </div>
                      </div>
                 </div>
@@ -60,10 +60,10 @@ class ConfirmationFlow {
                                  </svg>
                              </div>
                              <div>
-                                 <p class="text-red-800 dark:text-red-200 font-medium mb-2">Ready to find your perfect offers!</p>
+                                 <p class="text-red-800 dark:text-red-200 font-medium mb-2">Prêt à découvrir vos offres parfaites !</p>
                                  <p class="text-red-700 dark:text-red-300 text-sm">
-                                     Based on your preferences, I'll show you the 3 best travel offers that match exactly what you're looking for. 
-                                     Each offer will be carefully selected and ranked by our AI to ensure the perfect match.
+                                     Basé sur vos préférences, je vais vous montrer les 3 meilleures offres de voyage qui correspondent exactement à ce que vous recherchez. 
+                                     Chaque offre sera soigneusement sélectionnée et classée par notre IA pour garantir la correspondance parfaite.
                                  </p>
                              </div>
                          </div>
@@ -130,7 +130,7 @@ class ConfirmationFlow {
                      </div>
                      <div>
                          <p class="text-sm font-medium text-gray-900 dark:text-white">Duration</p>
-                         <p class="text-xs text-gray-600 dark:text-gray-300">${preferences.duration} days</p>
+                         <p class="text-xs text-gray-600 dark:text-gray-300">${preferences.duration} jours</p>
                      </div>
                  </div>
             `);
@@ -178,7 +178,7 @@ class ConfirmationFlow {
                      </div>
                      <div>
                          <p class="text-sm font-medium text-gray-900 dark:text-white">Travelers</p>
-                         <p class="text-xs text-gray-600 dark:text-gray-300">${preferences.travelers} people</p>
+                         <p class="text-xs text-gray-600 dark:text-gray-300">${preferences.travelers} personnes</p>
                      </div>
                  </div>
             `);
@@ -309,7 +309,7 @@ class ConfirmationFlow {
                          </div>
                          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Your Perfect Travel Offers</h3>
                      </div>
-                     <p class="text-sm text-gray-600 dark:text-gray-300">Here are the 3 best offers that match your preferences perfectly</p>
+                     <p class="text-sm text-gray-600 dark:text-gray-300">Voici les 3 meilleures offres qui correspondent parfaitement à vos préférences</p>
                  </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     ${offers.map((offer, index) => this.createOfferCard(offer, index)).join('')}
@@ -339,7 +339,9 @@ class ConfirmationFlow {
         const gradient = gradients[index % gradients.length];
         
         return `
-            <div class="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 hover:scale-105">
+            <div class="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 hover:scale-105" 
+                 data-offer-reference="${offer.reference}" 
+                 data-offer-data='${JSON.stringify(offer)}'>
                 <div class="relative">
                     <div class="absolute inset-0 bg-gradient-to-br ${gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
                     <img src="${imageUrl}" alt="${offer.product_name}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.src='/assets/images/placeholder-travel.svg'">
@@ -412,8 +414,13 @@ class ConfirmationFlow {
                             <span class="ml-2">Petit groupe • Premium</span>
                         </div>
                         <div class="flex gap-3">
-                            <button onclick="confirmationFlow.showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm px-5 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
-                                Voir détails
+                            ${offer.price_url ? `
+                                <a href="${offer.price_url}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm px-5 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
+                                    Réserver
+                                </a>
+                            ` : ''}
+                            <button onclick="confirmationFlow.showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm px-4 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
+                                Détails
                             </button>
                         </div>
                     </div>
@@ -426,6 +433,16 @@ class ConfirmationFlow {
      * Show offer details modal
      */
     showOfferDetails(offerReference) {
+        // Find the offer data from the current offers
+        const offerCards = document.querySelectorAll('[data-offer-reference]');
+        let offerData = null;
+        
+        offerCards.forEach(card => {
+            if (card.getAttribute('data-offer-reference') === offerReference) {
+                offerData = JSON.parse(card.getAttribute('data-offer-data') || '{}');
+            }
+        });
+        
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
         modal.innerHTML = `
@@ -439,16 +456,48 @@ class ConfirmationFlow {
                     </button>
                 </div>
                 <div class="space-y-4">
-                    <p class="text-gray-600 dark:text-gray-300">Référence: ${offerReference}</p>
-                    <p class="text-gray-600 dark:text-gray-300">Cette fonctionnalité sera bientôt disponible pour afficher tous les détails de l'offre.</p>
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">${offerData?.product_name || 'Offre de voyage'}</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-2">Référence: ${offerReference}</p>
+                        ${offerData?.description ? `<p class="text-gray-600 dark:text-gray-300">${offerData.description}</p>` : ''}
+                    </div>
+                    
+                    ${offerData?.highlights && offerData.highlights.length > 0 ? `
+                        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+                            <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-2">Points forts</h4>
+                            <ul class="space-y-1">
+                                ${offerData.highlights.slice(0, 5).map(highlight => `
+                                    <li class="text-sm text-blue-800 dark:text-blue-200 flex items-center">
+                                        <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        ${highlight.text}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    ${offerData?.ai_reasoning ? `
+                        <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+                            <h4 class="font-semibold text-green-900 dark:text-green-100 mb-2">Pourquoi cette offre vous convient</h4>
+                            <p class="text-sm text-green-800 dark:text-green-200">${offerData.ai_reasoning}</p>
+                        </div>
+                    ` : ''}
                 </div>
                 <div class="mt-6 flex justify-end space-x-3">
                     <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100">
                         Fermer
                     </button>
-                    <button onclick="confirmationFlow.bookOffer('${offerReference}')" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 py-2 rounded-lg transition-all duration-200">
-                        Réserver
-                    </button>
+                    ${offerData?.price_url ? `
+                        <a href="${offerData.price_url}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium">
+                            Réserver maintenant
+                        </a>
+                    ` : `
+                        <button onclick="confirmationFlow.bookOffer('${offerReference}')" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 py-2 rounded-lg transition-all duration-200">
+                            Réserver
+                        </button>
+                    `}
                 </div>
             </div>
         `;

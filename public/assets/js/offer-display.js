@@ -152,9 +152,16 @@ const OfferDisplay = {
                         <span class="font-semibold text-green-600">€€€</span>
                         <span class="ml-1">Petit groupe</span>
                     </div>
-                    <button onclick="OfferDisplay.showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm px-4 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
-                        Voir détails
-                    </button>
+                    <div class="flex gap-2">
+                        ${offer.price_url ? `
+                            <a href="${offer.price_url}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm px-4 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
+                                Réserver
+                            </a>
+                        ` : ''}
+                        <button onclick="OfferDisplay.showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm px-4 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
+                            Détails
+                        </button>
+                    </div>
                 </div>
             </div>
         `;

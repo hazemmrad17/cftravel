@@ -591,7 +591,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const gradient = gradients[index % gradients.length];
     
     return `
-      <div class="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 hover:scale-105">
+      <div class="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 hover:scale-105" 
+           data-offer-reference="${offer.reference}" 
+           data-offer-data='${JSON.stringify(offer)}'>
         <div class="relative">
           <div class="absolute inset-0 bg-gradient-to-br ${gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
           <img src="${imageUrl}" alt="${offer.product_name}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.src='/assets/images/placeholder-travel.svg'">
@@ -701,6 +703,11 @@ document.addEventListener('DOMContentLoaded', function() {
               <button onclick="showDetailedProgram('${offer.reference}')" class="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-sm px-4 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
                 Programme détaillé
               </button>
+              ${offer.price_url ? `
+                <a href="${offer.price_url}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm px-5 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
+                  Réserver
+                </a>
+              ` : ''}
               <button onclick="showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm px-5 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
                 Voir détails
               </button>
@@ -712,6 +719,16 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function showOfferDetails(offerReference) {
+    // Find the offer data from the current offers
+    const offerCards = document.querySelectorAll('[data-offer-reference]');
+    let offerData = null;
+    
+    offerCards.forEach(card => {
+      if (card.getAttribute('data-offer-reference') === offerReference) {
+        offerData = JSON.parse(card.getAttribute('data-offer-data') || '{}');
+      }
+    });
+    
     // Create a modal with detailed offer information
     const modal = document.createElement('div');
     modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
@@ -726,16 +743,48 @@ document.addEventListener('DOMContentLoaded', function() {
           </button>
         </div>
         <div class="space-y-4">
-          <p class="text-gray-600 dark:text-gray-400">Référence: ${offerReference}</p>
-          <p class="text-gray-600 dark:text-gray-400">Cette fonctionnalité sera bientôt disponible pour afficher tous les détails de l'offre.</p>
+          <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+            <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">${offerData?.product_name || 'Offre de voyage'}</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-2">Référence: ${offerReference}</p>
+            ${offerData?.description ? `<p class="text-gray-600 dark:text-gray-300">${offerData.description}</p>` : ''}
+          </div>
+          
+          ${offerData?.highlights && offerData.highlights.length > 0 ? `
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+              <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-2">Points forts</h4>
+              <ul class="space-y-1">
+                ${offerData.highlights.slice(0, 5).map(highlight => `
+                  <li class="text-sm text-blue-800 dark:text-blue-200 flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    ${highlight.text}
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          ` : ''}
+          
+          ${offerData?.ai_reasoning ? `
+            <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+              <h4 class="font-semibold text-green-900 dark:text-green-100 mb-2">Pourquoi cette offre vous convient</h4>
+              <p class="text-sm text-green-800 dark:text-green-200">${offerData.ai_reasoning}</p>
+            </div>
+          ` : ''}
         </div>
         <div class="mt-6 flex justify-end space-x-3">
           <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
             Fermer
           </button>
-          <button onclick="bookOffer('${offerReference}')" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-200">
-            Réserver
-          </button>
+          ${offerData?.price_url ? `
+            <a href="${offerData.price_url}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium">
+              Réserver maintenant
+            </a>
+          ` : `
+            <button onclick="bookOffer('${offerReference}')" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-200">
+              Réserver
+            </button>
+          `}
         </div>
       </div>
     `;

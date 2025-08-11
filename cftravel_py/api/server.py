@@ -62,7 +62,7 @@ async def startup_event():
         logger.info("🚀 Starting ASIA.fr Agent initialization...")
         
         # Initialize services
-        data_service = DataService()
+        data_service = DataService("data/asia/data.json")
         memory_service = MemoryService()
         offer_service = OfferService(data_service)
         
