@@ -439,18 +439,23 @@ async def clear_preferences():
 async def clear_memory():
     """Clear conversation memory"""
     try:
+        # Clear memory service
         if memory_service:
             memory_service.clear_all_conversations()
-            logger.info("🧹 Memory cleared successfully")
-            return MemoryResponse(
-                status="success", 
-                message="Memory cleared successfully"
-            )
-        else:
-            return MemoryResponse(
-                status="error", 
-                message="Memory system not available"
-            )
+            logger.info("🧹 Memory service cleared successfully")
+        
+        # Clear agent's internal memory
+        if agent:
+            try:
+                agent.clear_memory()
+                logger.info("🧹 Agent memory cleared successfully")
+            except Exception as agent_error:
+                logger.warning(f"⚠️ Could not clear agent memory: {agent_error}")
+        
+        return MemoryResponse(
+            status="success", 
+            message="Memory cleared successfully"
+        )
     except Exception as e:
         logger.error(f"❌ Error clearing memory: {e}")
         return MemoryResponse(
@@ -462,18 +467,23 @@ async def clear_memory():
 async def clear_memory_post():
     """Clear conversation memory (POST method for easier frontend integration)"""
     try:
+        # Clear memory service
         if memory_service:
             memory_service.clear_all_conversations()
-            logger.info("🧹 Memory cleared successfully")
-            return MemoryResponse(
-                status="success", 
-                message="Memory cleared successfully"
-            )
-        else:
-            return MemoryResponse(
-                status="error", 
-                message="Memory system not available"
-            )
+            logger.info("🧹 Memory service cleared successfully")
+        
+        # Clear agent's internal memory
+        if agent:
+            try:
+                agent.clear_memory()
+                logger.info("🧹 Agent memory cleared successfully")
+            except Exception as agent_error:
+                logger.warning(f"⚠️ Could not clear agent memory: {agent_error}")
+        
+        return MemoryResponse(
+            status="success", 
+            message="Memory cleared successfully"
+        )
     except Exception as e:
         logger.error(f"❌ Error clearing memory: {e}")
         return MemoryResponse(

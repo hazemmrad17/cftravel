@@ -9,6 +9,9 @@ let isAITyping = false;        // AI is currently streaming a response
 let eventListenersAttached = false;
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Clear memory on page load/refresh
+  clearMemory();
+  
   // Cache input and button elements
   let chatInputEl = document.querySelector('#chat-input');
   let sendButtonEl = document.querySelector('#chat-send-btn');
@@ -1681,5 +1684,11 @@ document.addEventListener('DOMContentLoaded', function() {
   observer.observe(document.body, {
     childList: true,
     subtree: true
+  });
+
+  // Clear memory when page is about to be unloaded (refresh/close)
+  window.addEventListener('beforeunload', function() {
+    // Use synchronous request to ensure it completes before page unloads
+    navigator.sendBeacon(`${API_BASE_URL}/memory/clear`, JSON.stringify({}));
   });
 }); 

@@ -23,7 +23,7 @@ class ConfirmationFlow {
              <div class="bg-chat-ai bg-white dark:bg-gray-800 shadow-theme-xs rounded-3xl rounded-bl-lg p-6 max-w-4xl border border-gray-200 dark:border-gray-700">
                 <div class="mb-6">
                                          <div class="flex items-center mb-4">
-                         <div class="w-10 h-10 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center mr-4">
+                         <div class="w-10 h-10 bg-gradient-to-r from-green-600 to-green-700 rounded-full flex items-center justify-center mr-4">
                              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                              </svg>
@@ -38,12 +38,12 @@ class ConfirmationFlow {
                 <!-- Preferences Summary -->
                 <div class="mb-6">
                                          <h4 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                         <svg class="w-5 h-5 mr-2 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <svg class="w-5 h-5 mr-2 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                          </svg>
                          Your Travel Preferences
                      </h4>
-                                         <div class="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-xl p-4 border border-red-200 dark:border-red-700">
+                                         <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 border border-gray-200 dark:border-gray-600">
                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                              ${this.renderPreferenceItems(preferences)}
                          </div>
@@ -52,16 +52,16 @@ class ConfirmationFlow {
 
                 <!-- Confirmation Message -->
                 <div class="mb-6">
-                                         <div class="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-xl p-4 border border-red-200 dark:border-red-700">
+                                         <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
                          <div class="flex items-start">
-                             <div class="w-8 h-8 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                             <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                  </svg>
                              </div>
                              <div>
-                                 <p class="text-red-800 dark:text-red-200 font-medium mb-2">Prêt à découvrir vos offres parfaites !</p>
-                                 <p class="text-red-700 dark:text-red-300 text-sm">
+                                 <p class="text-blue-800 dark:text-blue-200 font-medium mb-2">Prêt à découvrir vos offres parfaites !</p>
+                                 <p class="text-blue-700 dark:text-blue-300 text-sm">
                                      Basé sur vos préférences, je vais vous montrer les 3 meilleures offres de voyage qui correspondent exactement à ce que vous recherchez. 
                                      Chaque offre sera soigneusement sélectionnée et classée par notre IA pour garantir la correspondance parfaite.
                                  </p>
@@ -73,14 +73,14 @@ class ConfirmationFlow {
                 <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row gap-4">
                                          <button onclick="confirmationFlow.confirmPreferences()" 
-                             class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white dark:text-white px-8 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center">
+                             class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white dark:text-white px-8 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center">
                          <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                          </svg>
                          Yes, show me the offers!
                      </button>
                      <button onclick="confirmationFlow.modifyPreferences()" 
-                             class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white dark:text-white px-8 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center">
+                             class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white dark:text-white px-8 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center">
                          <svg class="w-5 h-5 mr-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                          </svg>
@@ -106,14 +106,14 @@ class ConfirmationFlow {
         if (preferences.destination) {
             items.push(`
                                  <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                     <div class="w-8 h-8 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center mr-3">
+                     <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center mr-3">
                          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                          </svg>
                      </div>
                      <div>
-                         <p class="text-sm font-medium text-gray-900 dark:text-white">Destination</p>
+                         <p class="text-sm font-medium text-gray-900 dark:text-white">Déstination</p>
                          <p class="text-xs text-gray-600 dark:text-gray-300">${preferences.destination}</p>
                      </div>
                  </div>
@@ -123,13 +123,13 @@ class ConfirmationFlow {
         if (preferences.duration) {
             items.push(`
                                  <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                     <div class="w-8 h-8 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center mr-3">
+                     <div class="w-8 h-8 bg-gradient-to-r from-green-600 to-green-700 rounded-full flex items-center justify-center mr-3">
                          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                          </svg>
                      </div>
                      <div>
-                         <p class="text-sm font-medium text-gray-900 dark:text-white">Duration</p>
+                         <p class="text-sm font-medium text-gray-900 dark:text-white">Durée</p>
                          <p class="text-xs text-gray-600 dark:text-gray-300">${preferences.duration} jours</p>
                      </div>
                  </div>
@@ -139,13 +139,13 @@ class ConfirmationFlow {
         if (preferences.style) {
             items.push(`
                                  <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                     <div class="w-8 h-8 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center mr-3">
+                     <div class="w-8 h-8 bg-gradient-to-r from-purple-600 to-purple-700 rounded-full flex items-center justify-center mr-3">
                          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                          </svg>
                      </div>
                      <div>
-                         <p class="text-sm font-medium text-gray-900 dark:text-white">Travel Style</p>
+                         <p class="text-sm font-medium text-gray-900 dark:text-white">Style de voyage</p>
                          <p class="text-xs text-gray-600 dark:text-gray-300">${preferences.style}</p>
                      </div>
                  </div>
@@ -155,7 +155,7 @@ class ConfirmationFlow {
         if (preferences.budget) {
             items.push(`
                                  <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                     <div class="w-8 h-8 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center mr-3">
+                     <div class="w-8 h-8 bg-gradient-to-r from-yellow-600 to-yellow-700 rounded-full flex items-center justify-center mr-3">
                          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                          </svg>
@@ -171,13 +171,13 @@ class ConfirmationFlow {
         if (preferences.travelers) {
             items.push(`
                                  <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                     <div class="w-8 h-8 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center mr-3">
+                     <div class="w-8 h-8 bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-full flex items-center justify-center mr-3">
                          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                          </svg>
                      </div>
                      <div>
-                         <p class="text-sm font-medium text-gray-900 dark:text-white">Travelers</p>
+                         <p class="text-sm font-medium text-gray-900 dark:text-white">Nombre de voyageurs</p>
                          <p class="text-xs text-gray-600 dark:text-gray-300">${preferences.travelers} personnes</p>
                      </div>
                  </div>
@@ -187,7 +187,7 @@ class ConfirmationFlow {
         if (preferences.timing) {
             items.push(`
                                  <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                     <div class="w-8 h-8 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center mr-3">
+                     <div class="w-8 h-8 bg-gradient-to-r from-teal-600 to-teal-700 rounded-full flex items-center justify-center mr-3">
                          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                          </svg>
