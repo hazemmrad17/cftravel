@@ -51,4 +51,4 @@ __all__ = [
     'DEFAULT_TEMPERATURE',
     'DEFAULT_MAX_OFFERS',
     'ERROR_MESSAGES'
-] 
+]               
