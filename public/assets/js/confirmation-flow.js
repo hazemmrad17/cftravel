@@ -339,12 +339,12 @@ class ConfirmationFlow {
         const gradient = gradients[index % gradients.length];
         
         return `
-            <div class="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 hover:scale-105" 
+            <div class="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 hover:scale-105 flex flex-col h-full" 
                  data-offer-reference="${offer.reference}" 
                  data-offer-data='${JSON.stringify(offer)}'>
                 <div class="relative">
                     <div class="absolute inset-0 bg-gradient-to-br ${gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
-                    <img src="${imageUrl}" alt="${offer.product_name}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.src='/assets/images/placeholder-travel.svg'">
+                    <img src="${imageUrl}" alt="${offer.product_name}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.src='/assets/images/placeholder-travel.svg'">
                     
                     <!-- Duration badge -->
                     <div class="absolute top-4 right-4">
@@ -371,7 +371,7 @@ class ConfirmationFlow {
                      </div>
                 </div>
                 
-                <div class="p-6">
+                <div class="p-6 flex-1 flex flex-col">
                     <!-- Title -->
                     <h3 class="font-bold text-xl text-gray-900 dark:text-white mb-4 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                         ${offer.product_name}
@@ -408,18 +408,18 @@ class ConfirmationFlow {
                     ` : ''}
                     
                     <!-- Action Buttons -->
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700 mt-auto">
                         <div class="text-sm text-gray-500 dark:text-gray-400">
                             <span class="font-bold text-green-600 text-lg">€€€</span>
                             <span class="ml-2">Petit groupe • Premium</span>
                         </div>
-                        <div class="flex gap-3">
+                        <div class="flex gap-2">
                             ${offer.price_url ? `
-                                <a href="${offer.price_url}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm px-5 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
+                                <a href="${offer.price_url}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-xs px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
                                     Réserver
                                 </a>
                             ` : ''}
-                            <button onclick="confirmationFlow.showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm px-4 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
+                            <button onclick="confirmationFlow.showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
                                 Détails
                             </button>
                         </div>

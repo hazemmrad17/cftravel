@@ -591,12 +591,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const gradient = gradients[index % gradients.length];
     
     return `
-      <div class="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 hover:scale-105" 
+      <div class="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 hover:scale-105 flex flex-col h-full" 
            data-offer-reference="${offer.reference}" 
            data-offer-data='${JSON.stringify(offer)}'>
         <div class="relative">
           <div class="absolute inset-0 bg-gradient-to-br ${gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
-          <img src="${imageUrl}" alt="${offer.product_name}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.src='/assets/images/placeholder-travel.svg'">
+          <img src="${imageUrl}" alt="${offer.product_name}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.src='/assets/images/placeholder-travel.svg'">
           
           <!-- Duration badge -->
           <div class="absolute top-4 right-4">
@@ -623,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
         </div>
         
-        <div class="p-6">
+        <div class="p-6 flex-1 flex flex-col">
           <!-- Title -->
           <h3 class="font-bold text-xl text-gray-900 dark:text-white mb-4 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
             ${offer.product_name}
@@ -647,15 +647,15 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
           
           <!-- Description -->
-          <p class="text-sm text-gray-600 dark:text-gray-400 mb-5 line-clamp-3 leading-relaxed">
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed">
             ${offer.description}
           </p>
           
           <!-- Highlights -->
-          <div class="mb-5">
-            <div class="flex flex-wrap gap-2">
-              ${offer.highlights.slice(0, 3).map(highlight => `
-                <span class="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-800 dark:text-blue-300 text-xs px-3 py-2 rounded-full font-medium shadow-sm">
+          <div class="mb-4">
+            <div class="flex flex-wrap gap-1">
+              ${offer.highlights.slice(0, 2).map(highlight => `
+                <span class="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-800 dark:text-blue-300 text-xs px-2 py-1 rounded-full font-medium shadow-sm">
                   ${highlight.text}
                 </span>
               `).join('')}
@@ -664,22 +664,14 @@ document.addEventListener('DOMContentLoaded', function() {
           
           <!-- AI Reasoning (if available) -->
           ${offer.ai_reasoning ? `
-            <div class="mb-5 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border-l-4 border-blue-400">
-              <div class="flex items-center mb-3">
-                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border-l-4 border-blue-400">
+              <div class="flex items-center mb-2">
+                <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                 </svg>
-                <span class="text-sm font-bold text-blue-800 dark:text-blue-200">Pourquoi cette offre vous convient</span>
+                <span class="text-xs font-bold text-blue-800 dark:text-blue-200">Match: ${Math.round(offer.match_score * 100)}%</span>
               </div>
-              <p class="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">${offer.ai_reasoning}</p>
-              ${offer.match_score ? `
-                <div class="mt-3 flex items-center">
-                  <div class="flex-1 bg-blue-200 dark:bg-blue-700 rounded-full h-2">
-                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-500" style="width: ${offer.match_score * 100}%"></div>
-                  </div>
-                  <span class="ml-3 text-xs text-blue-800 dark:text-blue-200 font-bold">${Math.round(offer.match_score * 100)}% match</span>
-                </div>
-              ` : ''}
+              <p class="text-xs text-blue-700 dark:text-blue-300 leading-relaxed line-clamp-2">${offer.ai_reasoning}</p>
             </div>
           ` : ''}
           
@@ -694,22 +686,19 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
           
           <!-- Price and Action -->
-          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700 mt-auto">
             <div class="text-sm text-gray-500 dark:text-gray-400">
               <span class="font-bold text-green-600 text-lg">€€€</span>
               <span class="ml-2">Petit groupe • Premium</span>
             </div>
-            <div class="flex gap-3">
-              <button onclick="showDetailedProgram('${offer.reference}')" class="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-sm px-4 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
-                Programme détaillé
-              </button>
+            <div class="flex gap-2">
               ${offer.price_url ? `
-                <a href="${offer.price_url}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm px-5 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
+                <a href="${offer.price_url}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-xs px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
                   Réserver
                 </a>
               ` : ''}
-              <button onclick="showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm px-5 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
-                Voir détails
+              <button onclick="showOfferDetails('${offer.reference}')" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg font-medium">
+                Détails
               </button>
             </div>
           </div>
