@@ -5,11 +5,7 @@
 
 class ConfirmationFlow {
     constructor() {
-        // Detect if we're on production or local development
-    const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-    this.API_BASE_URL = isProduction 
-      ? `${window.location.protocol}//${window.location.hostname}:8001` 
-      : 'http://localhost:8001';
+        this.API_BASE_URL = 'http://localhost:8001';
         this.currentState = null;
         this.preferences = {};
     }
