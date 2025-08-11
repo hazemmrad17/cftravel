@@ -171,6 +171,10 @@ Generate a conversational, helpful response that:
 - Explains your reasoning clearly
 - Suggests specific offers when relevant
 - Maintains a friendly, helpful tone
+- Uses Layla.ai style: ask multiple preference questions at once to speed up the conversation
+- When gathering preferences, ask 2-3 related questions together naturally
+- Format questions as a proper list with line breaks between each item using bullet points (•)
+- Avoid wall of text - each question should be on its own line for better readability
 
 Response:
 """

@@ -76,7 +76,7 @@ Create a `.env` file in the root directory:
 GROQ_API_KEY=your_groq_api_key_here
 
 # Model Configuration
-REASONING_MODEL=deepseek-r1-distill-llama-70b
+REASONING_MODEL=openai/gpt-oss-120b
 GENERATION_MODEL=llama-3.1-8b-instant
 MATCHER_MODEL=llama-3.1-8b-instant
 EXTRACTOR_MODEL=llama-3.1-8b-instant
@@ -127,7 +127,7 @@ The application uses multiple AI models for different tasks:
 - `GROQ_API_KEY`: Your Groq API key
 
 #### Model Configuration (Optional - uses defaults if not set)
-- `REASONING_MODEL`: Model for orchestration (default: deepseek-r1-distill-llama-70b)
+- `REASONING_MODEL`: Model for orchestration (default: openai/gpt-oss-120b)
 - `GENERATION_MODEL`: Model for response generation (default: llama-3.1-8b-instant)
 - `MATCHER_MODEL`: Model for offer matching (default: llama-3.1-8b-instant)
 - `EXTRACTOR_MODEL`: Model for preference extraction (default: llama-3.1-8b-instant)

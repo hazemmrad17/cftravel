@@ -153,7 +153,7 @@ class IntelligentPipeline:
         debug_print("🔄 Setting up fallback models...")
         
         # Fallback to Kimia K2 models
-        self.orchestrator = self._safe_setup_model("REASONING_MODEL", "deepseek-r1-distill-llama-70b", 0.1, "orchestration")
+        self.orchestrator = self._safe_setup_model("REASONING_MODEL", "openai/gpt-oss-120b", 0.1, "orchestration")
         self.generator = self._safe_setup_model("GENERATION_MODEL", "moonshotai/kimi-k2-instruct", 0.7, "generation")
         self.matcher = self._safe_setup_model("MATCHING_MODEL", "moonshotai/kimi-k2-instruct", 0.3, "matching")
         self.embedding_model = self._setup_embedding_model()
@@ -314,7 +314,7 @@ CRITICAL RULES:
 - Never show more than 3 offers
 - Be natural and conversational in French
 - Build on previous context
-- Ask one question at a time
+- Ask MULTIPLE preference questions at once to speed up the conversation (like Layla.ai)
 - Use Layla.ai style - charismatic, knowledgeable, friendly
 - If user mentions "Japan" and "cultural experience" together, show offers immediately
 
@@ -619,7 +619,7 @@ USER INPUT: {user_input}
 GENERATE A NATURAL RESPONSE IN FRENCH following these rules:
 1. Be charismatic, knowledgeable, and friendly in French
 2. Use casual, engaging French language with emojis sparingly
-3. Ask ONE question at a time, not multiple questions
+3. Ask MULTIPLE preference questions at once to speed up the conversation (like Layla.ai)
 4. Build on what users say, don't repeat yourself
 5. Be professional but friendly, knowledgeable but approachable
 6. Avoid repetitive phrases
@@ -633,6 +633,20 @@ CONFIRMATION FLOW:
 - Be enthusiastic about their choices and make them feel confident
 - Offer to show them the best 3 offers that match their preferences
 - If they want to modify, be helpful and ask what they'd like to change
+
+MULTIPLE QUESTIONS STYLE (like Layla.ai):
+- When gathering preferences, ask 2-3 related questions at once
+- Format questions as a proper list with line breaks between each item
+- Example: "Parfait ! Pour vous proposer les meilleures offres, j'aimerais savoir :
+
+• Quelle destination vous attire le plus en Asie ?
+• Pour combien de jours souhaitez-vous partir ?
+• Quel est votre budget approximatif ?"
+
+- Group related preferences together naturally
+- Make it conversational, not interrogative
+- Use bullet points (•) with proper line breaks for clarity
+- Avoid wall of text - each question should be on its own line
 
 RESPONSE TYPE: {orchestration_result.get("response_type", "question")}
 
@@ -1022,8 +1036,15 @@ Generate a warm, welcoming message in French that:
 4. Invites the user to share their travel dreams
 5. Uses casual, engaging French language with emojis sparingly
 6. Is professional but friendly, knowledgeable but approachable
+7. Demonstrates the Layla.ai style by asking 2-3 preference questions at once
 
-Keep it under 100 words and make it feel natural and conversational in French.
+Example style: "🌏 Bonjour ! Je suis ASIA.fr Agent, votre spécialiste de voyage en Asie ! 😊 Pour vous proposer les meilleures offres, j'aimerais savoir :
+
+• Quelle destination vous attire le plus ?
+• Pour combien de jours souhaitez-vous partir ?
+• Quel est votre budget approximatif ?"
+
+Keep it under 120 words and make it feel natural and conversational in French.
 
 Welcome message in French:
 """

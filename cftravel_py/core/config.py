@@ -57,7 +57,7 @@ class Config:
         # Default values for each model type - Kimia K2 for French responses
         defaults = {
             "reasoning": {
-                "model": "deepseek-r1-distill-llama-70b",
+                "model": "openai/gpt-oss-120b",
                 "temperature": 0.1,
                 "max_tokens": 2048
             },
