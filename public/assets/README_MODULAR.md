@@ -1,7 +1,7 @@
 # Frontend Assets - Modular Structure
 
 ## 📁 Proposed Directory Structure
-        
+
 ```
 public/assets/
 ├── README.md
@@ -17,7 +17,7 @@ public/assets/
 │   │   ├── api.service.js     # API communication service
 │   │   ├── chat.service.js    # Chat-specific API calls
 │   │   ├── offer.service.js   # Offer-specific API calls
-│   │   └── storage.service.js # Local storage management
+│   │   └── storage.service.js # Local storage management           
 │   │   
 │   ├── 📁 components/
 │   │   ├── 📁 chat/
