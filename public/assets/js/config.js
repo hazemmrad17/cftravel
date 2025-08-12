@@ -24,7 +24,7 @@ const Config = {
         if (hostname === 'ovg-iagent.cftravel.net' || 
             hostname === 'iagent.cftravel.net' ||
             hostname.includes('cftravel.net')) {
-            return 'https://ovg-iagent.cftravel.net:8000'; // Production API on port 8000
+            return 'http://ovg-iagent.cftravel.net:8000'; // Production API on port 8000
         }
         
         // Default fallback
