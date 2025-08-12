@@ -8,26 +8,23 @@ const Config = {
     getApiBaseUrl: function() {
         const hostname = window.location.hostname;
         
-        // Force local development for testing (comment out when deploying)
+        // Force local development for testing (add ?local=true to URL)
         if (window.location.search.includes('local=true')) {
-            const protocol = window.location.protocol;
-            return `${protocol}//localhost:8002`;
-        }
-        
-        // Production environments
-        if (hostname === 'ovg-iagent.cftravel.net' || 
-            hostname === 'iagent.cftravel.net' ||
-            hostname.includes('cftravel.net')) {
-            return 'https://ovg-iagent.cftravel.net/api-proxy.php';
+            return 'http://localhost:8002';
         }
         
         // Local development
         if (hostname === 'localhost' || 
             hostname === '127.0.0.1' ||
             hostname.includes('local')) {
-            // Use HTTPS if the page is served over HTTPS, otherwise HTTP
-            const protocol = window.location.protocol;
-            return `${protocol}//localhost:8002`;
+            return 'http://localhost:8002';
+        }
+        
+        // Production - use production API
+        if (hostname === 'ovg-iagent.cftravel.net' || 
+            hostname === 'iagent.cftravel.net' ||
+            hostname.includes('cftravel.net')) {
+            return 'https://ovg-iagent.cftravel.net:8000'; // Production API on port 8000
         }
         
         // Default fallback
