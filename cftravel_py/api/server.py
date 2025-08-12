@@ -15,9 +15,10 @@ from typing import Dict, Any, List
 import os
 from pathlib import Path
 
-# Import the pipeline
-from pipelines.concrete_pipeline import ASIAConcreteAgent, IntelligentPipeline
+# Import services
 from services.memory_service import MemoryService
+
+# Pipeline imports will be done lazily to avoid startup issues
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -44,9 +45,14 @@ def get_agent():
     """Lazy load the agent only when needed"""
     global _agent
     if _agent is None:
-        logger.info("🚀 Initializing ASIA.fr Agent...")
-        _agent = ASIAConcreteAgent()
-        logger.info("✅ ASIA.fr Agent initialized successfully")
+        try:
+            logger.info("🚀 Initializing ASIA.fr Agent...")
+            from pipelines.concrete_pipeline import ASIAConcreteAgent
+            _agent = ASIAConcreteAgent()
+            logger.info("✅ ASIA.fr Agent initialized successfully")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize ASIA.fr Agent: {e}")
+            raise HTTPException(status_code=500, detail="AI Agent not available")
     return _agent
 
 def get_memory_service():
@@ -75,7 +81,7 @@ async def startup_event():
     get_memory_service()
     
     logger.info("✅ Server startup complete")
-
+        
 @app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup on shutdown"""
@@ -92,6 +98,24 @@ async def read_home(request: Request):
     """Serve the home page"""
     templates = get_templates()
     return templates.TemplateResponse("chat/index.html.twig", {"request": request})
+
+@app.get("/test")
+async def test():
+    """Simple test endpoint"""
+    return {
+        "message": "Server is running!",
+        "status": "success",
+        "timestamp": "2024-01-15T12:00:00Z"
+    }
+
+@app.get("/health")
+async def health():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "agent_loaded": _agent is not None,
+        "memory_service_loaded": _memory_service is not None
+    }
 
 @app.post("/memory/clear")
 async def clear_memory(request: Request):
@@ -150,9 +174,32 @@ async def chat_stream(request: Request):
                 
                 # Check if we need to show offers
                 if isinstance(result, dict) and result.get("offers"):
-                    # Send offers data
+                    # Convert real offers to proper format
                     offers = result["offers"]
-                    yield f"data: {json.dumps({'offers': [offer.model_dump() if hasattr(offer, 'model_dump') else offer for offer in offers], 'type': 'offers'})}\n\n"
+                    converted_offers = []
+                    
+                    for offer in offers:
+                        # Convert real offer data to offer card format
+                        converted_offer = {
+                            "reference": offer.get("reference", f"OFFER-{len(converted_offers)+1:03d}"),
+                            "product_name": offer.get("product_name", "Travel Package"),
+                            "description": offer.get("description", "Amazing travel experience"),
+                            "duration": offer.get("duration", 7),
+                            "departure_city": offer.get("departure_city", "Paris"),
+                            "destinations": offer.get("destinations", []),
+                            "highlights": offer.get("highlights", []),
+                            "images": offer.get("images", ["/assets/images/placeholder-travel.jpg"]),
+                            "match_score": offer.get("match_score", 0.8),
+                            "price_url": offer.get("price_url", "#"),
+                            "offer_type": offer.get("offer_type", "Package"),
+                            "dates": offer.get("dates", "Flexible"),
+                            "ai_reasoning": "Selected from our database based on your preferences",
+                            "ai_highlights": ["Real offer", "Database match", "Personalized selection"],
+                            "why_perfect": f"Matches your preferences for {offer.get('destinations', [{}])[0].get('country', 'travel')}"
+                        }
+                        converted_offers.append(converted_offer)
+                    
+                    yield f"data: {json.dumps({'offers': converted_offers, 'type': 'offers'})}\n\n"
                 
                 # Stream the response text
                 words = response_text.split()

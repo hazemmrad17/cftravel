@@ -66,25 +66,25 @@ class Config:
         temp_env_var = f"{model_type.upper()}_TEMPERATURE"
         tokens_env_var = f"{model_type.upper()}_MAX_TOKENS"
         
-        # Default values for each model type - Using Groq's available models
+        # Default values for each model type - Using Kimi K2 for better performance
         defaults = {
             "reasoning": {
-                "model": "llama3-70b-8192",
+                "model": "moonshotai/kimi-k2-instruct",
                 "temperature": 0.1,
                 "max_tokens": 2048
             },
             "generation": {
-                "model": "llama3-70b-8192",
+                "model": "moonshotai/kimi-k2-instruct",
                 "temperature": 0.7,
                 "max_tokens": 2048
             },
             "matcher": {
-                "model": "llama3-70b-8192",
+                "model": "moonshotai/kimi-k2-instruct",
                 "temperature": 0.3,
                 "max_tokens": 2048
             },
             "extractor": {
-                "model": "llama3-70b-8192",
+                "model": "moonshotai/kimi-k2-instruct",
                 "temperature": 0.1,
                 "max_tokens": 1024
             }

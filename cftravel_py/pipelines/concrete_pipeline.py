@@ -655,24 +655,15 @@ JSON Response:
         # Handle offer display when user confirms or explicitly requests offers
         if should_show_offers and has_sufficient_details:
             try:
-                # Step 1: Use sentence transformer to find similar offers
-                search_query = self._build_preference_query(preferences)
-                debug_print(f"🔍 Building search query: {search_query}")
+                # Use the improved pipeline: sentence transformer → MATCHER LLM → card display
+                offers = self._get_ai_selected_offers(preferences, offer_count)
                 
-                # Step 2: Use semantic search to find candidates
-                vector_results = self._vector_search_offers(search_query, top_k=6)
-                debug_print(f"🔍 Semantic search found {len(vector_results)} candidates")
-                
-                # Step 3: Use MATCHER LLM to refine and rank offers
-                ai_refined_offers = self._ai_refine_offers(vector_results, preferences, max_offers=offer_count)
-                debug_print(f"🔍 AI refinement selected {len(ai_refined_offers)} offers")
-                
-                if ai_refined_offers:
-                    response["offers"] = ai_refined_offers
+                if offers:
+                    response["offers"] = offers
                     response["response_type"] = "offers"
-                    debug_print(f"🎯 Generated {len(ai_refined_offers)} AI-selected offers using sentence transformer + matcher LLM")
+                    debug_print(f"🎯 Generated {len(offers)} offers using improved pipeline (sentence transformer → MATCHER LLM → card display)")
                 else:
-                    debug_print("❌ No offers found through semantic search")
+                    debug_print("❌ No offers found through the pipeline")
                     response["response"] += "\n\nJe n'ai pas trouvé d'offres correspondant exactement à vos critères. Pouvez-vous ajuster vos préférences ?"
                     
             except Exception as e:
@@ -1084,7 +1075,7 @@ Select exactly {max_offers} offers:
         debug_print("✅ Memory cleared")
 
     def _build_preference_query(self, preferences: Dict) -> str:
-        """Build a comprehensive search query from user preferences"""
+        """Build a comprehensive search query from user preferences for sentence transformer"""
         query_parts = []
         
         if preferences.get('destination'):
@@ -1105,13 +1096,39 @@ Select exactly {max_offers} offers:
         if preferences.get('timing'):
             query_parts.append(f"période {preferences['timing']}")
         
-        # Add some context words for better matching
+        # Add context words for better semantic matching
         query_parts.extend(["circuit organisé", "voyage guidé", "découverte culturelle"])
         
         return " ".join(query_parts)
     
-    def _vector_search_offers(self, query: str, top_k: int = 6) -> List[Dict]:
-        """Use sentence transformers for semantic search"""
+    def _parse_json_response(self, response: str) -> List[Dict]:
+        """Parse JSON response from LLM with error handling"""
+        try:
+            # Clean the response
+            cleaned_response = response.strip()
+            
+            # Try to find JSON array in the response
+            start_idx = cleaned_response.find('[')
+            end_idx = cleaned_response.rfind(']')
+            
+            if start_idx != -1 and end_idx != -1:
+                json_str = cleaned_response[start_idx:end_idx + 1]
+                parsed = json.loads(json_str)
+                debug_print(f"✅ JSON parsed successfully: {len(parsed)} items")
+                return parsed
+            else:
+                debug_print("❌ No JSON array found in response")
+                return []
+                
+        except json.JSONDecodeError as e:
+            debug_print(f"❌ JSON decode error: {e}")
+            return []
+        except Exception as e:
+            debug_print(f"❌ Error parsing JSON: {e}")
+            return []
+    
+    def _vector_search_offers(self, query: str, top_k: int = 10) -> List[Dict]:
+        """Use sentence transformers to find top 10 closest offers from JSON database"""
         try:
             # Initialize semantic service if not already done
             if not hasattr(self, 'semantic_service'):
@@ -1119,14 +1136,19 @@ Select exactly {max_offers} offers:
                 self.semantic_service = OptimizedSemanticService()
                 debug_print("🔍 Initialized semantic service")
             
-            # Use the semantic service to find similar offers
+            # Use sentence transformer to search the JSON database
             search_results = self.semantic_service.search(query, top_k)
-            debug_print(f"🔍 Semantic search found {len(search_results)} results")
+            debug_print(f"🔍 Sentence transformer found {len(search_results)} closest offers")
+            
+            # Debug: Show first offer to verify it's from database
+            if search_results:
+                first_offer = search_results[0]
+                debug_print(f"🔍 First offer from database: {first_offer.get('product_name', 'Unknown')} - {first_offer.get('destinations', [])}")
             
             return search_results
             
         except Exception as e:
-            debug_print(f"❌ Vector search failed: {e}")
+            debug_print(f"❌ Sentence transformer search failed: {e}")
             # Fallback to basic search
             return self._fallback_text_search(query, top_k)
     
@@ -1169,7 +1191,7 @@ Select exactly {max_offers} offers:
             return []
     
     def _ai_refine_offers(self, vector_results: List[Dict], preferences: Dict, max_offers: int = 3) -> List[Dict]:
-        """Use the MATCHER LLM to refine and rank offers based on preferences"""
+        """Use the MATCHER LLM to rank the top 10 offers from sentence transformer based on user preferences"""
         try:
             if not vector_results:
                 return []
@@ -1177,15 +1199,28 @@ Select exactly {max_offers} offers:
             # Ensure models are loaded
             self._ensure_models_loaded()
             
-            # Create a prompt specifically for the MATCHER LLM
+            # Create a simplified version of offers to reduce token usage
+            simplified_offers = []
+            for offer in vector_results:
+                simplified_offer = {
+                    'product_name': offer.get('product_name', ''),
+                    'destinations': offer.get('destinations', []),
+                    'duration': offer.get('duration', 0),
+                    'description': offer.get('description', '')[:150],  # Limit description length
+                    'offer_type': offer.get('offer_type', ''),
+                    'similarity_score': offer.get('similarity_score', 0.0)
+                }
+                simplified_offers.append(simplified_offer)
+            
+            # Create a prompt for the MATCHER LLM to rank the top 10 offers
             prompt = f"""
-You are an expert travel agent specializing in matching offers to user preferences. Your job is to rank and select the best {max_offers} offers.
+You are an expert travel agent. Rank and select the best {max_offers} offers from these 10 candidates (found by sentence transformer).
 
 USER PREFERENCES:
 {json.dumps(preferences, indent=2, ensure_ascii=False)}
 
-SEMANTIC SEARCH RESULTS (from sentence transformer):
-{json.dumps(vector_results, indent=2, ensure_ascii=False)}
+TOP 10 OFFERS FROM SENTENCE TRANSFORMER:
+{json.dumps(simplified_offers, indent=2, ensure_ascii=False)}
 
 TASK: As the MATCHER LLM, analyze each offer and select the {max_offers} best matches. Consider:
 1. Destination compatibility (exact match gets highest score)
@@ -1196,18 +1231,26 @@ TASK: As the MATCHER LLM, analyze each offer and select the {max_offers} best ma
 
 For each selected offer, add a 'match_score' field (0.0-1.0) based on how well it matches preferences.
 
-Return ONLY a JSON array of the selected offers with match scores:
+Return ONLY a JSON array with the selected offers (include product_name for mapping):
 """
             
             # Use the MATCHER LLM specifically for this task
             response = self._call_llm_with_retry(self.matcher, prompt)
-            selected_offers = self._parse_json_response(response)
+            debug_print(f"🔍 MATCHER LLM response: {response[:200]}...")
+            selected_simplified = self._parse_json_response(response)
             
-            if isinstance(selected_offers, list):
-                # Ensure each offer has a match score
-                for offer in selected_offers:
-                    if 'match_score' not in offer:
-                        offer['match_score'] = 0.8  # Default score
+            if isinstance(selected_simplified, list):
+                # Map back to original offers and add match scores
+                selected_offers = []
+                for simplified in selected_simplified:
+                    # Find the original offer by product name
+                    for original in vector_results:
+                        if original.get('product_name') == simplified.get('product_name'):
+                            # Add match score to original offer
+                            original['match_score'] = simplified.get('match_score', 0.8)
+                            selected_offers.append(original)
+                            break
+                
                 return selected_offers[:max_offers]
             else:
                 # Fallback: return top results by semantic similarity score
@@ -1215,13 +1258,22 @@ Return ONLY a JSON array of the selected offers with match scores:
                 
         except Exception as e:
             debug_print(f"❌ AI refinement failed: {e}")
-            # Fallback: return top results by semantic similarity score
-            return sorted(vector_results, key=lambda x: x.get('similarity_score', 0), reverse=True)[:max_offers]
+            # Fallback: return top results by semantic similarity score with basic scoring
+            fallback_offers = []
+            for offer in vector_results[:max_offers]:
+                # Add a basic match score based on similarity
+                offer['match_score'] = offer.get('similarity_score', 0.8)
+                fallback_offers.append(offer)
+            
+            debug_print(f"🔄 Using fallback scoring for {len(fallback_offers)} offers")
+            return fallback_offers
     
     def _get_ai_selected_offers(self, preferences: Dict, offer_count: int = 3) -> List[Dict]:
         """
-        Get AI-selected offers using the sophisticated semantic search pipeline
-        Optimized for speed with caching
+        Get AI-selected offers using the improved pipeline:
+        1. Sentence transformer finds top 10 closest offers from JSON database
+        2. MATCHER LLM ranks them based on user preferences
+        3. Returns top 3 for card display
         """
         # Create cache key based on preferences
         cache_key = f"{hash(str(sorted(preferences.items())))}"
@@ -1230,40 +1282,36 @@ Return ONLY a JSON array of the selected offers with match scores:
             return self._offers_cache[cache_key]
         
         try:
-            # Build a comprehensive query from preferences
+            # Step 1: Build query for sentence transformer
             query = self._build_preference_query(preferences)
-            debug_print(f"🔍 Building semantic search query: {query}")
+            debug_print(f"🔍 Building query for sentence transformer: {query}")
             
-            # Step 1: Use vector search with sentence transformers
-            vector_results = self._vector_search_offers(query, top_k=6)
-            debug_print(f"🔍 Vector search found {len(vector_results)} candidates")
+            # Step 2: Use sentence transformer to find top 10 closest offers from JSON database
+            top_10_offers = self._vector_search_offers(query, top_k=10)
+            debug_print(f"🔍 Sentence transformer found {len(top_10_offers)} closest offers from database")
             
-            # Step 2: Use AI to refine and rank the results
-            ai_refined_offers = self._ai_refine_offers(vector_results, preferences, max_offers=offer_count)
-            debug_print(f"🔍 AI refinement selected {len(ai_refined_offers)} offers")
+            if not top_10_offers:
+                debug_print("❌ No offers found by sentence transformer")
+                return []
             
-            if ai_refined_offers:
-                # Convert to the expected format
-                result = []
-                for offer in ai_refined_offers:
-                    # Add match score from AI refinement
-                    offer_with_score = offer.copy()
-                    offer_with_score['match_score'] = offer.get('ai_score', 0.8)
-                    result.append(offer_with_score)
-                
+            # Step 3: Use MATCHER LLM to rank the top 10 offers based on user preferences
+            ranked_offers = self._ai_refine_offers(top_10_offers, preferences, max_offers=offer_count)
+            debug_print(f"🔍 MATCHER LLM ranked and selected {len(ranked_offers)} best offers")
+            
+            if ranked_offers:
                 # Cache the result
                 if not hasattr(self, '_offers_cache'):
                     self._offers_cache = {}
-                self._offers_cache[cache_key] = result
+                self._offers_cache[cache_key] = ranked_offers
                 
-                debug_print(f"✅ Found {len(result)} AI-selected offers with semantic matching")
-                return result
+                debug_print(f"✅ Pipeline complete: {len(ranked_offers)} offers ready for card display")
+                return ranked_offers
             else:
-                debug_print("⚠️ No offers found through semantic search")
+                debug_print("⚠️ No offers selected by MATCHER LLM")
                 return []
                 
         except Exception as e:
-            debug_print(f"❌ Error in semantic offer selection: {e}")
+            debug_print(f"❌ Error in offer pipeline: {e}")
             # Fallback to basic matching
             return self._fallback_offer_selection(preferences, offer_count)
     
@@ -1455,3 +1503,29 @@ Welcome message in French:
         except Exception as e:
             debug_print(f"❌ Welcome message generation failed: {e}")
             return "🌏 Bonjour ! 👋 Je suis ASIA.fr Agent, votre spécialiste de voyage ! 😊 Je suis là pour vous aider à planifier votre parfait voyage en Asie ! Quel type de voyage rêvez-vous de faire ? 🎉"
+    
+    def _parse_json_response(self, response: str) -> List[Dict]:
+        """Parse JSON response from LLM with error handling"""
+        try:
+            # Clean the response
+            cleaned_response = response.strip()
+            
+            # Try to find JSON array in the response
+            start_idx = cleaned_response.find('[')
+            end_idx = cleaned_response.rfind(']')
+            
+            if start_idx != -1 and end_idx != -1:
+                json_str = cleaned_response[start_idx:end_idx + 1]
+                parsed = json.loads(json_str)
+                debug_print(f"✅ JSON parsed successfully: {len(parsed)} items")
+                return parsed
+            else:
+                debug_print("❌ No JSON array found in response")
+                return []
+                
+        except json.JSONDecodeError as e:
+            debug_print(f"❌ JSON decode error: {e}")
+            return []
+        except Exception as e:
+            debug_print(f"❌ Error parsing JSON: {e}")
+            return []
