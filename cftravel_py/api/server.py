@@ -26,12 +26,19 @@ logger = logging.getLogger(__name__)
 # Initialize FastAPI app
 app = FastAPI(title="ASIA.fr Agent API", version="1.0.0")
 
-# Add CORS middleware
+# Add CORS middleware for production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://ovg-iagent.cftravel.net",
+        "https://iagent.cftravel.net", 
+        "http://localhost:8000",
+        "http://localhost:3000",
+        "http://127.0.0.1:8000",
+        "http://127.0.0.1:3000"
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -181,25 +188,25 @@ async def chat_stream(request: Request):
                             delay += 0.1
                         
                         await asyncio.sleep(delay)
-            
-            # Send end marker
-            yield f"data: {json.dumps({'type': 'end'})}\n\n"
-            
-        except Exception as e:
+                
+                # Send end marker
+                yield f"data: {json.dumps({'type': 'end'})}\n\n"
+                
+            except Exception as e:
                 logger.error(f"❌ Error in streaming: {e}")
                 error_message = f"Je suis désolé, j'ai rencontré une erreur: {str(e)}"
                 yield f"data: {json.dumps({'type': 'content', 'chunk': error_message})}\n\n"
                 yield f"data: {json.dumps({'type': 'end'})}\n\n"
-    
-    return StreamingResponse(
+
+        return StreamingResponse(
             generate_stream(),
-        media_type="text/plain",
-        headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "Content-Type": "text/event-stream",
-        }
-    )
+            media_type="text/plain",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Content-Type": "text/event-stream",
+            }
+        )
 
     except Exception as e:
         logger.error(f"❌ Error in chat stream: {e}")
@@ -212,4 +219,7 @@ if static_dir.exists():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8002) 
+    # Production: port 8000, Local: port 8002
+    import os
+    port = int(os.getenv("PORT", 8000))  # Default to 8000 for production
+    uvicorn.run(app, host="0.0.0.0", port=port) 
