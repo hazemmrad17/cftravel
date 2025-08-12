@@ -1,7 +1,7 @@
 // Chat logic with session and conversation state management
 
-  // API Configuration
-  const API_BASE_URL = 'https://ovg-iagent.cftravel.net'; // FastAPI server
+// API Configuration - Using Config module
+const API_BASE_URL = Config.getApiBaseUrl();
 
 // Global flags to track message states
 let isSending = false;         // User is sending a message

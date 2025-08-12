@@ -5,7 +5,7 @@
 
 class ConfirmationFlow {
     constructor() {
-        this.API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:8001' : 'https://ovg-iagent.cftravel.net';
+        this.API_BASE_URL = Config.getApiBaseUrl();
         this.currentState = null;
         this.preferences = {};
         
