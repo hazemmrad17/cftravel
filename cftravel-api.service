@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 User=www-data
-WorkingDirectory=/var/www/cftravel/cftravel_py
+WorkingDirectory=/path/to/your/cftravel3/cftravel_py
 ExecStart=/usr/bin/python -m api.server
 Restart=always
 RestartSec=10

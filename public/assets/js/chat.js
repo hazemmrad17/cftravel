@@ -1,7 +1,7 @@
 // Chat logic with session and conversation state management
 
   // API Configuration
-  const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:8000' : `http://${window.location.hostname}:8000`;
+  const API_BASE_URL = 'https://ovg-iagent.cftravel.net'; // FastAPI server
 
 // Global flags to track message states
 let isSending = false;         // User is sending a message
@@ -567,7 +567,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const conversationId = conversationItem.getAttribute('data-conversation-id');
       if (conversationId) {
         switchToConversation(conversationId);
-      }
+  }
     }
     
     // Handle "Nouvelle Discussion" button click
@@ -1264,12 +1264,12 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // If content is the same, just scroll
       if (currentContent === newContent) {
-        setTimeout(() => {
+      setTimeout(() => {
           chatArea.scrollTo({
             top: chatArea.scrollHeight,
             behavior: 'smooth'
           });
-        }, 50);
+      }, 50);
         return;
       }
       
@@ -1483,7 +1483,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     assistantMessage += data.chunk;
                     // Update immediately for responsive streaming
                     updateStreamingMessage(assistantMessageElement, assistantMessage);
-                  } else if (data.type === 'offers' && data.offers) {
+                    } else if (data.type === 'offers' && data.offers) {
                     console.log('🎯 Received offers via streaming:', data.offers);
                     // Display the offers using the offer display system
                     if (typeof OfferDisplay !== 'undefined') {
@@ -1618,7 +1618,7 @@ document.addEventListener('DOMContentLoaded', function() {
               OfferDisplay.renderOfferCards(data.offers, 'ai-offers-container');
             } else {
               // Fallback to the existing displayOfferCards function
-              displayOfferCards(data.offers);
+            displayOfferCards(data.offers);
             }
           } else {
             appendMessage(assistantMessage, false, false, [], false);
