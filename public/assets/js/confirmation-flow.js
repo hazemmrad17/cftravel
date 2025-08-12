@@ -5,7 +5,7 @@
 
 class ConfirmationFlow {
     constructor() {
-        this.API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:8001' : `http://${window.location.hostname}:8001`;
+        this.API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:8000' : `http://${window.location.hostname}:8000`;
         this.currentState = null;
         this.preferences = {};
         

@@ -1,7 +1,7 @@
 // Chat logic with session and conversation state management
 
   // API Configuration
-  const API_BASE_URL = 'http://localhost:8001'; // FastAPI server
+  const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:8000' : `http://${window.location.hostname}:8000`;
 
 // Global flags to track message states
 let isSending = false;         // User is sending a message
