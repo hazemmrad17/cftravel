@@ -8,6 +8,12 @@ const Config = {
     getApiBaseUrl: function() {
         const hostname = window.location.hostname;
         
+        // Force local development for testing (comment out when deploying)
+        if (window.location.search.includes('local=true')) {
+            const protocol = window.location.protocol;
+            return `${protocol}//localhost:8002`;
+        }
+        
         // Production environments
         if (hostname === 'ovg-iagent.cftravel.net' || 
             hostname === 'iagent.cftravel.net' ||
