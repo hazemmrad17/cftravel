@@ -230,8 +230,8 @@ class IntelligentPipeline:
         json_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "asia", "data.json")
         
         try:
-            self.data_processor = DataProcessor(json_file_path)
-            debug_print(f"📊 Loaded {len(self.data_processor.offers)} offers")
+        self.data_processor = DataProcessor(json_file_path)
+        debug_print(f"📊 Loaded {len(self.data_processor.offers)} offers")
         except Exception as e:
             debug_print(f"❌ Data processor setup failed: {e}")
             self.data_processor = None
@@ -294,7 +294,7 @@ class IntelligentPipeline:
                 orchestration_result = self._orchestration_cache[cache_key]
             else:
                 # Use orchestrator to make intelligent decisions
-                orchestration_result = self._orchestrate_conversation(user_input)
+            orchestration_result = self._orchestrate_conversation(user_input)
                 # Cache the result
                 self._orchestration_cache[cache_key] = orchestration_result
             
@@ -384,7 +384,7 @@ RESPOND ONLY WITH VALID JSON:
             if json_match:
                 result = json.loads(json_match.group())
                 debug_print(f"✅ Orchestration result: {result}")
-                return result
+            return result
             else:
                 debug_print(f"❌ No JSON found in orchestrator response")
                 return self._default_orchestration()
@@ -418,16 +418,16 @@ RESPOND ONLY WITH VALID JSON:
     
     def _fast_greeting_response(self) -> Dict[str, Any]:
         """Fast response for greetings without LLM call"""
-        return {
-            "intent": "general",
+            return {
+                "intent": "general",
             "confidence": 0.8,
             "response_type": "question",
             "needs_confirmation": False,
             "has_sufficient_details": False,
-            "should_show_offers": False,
-            "offer_count": 0,
+                "should_show_offers": False,
+                "offer_count": 0,
             "reasoning": "Utilisateur a salué, nécessite de recueillir les préférences"
-        }
+            }
     
     def _extract_preferences_intelligently(self, user_input: str, orchestration_result: Dict) -> Dict[str, Any]:
         """
@@ -1069,7 +1069,7 @@ Select exactly {max_offers} offers:
     
     def clear_memory(self):
         """Clear conversation memory"""
-        self.memory.clear()
+        # Clear conversation context
         self.conversation_context.chat_history = ""
         self.conversation_context.turn_count = 0
         debug_print("✅ Memory cleared")
