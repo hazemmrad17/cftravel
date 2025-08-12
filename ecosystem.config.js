@@ -4,6 +4,10 @@ module.exports = {
     script: 'python',
     args: '-m uvicorn api.server:app --host 0.0.0.0 --port 8000',
     cwd: './cftravel_py',
+    env: {
+      PYTHONPATH: './cftravel_py',
+      VIRTUAL_ENV: './cftravel_py/venv'
+    },
     instances: 1,
     autorestart: true,
     watch: false,

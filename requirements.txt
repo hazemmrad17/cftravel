@@ -1,0 +1,43 @@
+# Core FastAPI and web framework
+fastapi
+uvicorn
+pydantic
+python-multipart
+python-dotenv
+
+# HTTP and file handling
+requests
+aiofiles
+httpx
+
+# Template engine
+jinja2
+
+# AI and Machine Learning
+openai
+langchain
+langchain-core
+langchain_openai
+sentence-transformers
+transformers
+torch
+numpy
+scikit-learn
+scipy
+
+# Database (optional - only if needed)
+# sqlalchemy
+# psycopg2-binary
+
+# Utilities
+tqdm
+packaging
+filelock
+regex
+tokenizers
+safetensors
+huggingface-hub
+fsspec
+
+# Development and debugging
+colorama 
