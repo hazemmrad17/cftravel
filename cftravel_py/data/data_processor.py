@@ -144,6 +144,10 @@ class DataProcessor:
         except Exception as e:
             logger.error(f"❌ Error building vector index: {e}")
     
+    def get_all_offers(self) -> List[Dict[str, Any]]:
+        """Get all offers as dictionaries"""
+        return self.offers_data
+    
     def filter_by_preferences(self, preferences: Dict[str, Any]) -> List[TravelOffer]:
         """Filter offers by user preferences"""
         if not preferences:

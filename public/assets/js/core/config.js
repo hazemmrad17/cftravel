@@ -4,13 +4,13 @@
 
 // API Configuration
 export const API_CONFIG = {
-    BASE_URL: 'http://localhost:8001',
+    BASE_URL: 'http://localhost:8000',
     ENDPOINTS: {
         CHAT: '/chat',
         CHAT_STREAM: '/chat/stream',
         OFFERS: '/offers',
         PREFERENCES: '/preferences',
-        MEMORY_CLEAR: '/memory/clear',
+        MEMORY_CLEAR: '/chat/memory/clear',
         WELCOME: '/welcome',
         STATUS: '/status'
     },

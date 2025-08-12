@@ -82,28 +82,28 @@ MATCHER_MODEL=llama-3.1-8b-instant
 EXTRACTOR_MODEL=llama-3.1-8b-instant
 
 # API Configuration
-AGENT_API_URL=http://localhost:8001
+AGENT_API_URL=http://localhost:8000
 ```
 
 ### 4. Start the Servers
 
-#### Start Python AI Backend (Port 8001)
+#### Start Python AI Backend (Port 8000)
 ```bash
-python -m uvicorn cftravel_py.api.server:app --host 0.0.0.0 --port 8001
+python -m uvicorn cftravel_py.api.server:app --host 0.0.0.0 --port 8000
 ```
 
-#### Start Symfony Frontend (Port 8000)
+#### Start Symfony Frontend (Port 3000)
 ```bash
 # Option 1: Symfony CLI
-symfony server:start -d --port=8000
+symfony server:start -d --port=3000
 
 # Option 2: PHP built-in server
-php -S localhost:8000 -t public
+php -S localhost:3000 -t public
 ```
 
 ### 5. Access the Application
 
-Open your browser and go to: **http://localhost:8000**
+Open your browser and go to: **http://localhost:3000**
 
 ## 🎯 Usage
 
@@ -145,7 +145,7 @@ The application uses multiple AI models for different tasks:
 
 #### API Configuration (Optional - uses defaults if not set)
 - `GROQ_BASE_URL`: Groq API base URL (default: https://api.groq.com/openai/v1)
-- `AGENT_API_URL`: Internal API URL (default: http://localhost:8001)
+- `AGENT_API_URL`: Internal API URL (default: http://localhost:8000)
 
 #### Other Settings (Optional)
 - `DEBUG`: Enable debug mode (default: false)
@@ -188,7 +188,7 @@ cftravel3/
 
 ## 🔌 API Endpoints
 
-### Python Backend (Port 8001)
+### Python Backend (Port 8000)
 - `GET /health` - Health check
 - `POST /chat` - Send message
 - `POST /chat/stream` - Streaming chat

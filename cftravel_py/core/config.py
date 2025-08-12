@@ -10,12 +10,22 @@ from dataclasses import dataclass
 from dotenv import load_dotenv
 from pathlib import Path
 
-# Load .env file from the root directory (parent of cftravel_py)
-root_dir = Path(__file__).parent.parent.parent
-env_path = root_dir / '.env'
+# Load .env file from the current directory or parent
+current_dir = Path(__file__).parent.parent
+env_path = current_dir / '.env'
+if not env_path.exists():
+    # Try parent directory
+    env_path = current_dir.parent / '.env'
+if not env_path.exists():
+    # Try root directory
+    env_path = current_dir.parent.parent / '.env'
+
 print(f"Loading .env from: {env_path}")
 print(f"File exists: {env_path.exists()}")
-load_dotenv(dotenv_path=env_path)
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
+else:
+    print("⚠️ No .env file found - using environment variables only")
 
 class LLMProvider(Enum):
     """Available LLM providers"""
@@ -38,11 +48,13 @@ class Config:
         self.data_path = os.getenv("DATA_PATH", "data")
         self.debug = os.getenv("DEBUG", "false").lower() == "true"
         self.groq_api_key = os.getenv("GROQ_API_KEY")
-        self.groq_base_url = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
+        # Force the correct base URL for Groq API
+        self.groq_base_url = "https://api.groq.com/openai/v1"
         
         # Validate required configuration
         if not self.groq_api_key:
             print("⚠️ WARNING: GROQ_API_KEY not set - AI functionality will be limited")
+            print("🔄 Server will run in fallback mode with basic functionality")
     
     def get_model_config(self, model_type: str) -> Dict[str, Any]:
         """Get configuration for a specific model type from environment variables"""
@@ -54,25 +66,25 @@ class Config:
         temp_env_var = f"{model_type.upper()}_TEMPERATURE"
         tokens_env_var = f"{model_type.upper()}_MAX_TOKENS"
         
-        # Default values for each model type - Kimia K2 for French responses
+        # Default values for each model type - Using Groq's available models
         defaults = {
             "reasoning": {
-                "model": "openai/gpt-oss-120b",
+                "model": "llama3-70b-8192",
                 "temperature": 0.1,
                 "max_tokens": 2048
             },
             "generation": {
-                "model": "moonshotai/kimi-k2-instruct",
+                "model": "llama3-70b-8192",
                 "temperature": 0.7,
                 "max_tokens": 2048
             },
             "matcher": {
-                "model": "moonshotai/kimi-k2-instruct",
+                "model": "llama3-70b-8192",
                 "temperature": 0.3,
                 "max_tokens": 2048
             },
             "extractor": {
-                "model": "moonshotai/kimi-k2-instruct",
+                "model": "llama3-70b-8192",
                 "temperature": 0.1,
                 "max_tokens": 1024
             }
@@ -82,7 +94,7 @@ class Config:
         
         return {
             "provider": "groq",
-            "model": os.getenv(model_env_var, default["model"]),
+            "model": default["model"],  # Use default models instead of env vars
             "temperature": float(os.getenv(temp_env_var, str(default["temperature"]))),
             "max_tokens": int(os.getenv(tokens_env_var, str(default["max_tokens"]))),
             "api_key": self.groq_api_key,

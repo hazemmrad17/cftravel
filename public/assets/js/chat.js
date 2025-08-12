@@ -1,15 +1,17 @@
 // Chat logic with session and conversation state management
 
   // API Configuration
-  const API_BASE_URL = 'http://localhost:8001'; // Python API directly
+  const API_BASE_URL = 'http://localhost:8001'; // FastAPI server
 
 // Global flags to track message states
 let isSending = false;         // User is sending a message
 let isAITyping = false;        // AI is currently streaming a response
 let eventListenersAttached = false;
+let typingSoundEnabled = false; // Typing sound effect (disabled by default)
+let typingAudioContext = null; // Audio context for typing sounds
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Clear memory on page load/refresh
+  // Clear memory on page load/refresh to start fresh
   clearMemory();
   
   // Cache input and button elements
@@ -109,6 +111,132 @@ document.addEventListener('DOMContentLoaded', function() {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    
+    /* Removed typing cursor styles - keeping only clean streaming */
+    
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      opacity: 0.6;
+    }
+    
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      background-color: #dc2626;
+      border-radius: 50%;
+      animation: typing-bounce 1.4s infinite ease-in-out;
+    }
+    
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    .typing-dot:nth-child(3) { animation-delay: 0s; }
+    
+    @keyframes typing-bounce {
+      0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    /* Enhanced typing indicator styles */
+    .enhanced-typing {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+      padding: 8px 12px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+      border-radius: 20px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      backdrop-filter: blur(10px);
+      animation: typing-glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes typing-glow {
+      0% {
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+      }
+      100% {
+        box-shadow: 0 0 20px rgba(147, 51, 234, 0.4);
+      }
+    }
+    
+    .typing-avatar {
+      position: relative;
+      width: 24px;
+      height: 24px;
+    }
+    
+    .avatar-pulse {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #3b82f6, #9333ea);
+      border-radius: 50%;
+      animation: avatar-pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes avatar-pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+    }
+    
+    .typing-dots {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .typing-text {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 500;
+      animation: text-fade 2s ease-in-out infinite;
+    }
+    
+    @keyframes text-fade {
+      0%, 100% {
+        opacity: 0.6;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+    
+    /* Smooth streaming animations */
+    .message-text {
+      transition: all 0.1s ease-out;
+    }
+    
+    .message-text.streaming {
+      animation: text-glow 0.2s ease-in-out;
+    }
+    
+    @keyframes text-glow {
+      0% {
+        opacity: 0.9;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    
+
     
     .line-clamp-1 {
       display: -webkit-box;
@@ -399,13 +527,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  async function clearMemory() {
+  async function clearMemory(conversationId = null) {
     try {
+      const body = conversationId ? { conversation_id: conversationId } : {};
       const response = await fetch(`${API_BASE_URL}/memory/clear`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        body: JSON.stringify(body)
       });
       
       if (response.ok) {
@@ -437,7 +567,13 @@ document.addEventListener('DOMContentLoaded', function() {
       const conversationId = conversationItem.getAttribute('data-conversation-id');
       if (conversationId) {
         switchToConversation(conversationId);
-  }
+      }
+    }
+    
+    // Handle "Nouvelle Discussion" button click
+    if (e.target.closest('.new-chat-btn')) {
+      e.preventDefault();
+      createNewConversation();
     }
   });
 
@@ -481,10 +617,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let html = '';
     
     if (isUser) {
+      // Format user message with line breaks
+      const formattedUserMessage = message.replace(/\n/g, '<br>');
       html = `
         <div class="bg-chat-user shadow-theme-xs rounded-3xl rounded-tr-lg py-4 px-5 max-w-md" style="background-color: #8B0000 !important;">
           <p class="text-white dark:text-white/90 font-normal">
-            ${message}
+            ${formattedUserMessage}
           </p>
         </div>
       `;
@@ -497,23 +635,33 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       // For AI messages
       if (shouldStream) {
-        // Create empty message element for server streaming
-        html = `
-          <div class="${isError ? 'bg-red-100 dark:bg-red-500 text-red-700 dark:text-white rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl' : 'bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl'}">
-          <p class="text-gray-800 dark:text-white/90 font-normal message-text"></p>
-        </div>
-        `;
+        // Create empty message element for server streaming with proper initial state
+        const streamErrorClass = isError ? 'bg-red-100 dark:bg-red-500 text-red-700 dark:text-white rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl' : 'bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl';
+        html = '<div class="' + streamErrorClass + '"><p class="text-gray-800 dark:text-white/90 font-normal message-text streaming" style="opacity: 0.8;"></p></div>';
         msgDiv.innerHTML = html;
         chatArea.appendChild(msgDiv);
+        
+        // Add a subtle typing indicator
+        const textElement = msgDiv.querySelector('.message-text');
+        if (textElement) {
+          textElement.textContent = 'L\'IA rédige...';
+          setTimeout(() => {
+            textElement.textContent = '';
+            textElement.classList.remove('streaming');
+          }, 500);
+        }
+        
         // Return the message element for streaming updates
         return msgDiv;
       } else {
         // Show immediately for loaded messages (no streaming)
-        html = `
-          <div class="${isError ? 'bg-red-100 dark:bg-red-500 text-red-700 dark:text-white rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl' : 'bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl'}">
-          <p class="text-gray-800 dark:text-white/90 font-normal">${message}</p>
-        </div>
-        `;
+        const errorClass = isError ? 'bg-red-100 dark:bg-red-500 text-red-700 dark:text-white rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl' : 'bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl';
+        // Format message with proper line breaks and bullet points
+        const formattedMessage = message
+          .replace(/\n/g, '<br>')
+          .replace(/•\s*/g, '<br>• ')
+          .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
+        html = '<div class="' + errorClass + '"><p class="text-gray-800 dark:text-white/90 font-normal">' + formattedMessage + '</p></div>';
         msgDiv.innerHTML = html;
         chatArea.appendChild(msgDiv);
         // Smooth scroll to bottom
@@ -1110,21 +1258,75 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update the message content with streaming text
     const textElement = messageElement.querySelector('.message-text');
     if (textElement) {
-      textElement.textContent = content;
-      // Scroll to bottom as content updates
+      // Simple and responsive streaming effect
+      const currentContent = textElement.textContent || '';
+      const newContent = content;
+      
+      // If content is the same, just scroll
+      if (currentContent === newContent) {
+        setTimeout(() => {
+          chatArea.scrollTo({
+            top: chatArea.scrollHeight,
+            behavior: 'smooth'
+          });
+        }, 50);
+        return;
+      }
+      
+      // Clear typing indicator if it's still showing
+      if (currentContent === 'L\'IA rédige...') {
+        textElement.textContent = '';
+        textElement.classList.remove('streaming');
+        textElement.style.opacity = '1';
+      }
+      
+      // Format content with proper line breaks and bullet points
+      const formattedContent = newContent
+        .replace(/\n/g, '<br>')
+        .replace(/•\s*/g, '<br>• ')
+        .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
+      
+      // Update with formatted content
+      textElement.innerHTML = formattedContent;
+      
+      // Add subtle visual effect
+      textElement.classList.add('streaming');
       setTimeout(() => {
-        chatArea.scrollTop = chatArea.scrollHeight;
-      }, 50);
+        textElement.classList.remove('streaming');
+      }, 150);
+      
+      // Scroll to bottom
+      setTimeout(() => {
+        chatArea.scrollTo({
+          top: chatArea.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 10);
     }
   }
+  
+
 
   function finalizeStreamingMessage(messageElement, content) {
     // Finalize the streaming message
     const textElement = messageElement.querySelector('.message-text');
     if (textElement) {
-      textElement.textContent = content;
-      // Remove any streaming indicators
+      // Format content with proper line breaks and bullet points
+      const formattedContent = content
+        .replace(/\n/g, '<br>')
+        .replace(/•\s*/g, '<br>• ')
+        .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
+      
+      // Set final content without cursor
+      textElement.innerHTML = formattedContent;
       textElement.classList.remove('streaming');
+      
+      // Remove typing indicator
+      const typingIndicator = messageElement.querySelector('.typing-indicator');
+      if (typingIndicator) {
+        typingIndicator.remove();
+      }
+      
       // Final scroll to bottom
       setTimeout(() => {
         chatArea.scrollTop = chatArea.scrollHeight;
@@ -1208,11 +1410,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 60000); // 60 seconds timeout
     
     try {
-      // Generate a simple conversation ID if none exists
+      // Get or create conversation ID
       let conversationId = getCurrentConversationId();
       if (!conversationId) {
         conversationId = 'conv_' + Date.now();
+        currentConversationId = conversationId; // Store it globally
         console.log('[DEBUG] Created new conversation ID:', conversationId);
+      } else {
+        console.log('[DEBUG] Using existing conversation ID:', conversationId);
       }
     
       // Display user message immediately
@@ -1266,27 +1471,67 @@ document.addEventListener('DOMContentLoaded', function() {
             if (done) break;
             
             const chunk = decoder.decode(value);
-            console.log('📦 Received streaming chunk:', chunk);
             const lines = chunk.split('\n');
             
             for (const line of lines) {
               if (line.startsWith('data: ')) {
                 try {
                   const data = JSON.parse(line.slice(6));
-                  console.log('📊 Parsed streaming data:', data);
                   
                   if (data.type === 'content' && data.chunk) {
+                    console.log('📝 Received chunk:', data.chunk);
                     assistantMessage += data.chunk;
+                    // Update immediately for responsive streaming
                     updateStreamingMessage(assistantMessageElement, assistantMessage);
-                    } else if (data.type === 'offers' && data.offers) {
+                  } else if (data.type === 'offers' && data.offers) {
                     console.log('🎯 Received offers via streaming:', data.offers);
-                    // Display the offers in beautiful cards
-                    displayOfferCards(data.offers);
-                  } else if (data.type === 'confirmation' && data.needs_confirmation) {
-                    console.log('📋 Received confirmation request:', data);
-                    // Display confirmation request
-                    if (typeof confirmationFlow !== 'undefined') {
-                      confirmationFlow.displayConfirmationRequest(data.preferences, data.confirmation_summary);
+                    // Display the offers using the offer display system
+                    if (typeof OfferDisplay !== 'undefined') {
+                      // Create the main offers container with the beautiful layout
+                      let offersContainer = document.getElementById('ai-offers-container');
+                      if (!offersContainer) {
+                        offersContainer = document.createElement('div');
+                        offersContainer.id = 'ai-offers-container';
+                        offersContainer.className = 'flex justify-start mb-6';
+                        chatArea.appendChild(offersContainer);
+                      }
+                      
+                      // Create the beautiful offers display
+                      offersContainer.innerHTML = 
+                        '<div class="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl rounded-bl-lg p-8 max-w-6xl border border-gray-100 dark:border-gray-700 backdrop-blur-sm relative overflow-hidden">' +
+                          '<!-- Compact Header -->' +
+                          '<div class="text-center mb-6">' +
+                            '<div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full mb-4 animate-pulse">' +
+                              '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="gift" class="lucide lucide-gift w-6 h-6">' +
+                                '<rect x="3" y="8" width="18" height="4" rx="1"></rect>' +
+                                '<path d="M12 8v13"></path>' +
+                                '<path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"></path>' +
+                                '<path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"></path>' +
+                              '</svg>' +
+                            '</div>' +
+                            '<h2 class="text-2xl font-bold text-mode-primary mb-2">Vos Offres Parfaites</h2>' +
+                            '<p class="text-base text-mode-secondary max-w-2xl mx-auto">' +
+                              'Voici les 3 meilleures offres sélectionnées spécialement pour vous selon vos préférences' +
+                            '</p>' +
+                          '</div>' +
+
+                          '<!-- Compact Offers Grid -->' +
+                          '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6" id="offers-grid">' +
+                            '<!-- Offers will be inserted here by OfferDisplay -->' +
+                          '</div>' +
+
+                          '<!-- Compact Footer -->' +
+                          '<div class="text-center">' +
+                            '<div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 border border-gray-300 dark:border-gray-600">' +
+                              '<p class="text-sm font-medium text-gray-800 dark:text-gray-200">' +
+                                '<strong>Réservez en toute confiance :</strong> Toutes nos offres sont garanties et incluent une assistance 24/7' +
+                              '</p>' +
+                            '</div>' +
+                          '</div>' +
+                        '</div>';
+                      
+                      // Use OfferDisplay to render the actual offer cards
+                      OfferDisplay.renderOfferCards(data.offers, 'offers-grid');
                     }
                   } else if (data.type === 'detailed_program' && data.detailed_program) {
                     console.log('📋 Received detailed program via streaming:', data.detailed_program);
@@ -1358,9 +1603,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           }
           // Check if we have offers to display
-          else if (data.offers && data.offers.length > 0) {
+          if (data.offers && data.offers.length > 0) {
             appendMessage(assistantMessage, false, false, [], false);
-            displayOfferCards(data.offers);
+            // Display offers using the offer display system
+            if (typeof OfferDisplay !== 'undefined') {
+              // Create a container for the offers if it doesn't exist
+              let offersContainer = document.getElementById('ai-offers-container');
+              if (!offersContainer) {
+                offersContainer = document.createElement('div');
+                offersContainer.id = 'ai-offers-container';
+                offersContainer.className = 'flex justify-start mb-6';
+                chatArea.appendChild(offersContainer);
+              }
+              OfferDisplay.renderOfferCards(data.offers, 'ai-offers-container');
+            } else {
+              // Fallback to the existing displayOfferCards function
+              displayOfferCards(data.offers);
+            }
           } else {
             appendMessage(assistantMessage, false, false, [], false);
           }
@@ -1421,6 +1680,14 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!eventListenersAttached) {
     console.log("[DEBUG] Attaching chat event listeners");
     
+    // Prevent all form submissions globally
+    document.addEventListener('submit', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      return false;
+    }, true);
+    
     // Unified message sending handler
     const handleSendMessage = (e) => {
       if (e) {
@@ -1452,7 +1719,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form submit handler (Enter key or button click)
     const chatForm = document.querySelector('.chat-form');
     if (chatForm) {
-      chatForm.addEventListener('submit', handleSendMessage);
+      chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        handleSendMessage(e);
+        return false;
+      });
     }
     
     function updateButtonIcon() {
@@ -1550,6 +1823,10 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Set up input event listeners
       chatInputEl.addEventListener('keydown', handleInputKeydown);
+      
+      // Initialize audio context on first user interaction
+      chatInputEl.addEventListener('focus', initAudioContext);
+      chatInputEl.addEventListener('input', initAudioContext);
       
       // Block paste and other events when AI is typing
       function blockInputEvents(e) {
@@ -1691,4 +1968,42 @@ document.addEventListener('DOMContentLoaded', function() {
     // Use synchronous request to ensure it completes before page unloads
     navigator.sendBeacon(`${API_BASE_URL}/memory/clear`, JSON.stringify({}));
   });
+
+  // Function to play typing sound effect
+  function playTypingSound() {
+    if (!typingSoundEnabled || !typingAudioContext) return;
+    
+    try {
+      // Create a simple beep sound
+      const oscillator = typingAudioContext.createOscillator();
+      const gainNode = typingAudioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(typingAudioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(800, typingAudioContext.currentTime);
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0.01, typingAudioContext.currentTime); // Very quiet
+      gainNode.gain.exponentialRampToValueAtTime(0.001, typingAudioContext.currentTime + 0.1);
+      
+      oscillator.start(typingAudioContext.currentTime);
+      oscillator.stop(typingAudioContext.currentTime + 0.1);
+    } catch (e) {
+      // Silently fail if audio is not supported
+      console.debug('Audio not supported or disabled');
+    }
+  }
+
+  // Initialize audio context on user interaction
+  function initAudioContext() {
+    if (!typingAudioContext && typeof AudioContext !== 'undefined') {
+      try {
+        typingAudioContext = new AudioContext();
+        console.log('🎵 Audio context initialized for typing sounds');
+      } catch (e) {
+        console.debug('Audio context not supported');
+      }
+    }
+  }
 }); 

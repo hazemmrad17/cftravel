@@ -1,8 +1,0 @@
-/* Tentatio Theme - Asia.fr Red Colors */
-:root {
-  --primary-500: #8B0000;  /* Dark Red/Maroon like asia.fr */
-  --primary-100: #FEE2E2;  /* Light red background */
-}
-.bg-primary-500 { background-color: var(--primary-500) !important; }
-.bg-primary-100 { background-color: var(--primary-100) !important; }
-.text-primary-500 { color: var(--primary-500) !important; } 

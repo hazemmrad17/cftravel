@@ -20,7 +20,16 @@ class ChatController extends AbstractController
     {
         $this->httpClient = $httpClient;
         $this->logger = $logger;
-        $this->agentApiUrl = $_ENV['AGENT_API_URL'] ?? 'http://localhost:8001';
+        $this->agentApiUrl = $_ENV['AGENT_API_URL'] ?? 'http://localhost:8000';
+    }
+
+    private function addCorsHeaders(array $headers = []): array
+    {
+        return array_merge($headers, [
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS',
+            'Access-Control-Allow-Headers' => 'Content-Type',
+        ]);
     }
 
     #[Route('/', name: 'app_home')]
@@ -84,9 +93,19 @@ class ChatController extends AbstractController
         return $this->render('billing.html.twig');
     }
 
-    #[Route('/chat', name: 'chat_home', methods: ['GET'])]
-    public function chatHome(): Response
+    #[Route('/chat', name: 'chat_home', methods: ['GET', 'POST', 'OPTIONS'])]
+    public function chatHome(Request $request): Response
     {
+        // Handle preflight OPTIONS request
+        if ($request->getMethod() === 'OPTIONS') {
+            return new Response('', 200, $this->addCorsHeaders());
+        }
+        
+        // Handle POST request (fallback for chat)
+        if ($request->getMethod() === 'POST') {
+            return $this->chatMessage($request);
+        }
+        
         return $this->render('chat/chat.html.twig');
     }
 
@@ -96,9 +115,14 @@ class ChatController extends AbstractController
         return $this->render('status.html.twig');
     }
 
-    #[Route('/chat/message', name: 'chat_message', methods: ['POST'])]
+    #[Route('/chat/message', name: 'chat_message', methods: ['POST', 'OPTIONS'])]
     public function chatMessage(Request $request): JsonResponse
     {
+        // Handle preflight OPTIONS request
+        if ($request->getMethod() === 'OPTIONS') {
+            return new JsonResponse('', 200, $this->addCorsHeaders());
+        }
+        
         try {
             $data = json_decode($request->getContent(), true);
             $userInput = $data['message'] ?? '';
@@ -140,9 +164,14 @@ class ChatController extends AbstractController
         }
     }
 
-    #[Route('/chat/stream', name: 'chat_stream', methods: ['POST'])]
+    #[Route('/chat/stream', name: 'chat_stream', methods: ['POST', 'OPTIONS'])]
     public function chatStream(Request $request): Response
     {
+        // Handle preflight OPTIONS request
+        if ($request->getMethod() === 'OPTIONS') {
+            return new Response('', 200, $this->addCorsHeaders());
+        }
+        
         try {
             $data = json_decode($request->getContent(), true);
             $userInput = $data['message'] ?? '';
@@ -168,11 +197,11 @@ class ChatController extends AbstractController
             return new Response(
                 $response->getContent(),
                 $response->getStatusCode(),
-                [
+                $this->addCorsHeaders([
                     'Content-Type' => 'text/event-stream',
                     'Cache-Control' => 'no-cache',
                     'Connection' => 'keep-alive',
-                ]
+                ])
             );
 
         } catch (\Exception $e) {
@@ -183,7 +212,9 @@ class ChatController extends AbstractController
             return new Response(
                 "data: " . json_encode(['type' => 'error', 'error' => $e->getMessage()]) . "\n\n",
                 500,
-                ['Content-Type' => 'text/event-stream']
+                $this->addCorsHeaders([
+                    'Content-Type' => 'text/event-stream',
+                ])
             );
         }
     }
@@ -193,7 +224,7 @@ class ChatController extends AbstractController
     {
         try {
             $response = $this->httpClient->request('GET', $this->agentApiUrl . '/status', [
-                'timeout' => 10
+                'timeout' => 30
             ]);
 
             $statusData = $response->toArray();
@@ -315,12 +346,17 @@ class ChatController extends AbstractController
         }
     }
 
-    #[Route('/chat/memory/clear', name: 'chat_memory_clear', methods: ['POST'])]
-    public function clearMemory(): JsonResponse
+    #[Route('/chat/memory/clear', name: 'chat_memory_clear', methods: ['POST', 'OPTIONS'])]
+    public function clearMemory(Request $request): JsonResponse
     {
+        // Handle preflight OPTIONS request
+        if ($request->getMethod() === 'OPTIONS') {
+            return new JsonResponse('', 200, $this->addCorsHeaders());
+        }
+        
         try {
             $response = $this->httpClient->request('POST', $this->agentApiUrl . '/memory/clear', [
-                'timeout' => 10
+                'timeout' => 30
             ]);
 
             $responseData = $response->toArray();
@@ -328,7 +364,7 @@ class ChatController extends AbstractController
             return new JsonResponse([
                 'status' => 'success',
                 'message' => $responseData['message'] ?? 'Mémoire de conversation effacée'
-            ]);
+            ], 200, $this->addCorsHeaders());
 
         } catch (\Exception $e) {
             $this->logger->error('Error clearing memory', [
@@ -339,7 +375,7 @@ class ChatController extends AbstractController
                 'status' => 'error',
                 'message' => 'Impossible d\'effacer la mémoire de conversation',
                 'error' => $e->getMessage()
-            ], 500);
+            ], 500, $this->addCorsHeaders());
         }
     }
 
@@ -348,7 +384,7 @@ class ChatController extends AbstractController
     {
         try {
             $response = $this->httpClient->request('GET', $this->agentApiUrl . '/welcome', [
-                'timeout' => 10
+                'timeout' => 30
             ]);
 
             $responseData = $response->toArray();

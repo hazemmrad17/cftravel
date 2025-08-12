@@ -10,6 +10,7 @@
 		<link rel="icon" href="{{ asset('assets/images/favicon.png') }}"/>
 		<title>ASIA.fr Agent - Spécialiste de Voyages Asiatiques | Planification Intelligente</title>
 		<link rel="stylesheet" href="{{ asset('assets/css/output.css') }}"/>
+		<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 		<style>
 			.line-clamp-2 {
 				display: -webkit-box;
@@ -30,63 +31,64 @@
 				transform: translateY(-2px);
 			}
 		</style>
-		
+
 	</head>
-	<body class="dark:bg-dark-primary" x-data="{
-			        sidebarOpen: false,
-						        rightSidebarOpen: window.innerWidth >= 1024 ? true : false, // Always open on desktop
-			        showMoreHistory: false,
-			        activeDropdown: null,
-			        darkMode: localStorage.getItem('darkMode') === 'true',
-			        toggleDarkMode() {
-			            this.darkMode = !this.darkMode;
-			            localStorage.setItem('darkMode', this.darkMode);
-			            if (this.darkMode) {
-			              document.documentElement.classList.add('dark');
-			              document.documentElement.classList.remove('light');
-			            } else {
-			              document.documentElement.classList.add('light');
-			              document.documentElement.classList.remove('dark');
-			            }
-			          },
-			        toggleDropdown(dropdown) {
-			          if (window.innerWidth < 1024) {
-			            this.activeDropdown = this.activeDropdown === dropdown ? null : dropdown;
-			          }
-			        },
-			        closeDropdowns() {
-			          this.activeDropdown = null;
-			        },
-			        init() {
-			          // Apply dark mode on page load if saved in localStorage
-			          const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-			          if (savedDarkMode) {
-			            this.darkMode = true;
-			            document.documentElement.classList.add('dark');
-			            document.documentElement.classList.remove('light');
-			          } else {
-			            this.darkMode = false;
-			            document.documentElement.classList.add('light');
-			            document.documentElement.classList.remove('dark');
-			          }
-			          // Close dropdowns when clicking outside
-			          document.addEventListener('click', (e) => {
-			            if (!e.target.closest('.nav-item') && !e.target.closest('.dropdown-menu') && !e.target.closest('.mobile-dropdown-toggle')) {
-			              this.closeDropdowns();
-			            }
-			          });
-			          // Reset activeDropdown when resizing to desktop
-			          window.addEventListener('resize', () => {
-			            if (window.innerWidth >= 1024) {
-			              this.activeDropdown = null;
-			              this.mobileMenuOpen = false;
-						              this.rightSidebarOpen = true; // Always open on desktop
+	<body
+		class="dark:bg-dark-primary" x-data="{
+						        sidebarOpen: false,
+									        rightSidebarOpen: window.innerWidth >= 1024 ? true : false, // Always open on desktop
+						        showMoreHistory: false,
+						        activeDropdown: null,
+						        darkMode: localStorage.getItem('darkMode') === 'true',
+						        toggleDarkMode() {
+						            this.darkMode = !this.darkMode;
+						            localStorage.setItem('darkMode', this.darkMode);
+						            if (this.darkMode) {
+						              document.documentElement.classList.add('dark');
+						              document.documentElement.classList.remove('light');
 						            } else {
-						              this.rightSidebarOpen = false;
-			            }
-			          });
-			        }
-						      }">
+						              document.documentElement.classList.add('light');
+						              document.documentElement.classList.remove('dark');
+						            }
+						          },
+						        toggleDropdown(dropdown) {
+						          if (window.innerWidth < 1024) {
+						            this.activeDropdown = this.activeDropdown === dropdown ? null : dropdown;
+						          }
+						        },
+						        closeDropdowns() {
+						          this.activeDropdown = null;
+						        },
+						        init() {
+						          // Apply dark mode on page load if saved in localStorage
+						          const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+						          if (savedDarkMode) {
+						            this.darkMode = true;
+						            document.documentElement.classList.add('dark');
+						            document.documentElement.classList.remove('light');
+						          } else {
+						            this.darkMode = false;
+						            document.documentElement.classList.add('light');
+						            document.documentElement.classList.remove('dark');
+						          }
+						          // Close dropdowns when clicking outside
+						          document.addEventListener('click', (e) => {
+						            if (!e.target.closest('.nav-item') && !e.target.closest('.dropdown-menu') && !e.target.closest('.mobile-dropdown-toggle')) {
+						              this.closeDropdowns();
+						            }
+						          });
+						          // Reset activeDropdown when resizing to desktop
+						          window.addEventListener('resize', () => {
+						            if (window.innerWidth >= 1024) {
+						              this.activeDropdown = null;
+						              this.mobileMenuOpen = false;
+									              this.rightSidebarOpen = true; // Always open on desktop
+									            } else {
+									              this.rightSidebarOpen = false;
+						            }
+						          });
+						        }
+									      }">
 		<!-- Top Navigation Bar -->
 		<header class="bg-white border-b dark:bg-dark-primary dark:border-gray-800 border-gray-100 sticky top-0 z-50">
 			<div class="px-4 sm:px-6 lg:px-8">
@@ -246,41 +248,41 @@
 							<nav class="mt-3 space-y-1">
 								{% if mostRecentConversationId %}
 									<a href="{{ path('chat_agent', {'agent': agent, 'conversation_id': mostRecentConversationId}) }}" class="flex items-center bg-gray-100 dark:bg-white/5 dark:text-white/90 h-11 text-gray-800 px-2 py-3 text-sm font-medium rounded-full">
-									<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewbox="0 0 42 42" fill="none">
-										<g filter="url(#filter0_d_11222_4282)">
-											<g filter="url(#filter1_i_11222_4282)">
-												<path fill-rule="evenodd" clip-rule="evenodd" d="M8.65016 30.069L8.65172 30.0672L8.66373 30.0529C8.67509 30.0393 8.69298 30.0176 8.71661 29.9884C8.76388 29.9299 8.83392 29.8415 8.92028 29.727C9.09325 29.4974 9.32961 29.166 9.57857 28.7639C10.0262 28.041 10.4852 27.1362 10.7156 26.2116C9.27786 24.168 8.43335 21.6756 8.43335 18.9882C8.43335 12.0479 14.0596 6.42157 21 6.42157C27.9404 6.42157 33.5667 12.0479 33.5667 18.9882C33.5667 25.9286 27.9404 31.5549 21 31.5549C19.4278 31.5549 17.9211 31.2657 16.5317 30.737C15.1235 31.2652 13.374 31.4628 12.0023 31.5368C11.2414 31.5779 10.5659 31.5822 10.0802 31.5763C9.83698 31.5733 9.6405 31.5678 9.50367 31.5629C9.43523 31.5605 9.38166 31.5582 9.34455 31.5565L9.30143 31.5545L9.2895 31.5539L9.28489 31.5536L9.33335 30.6549C9.28419 31.5536 9.28489 31.5536 9.28489 31.5536C8.94277 31.5349 8.64025 31.3235 8.50567 31.0084C8.37122 30.6936 8.42761 30.3291 8.65016 30.069ZM15.1666 17.4885C14.3381 17.4885 13.6666 18.16 13.6666 18.9885C13.6666 19.8169 14.3381 20.4885 15.1666 20.4885H15.1799C16.0083 20.4885 16.6799 19.8169 16.6799 18.9885C16.6799 18.16 16.0083 17.4885 15.1799 17.4885H15.1666ZM20.9999 17.4885C20.1715 17.4885 19.4999 18.16 19.4999 18.9885C19.4999 19.8169 20.1715 20.4885 20.9999 20.4885H21.0132C21.8417 20.4885 22.5132 19.8169 22.5132 18.9885C22.5132 18.16 21.8417 17.4885 21.0132 17.4885H20.9999ZM26.8332 17.4885C26.0048 17.4885 25.3332 18.16 25.3332 18.9885C25.3332 19.8169 26.0048 20.4885 26.8332 20.4885H26.8466C27.675 20.4885 28.3466 19.8169 28.3466 18.9885C28.3466 18.16 27.675 17.4885 26.8466 17.4885H26.8332Z" fill="url(#paint0_radial_11222_4282)"/>
+										<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewbox="0 0 42 42" fill="none">
+											<g filter="url(#filter0_d_11222_4282)">
+												<g filter="url(#filter1_i_11222_4282)">
+													<path fill-rule="evenodd" clip-rule="evenodd" d="M8.65016 30.069L8.65172 30.0672L8.66373 30.0529C8.67509 30.0393 8.69298 30.0176 8.71661 29.9884C8.76388 29.9299 8.83392 29.8415 8.92028 29.727C9.09325 29.4974 9.32961 29.166 9.57857 28.7639C10.0262 28.041 10.4852 27.1362 10.7156 26.2116C9.27786 24.168 8.43335 21.6756 8.43335 18.9882C8.43335 12.0479 14.0596 6.42157 21 6.42157C27.9404 6.42157 33.5667 12.0479 33.5667 18.9882C33.5667 25.9286 27.9404 31.5549 21 31.5549C19.4278 31.5549 17.9211 31.2657 16.5317 30.737C15.1235 31.2652 13.374 31.4628 12.0023 31.5368C11.2414 31.5779 10.5659 31.5822 10.0802 31.5763C9.83698 31.5733 9.6405 31.5678 9.50367 31.5629C9.43523 31.5605 9.38166 31.5582 9.34455 31.5565L9.30143 31.5545L9.2895 31.5539L9.28489 31.5536L9.33335 30.6549C9.28419 31.5536 9.28489 31.5536 9.28489 31.5536C8.94277 31.5349 8.64025 31.3235 8.50567 31.0084C8.37122 30.6936 8.42761 30.3291 8.65016 30.069ZM15.1666 17.4885C14.3381 17.4885 13.6666 18.16 13.6666 18.9885C13.6666 19.8169 14.3381 20.4885 15.1666 20.4885H15.1799C16.0083 20.4885 16.6799 19.8169 16.6799 18.9885C16.6799 18.16 16.0083 17.4885 15.1799 17.4885H15.1666ZM20.9999 17.4885C20.1715 17.4885 19.4999 18.16 19.4999 18.9885C19.4999 19.8169 20.1715 20.4885 20.9999 20.4885H21.0132C21.8417 20.4885 22.5132 19.8169 22.5132 18.9885C22.5132 18.16 21.8417 17.4885 21.0132 17.4885H20.9999ZM26.8332 17.4885C26.0048 17.4885 25.3332 18.16 25.3332 18.9885C25.3332 19.8169 26.0048 20.4885 26.8332 20.4885H26.8466C27.675 20.4885 28.3466 19.8169 28.3466 18.9885C28.3466 18.16 27.675 17.4885 26.8466 17.4885H26.8332Z" fill="url(#paint0_radial_11222_4282)"/>
+												</g>
 											</g>
-										</g>
-										<defs>
-											<filter id="filter0_d_11222_4282" x="-3" y="-3" width="48" height="48" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-												<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-												<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-												<feOffset dy="2"/>
-												<feGaussianBlur stddeviation="4"/>
-												<feComposite in2="hardAlpha" operator="out"/>
-												<feColorMatrix type="matrix" values="0 0 0 0 0.498039 0 0 0 0 0.407843 0 0 0 0 1 0 0 0 0.25 0"/>
-												<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_11222_4282"/>
-												<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_11222_4282" result="shape"/>
-											</filter>
-											<filter id="filter1_i_11222_4282" x="8.43335" y="6.42157" width="26.6571" height="26.6807" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
-												<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-												<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-												<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-												<feOffset dx="1.52381" dy="1.52381"/>
-												<feGaussianBlur stddeviation="1.14286"/>
-												<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
-												<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"/>
-												<feBlend mode="normal" in2="shape" result="effect1_innerShadow_11222_4282"/>
-											</filter>
-																							<radialGradient id="paint0_radial_11222_4282" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(22.0839 27.1287) rotate(-60.1772) scale(24.8321 24.8204)">
+											<defs>
+												<filter id="filter0_d_11222_4282" x="-3" y="-3" width="48" height="48" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+													<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+													<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+													<feOffset dy="2"/>
+													<feGaussianBlur stddeviation="4"/>
+													<feComposite in2="hardAlpha" operator="out"/>
+													<feColorMatrix type="matrix" values="0 0 0 0 0.498039 0 0 0 0 0.407843 0 0 0 0 1 0 0 0 0.25 0"/>
+													<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_11222_4282"/>
+													<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_11222_4282" result="shape"/>
+												</filter>
+												<filter id="filter1_i_11222_4282" x="8.43335" y="6.42157" width="26.6571" height="26.6807" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+													<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+													<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+													<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+													<feOffset dx="1.52381" dy="1.52381"/>
+													<feGaussianBlur stddeviation="1.14286"/>
+													<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+													<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"/>
+													<feBlend mode="normal" in2="shape" result="effect1_innerShadow_11222_4282"/>
+												</filter>
+												<radialGradient id="paint0_radial_11222_4282" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(22.0839 27.1287) rotate(-60.1772) scale(24.8321 24.8204)">
 													<stop stop-color="#8B0000"/>
 													<stop offset="1" stop-color="#DC2626"/>
 												</radialGradient>
-										</defs>
-									</svg>
-									AI Trip Planner
-								</a>
+											</defs>
+										</svg>
+										AI Trip Planner
+									</a>
 								{% else %}
 									<span class="flex items-center bg-gray-100 dark:bg-white/5 dark:text-white/90 h-11 text-gray-400 px-2 py-3 text-sm font-medium rounded-full cursor-not-allowed">
 										<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewbox="0 0 42 42" fill="none">
@@ -322,20 +324,20 @@
 							</nav>
 						</div>
 
-						<!-- Bottom section -->
-						<div class="px-3 space-y-7 pb-6">
+						<!-- Bottom section with improved spacing -->
+						<div class="px-3 space-y-6 pb-6">
 							<div class="px-2">
-								<h2 class="text-xs font-medium text-gray-400 dark:text-gray-400 capitalize tracking-wider">
+								<h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 capitalize tracking-wider mb-3">
 									Liens importants
 								</h2>
-								<nav class="mt-5 space-y-1">
-									<a href="{{ path('settings_page')}}" class="flex items-center gap-2 px-3 py-2 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition">
+								<nav class="space-y-2">
+									<a href="{{ path('settings_page')}}" class="flex items-center gap-3 px-3 py-2.5 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition">
 										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 20 20" fill="none">
 											<path fill-rule="evenodd" clip-rule="evenodd" d="M8.73832 3.04175L11.2653 3.04175C11.5338 3.04175 11.7517 3.25953 11.7517 3.52822C11.7517 5.05702 13.4067 6.01309 14.731 5.2485C14.9635 5.11424 15.2609 5.19392 15.3952 5.42647L16.6588 7.61517C16.7931 7.84785 16.7134 8.14539 16.4807 8.27974C15.1564 9.04434 15.1564 10.9558 16.4807 11.7204C16.7134 11.8548 16.7931 12.1523 16.6588 12.385L15.3951 14.5737C15.2609 14.8063 14.9635 14.8859 14.731 14.7517C13.4067 13.9871 11.7517 14.9432 11.7517 16.472C11.7517 16.7406 11.5338 16.9584 11.2653 16.9584H8.73831C8.46954 16.9584 8.25166 16.7405 8.25166 16.4718C8.25166 14.9423 6.59581 13.9868 5.27153 14.7514C5.03863 14.8858 4.74084 14.806 4.60646 14.5732L3.34312 12.3851C3.20877 12.1524 3.2885 11.8548 3.5212 11.7205C4.84555 10.9559 4.84552 9.04432 3.52119 8.27972C3.28848 8.14536 3.20875 7.8478 3.3431 7.61511L4.60643 5.42696C4.74082 5.19419 5.03861 5.11435 5.27152 5.24882C6.5958 6.0134 8.25166 5.05792 8.25166 3.52841C8.25166 3.25963 8.46954 3.04175 8.73832 3.04175ZM11.2653 1.54175H8.73832C7.64112 1.54175 6.75166 2.43121 6.75166 3.52841C6.75166 3.90286 6.34611 4.13719 6.02152 3.94978C5.07131 3.40118 3.85607 3.72661 3.30739 4.67696L2.04406 6.86511C1.4955 7.81525 1.82105 9.03019 2.77119 9.57876C3.09554 9.76602 3.09553 10.2342 2.7712 10.4214C1.82106 10.97 1.49552 12.1849 2.04408 13.1351L3.30742 15.3232C3.8561 16.2736 5.07133 16.599 6.02153 16.0504C6.34613 15.863 6.75166 16.0973 6.75166 16.4718C6.75166 17.569 7.64111 18.4584 8.73831 18.4584H11.2653C12.3624 18.4584 13.2517 17.5689 13.2517 16.472C13.2517 16.0975 13.657 15.8637 13.981 16.0507C14.9309 16.5992 16.1457 16.2737 16.6942 15.3237L17.9578 13.135C18.5064 12.1849 18.1808 10.97 17.2307 10.4214C16.9064 10.2342 16.9064 9.76604 17.2307 9.57878C18.1808 9.03022 18.5064 7.8153 17.9578 6.86516L16.6942 4.67647C16.1457 3.72648 14.931 3.40099 13.981 3.94947C13.657 4.13652 13.2517 3.90269 13.2517 3.52822C13.2517 2.43126 12.3624 1.54175 11.2653 1.54175ZM8.18006 10C8.18006 8.9944 8.99527 8.17919 10.0009 8.17919C11.0065 8.17919 11.8217 8.9944 11.8217 10C11.8217 11.0056 11.0065 11.8209 10.0009 11.8209C8.99527 11.8209 8.18006 11.0056 8.18006 10ZM10.0009 6.67919C8.16684 6.67919 6.68006 8.16597 6.68006 10C6.68006 11.8341 8.16684 13.3209 10.0009 13.3209C11.8349 13.3209 13.3217 11.8341 13.3217 10C13.3217 8.16597 11.8349 6.67919 10.0009 6.67919Z" fill="currentColor"/>
 										</svg>
 										Paramètres
 									</a>
-									<a href="{{ path ('faq_page')}}" class="flex items-center gap-2 px-3 py-2 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition">
+									<a href="{{ path ('faq_page')}}" class="flex items-center gap-3 px-3 py-2.5 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition">
 										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 20 20" fill="none">
 											<path fill-rule="evenodd" clip-rule="evenodd" d="M3.45827 10.0798C3.45827 6.46689 6.38708 3.53809 9.99994 3.53809C13.6128 3.53809 16.5416 6.46689 16.5416 10.0798C16.5416 13.6926 13.6128 16.6214 9.99994 16.6214H4.51893L5.37428 15.7661C5.51494 15.6254 5.59395 15.4347 5.59395 15.2357C5.59395 15.0368 5.51494 14.8461 5.37428 14.7054C4.18965 13.5208 3.45827 11.8864 3.45827 10.0798ZM9.99994 2.03809C5.55865 2.03809 1.95827 5.63846 1.95827 10.0798C1.95827 12.03 2.6533 13.8191 3.80795 15.2111L2.17794 16.8411C1.96345 17.0556 1.89928 17.3782 2.01536 17.6584C2.13145 17.9387 2.40493 18.1214 2.70827 18.1214H9.99994C14.4412 18.1214 18.0416 14.521 18.0416 10.0798C18.0416 5.63846 14.4412 2.03809 9.99994 2.03809ZM6.35411 8.83057C5.66375 8.83057 5.10411 9.39021 5.10411 10.0806C5.10411 10.7709 5.66375 11.3306 6.35411 11.3306H6.35421C7.04456 11.3306 7.60421 10.7709 7.60421 10.0806C7.60421 9.39021 7.04456 8.83057 6.35421 8.83057H6.35411ZM8.74994 10.0806C8.74994 9.39021 9.30959 8.83057 9.99994 8.83057H10C10.6904 8.83057 11.25 9.39021 11.25 10.0806C11.25 10.7709 10.6904 11.3306 10 11.3306H9.99994C9.30959 11.3306 8.74994 10.7709 8.74994 10.0806ZM13.6458 8.83057C12.9554 8.83057 12.3958 9.39021 12.3958 10.0806C12.3958 10.7709 12.9554 11.3306 13.6458 11.3306H13.6459C14.3362 11.3306 14.8959 10.7709 14.8959 10.0806C14.8959 9.39021 14.3362 8.83057 13.6459 8.83057H13.6458Z" fill="currentColor"/>
 										</svg>
@@ -366,7 +368,7 @@
 											</p>
 										</div>
 										<div>
-											<span class="bg-white dark:bg-white/10 dark:text-white/70 px-2 py-0.5 text-xs font-medium rounded-full">Free</span>
+											<span class="bg-white dark:bg-white/10 dark:text-white/70 px-2 py-0.5 text-xs font-medium rounded-full">Gratuit</span>
 										</div>
 									</div>
 									<div class="mt-5">
@@ -436,11 +438,17 @@
 											</defs>
 										</svg>
 									</div>
-									<input id="chat-input" type="text" placeholder="Dites-moi où vous voulez partir ou ce que vous cherchez..." class="w-full p-4 pl-12 dark:text-white/90 focus:outline-0 placeholder:text-sm dark:placeholder:text-white/50 pr-28 backdrop-blur-[10px] dark:bg-white/5 dark:border-gray-600 rounded-full bg-white" autocomplete="off"/>
+									<input id="chat-input" type="text" placeholder="Dites-moi où vous voulez partir ou ce que vous cherchez..." class="w-full p-4 pl-12 dark:text-white/90 focus:outline-0 placeholder:text-sm dark:placeholder:text-white/50 pr-28 backdrop-blur-[10px] dark:bg-white/5 dark:border-gray-600 rounded-full bg-white shadow-lg border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 transition-colors duration-200" autocomplete="off"/>
 									<div class="absolute right-2 top-1/2 transform -translate-y-1/2 flex space-x-2">
-										<button type="submit" id="chat-send-btn" class="ml-2 w-10 h-10 flex hover:bg-primary-500 ml-2 w-10 h-10 flex hover:bg-primary-500 transition items-center justify-center dark:bg-white/30 bg-gray-800 rounded-full text-white items-center justify-center dark:bg-white/30 bg-gray-800 rounded-full text-white">
-											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 20 20" fill="none">
-												<path fill-rule="evenodd" clip-rule="evenodd" d="M17.4175 9.9986C17.4178 10.1909 17.3446 10.3832 17.198 10.53L12.2013 15.5301C11.9085 15.8231 11.4337 15.8233 11.1407 15.5305C10.8477 15.2377 10.8475 14.7629 11.1403 14.4699L14.8604 10.7472L3.33301 10.7472C2.91879 10.7472 2.58301 10.4114 2.58301 9.99715C2.58301 9.58294 2.91879 9.24715 3.33301 9.24715L14.8549 9.24715L11.1403 5.53016C10.8475 5.23717 10.8477 4.7623 11.1407 4.4695C11.4336 4.1767 11.9085 4.17685 12.2013 4.46984L17.1588 9.43049C17.3173 9.568 17.4175 9.77087 17.4175 9.99715C17.4175 9.99763 17.4175 9.99812 17.4175 9.9986Z" fill="currentColor"/>
+										<button type="submit" id="chat-send-btn" class="w-10 h-10 flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 rounded-full text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" style="background-color: #1f2937 !important;" onmouseover="this.style.setProperty('background-color', '#dc2626', 'important')" onmouseout="this.style.setProperty('background-color', '#1f2937', 'important')" title="Envoyer le message">
+											<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+											</svg>
+										</button>
+										<!-- Test Button for UI Preview -->
+										<button type="button" id="test-ui-btn" class="ml-2 w-10 h-10 flex transition items-center justify-center dark:bg-white/30 rounded-full text-white" style="background-color: #1f2937 !important;" onmouseover="this.style.setProperty('background-color', '#dc2626', 'important')" onmouseout="this.style.setProperty('background-color', '#1f2937', 'important')" onclick="confirmationFlow.showcaseOffers()" title="Test UI Components">
+											<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
 											</svg>
 										</button>
 									</div>
@@ -462,14 +470,14 @@
 				{% set conversationsYesterday = [] %}
 				{% set conversationsPrevious = [] %}
 				{% for conv in conversations %}
-				  {% set startedAt = conv.startedAt %}
-				  {% if startedAt >= today %}
-				    {% set conversationsToday = conversationsToday|merge([conv]) %}
-				  {% elseif startedAt >= yesterday and startedAt < today %}
-				    {% set conversationsYesterday = conversationsYesterday|merge([conv]) %}
-				  {% elseif startedAt >= sevenDaysAgo and startedAt < yesterday %}
-				    {% set conversationsPrevious = conversationsPrevious|merge([conv]) %}
-				  {% endif %}
+					{% set startedAt = conv.startedAt %}
+					{% if startedAt >= today %}
+						{% set conversationsToday = conversationsToday|merge([conv]) %}
+					{% elseif startedAt >= yesterday and startedAt < today %}
+						{% set conversationsYesterday = conversationsYesterday|merge([conv]) %}
+					{% elseif startedAt >= sevenDaysAgo and startedAt < yesterday %}
+						{% set conversationsPrevious = conversationsPrevious|merge([conv]) %}
+					{% endif %}
 				{% endfor %}
 				{% include 'chat/_sidebar.html.twig' with {
 				  'conversationsToday': conversationsToday,

@@ -74,6 +74,19 @@ const OfferDisplay = {
         // Generate gradient based on destination
         const gradient = this.getGradientColors(offer.destinations[0]?.country || '', index);
         
+        // Get the best image from the database
+        const mainImage = offer.images && offer.images.length > 0 ? offer.images[0] : '/assets/images/placeholder-travel.svg';
+        
+        // Get reservation URL (use first one if multiple, fallback to price_url)
+        const reservationUrl = offer.reservation_urls && offer.reservation_urls.length > 0 
+            ? offer.reservation_urls[0] 
+            : offer.price_url || '#';
+        
+        // Get highlights from database
+        const highlights = offer.highlights && offer.highlights.length > 0 
+            ? offer.highlights.slice(0, 2).map(h => h.text || h.title || h)
+            : [];
+        
         // Create card container
         const card = document.createElement('div');
         card.className = 'group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 transform hover:-translate-y-1 hover:scale-105';
@@ -82,7 +95,7 @@ const OfferDisplay = {
         card.innerHTML = `
             <div class="relative">
                 <div class="absolute inset-0 bg-gradient-to-br ${gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
-                <img src="${offer.images[0] || '/assets/images/placeholder-travel.svg'}" alt="${offer.product_name}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300" onerror="this.src='/assets/images/placeholder-travel.svg'">
+                <img src="${mainImage}" alt="${offer.product_name}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300" onerror="this.src='/assets/images/placeholder-travel.svg'">
                 
                 <!-- Duration badge -->
                 <div class="absolute top-3 right-3">
@@ -98,6 +111,20 @@ const OfferDisplay = {
                             ${this.generateStars(offer.match_score || 0.8)}
                         </div>
                         <span class="text-xs text-gray-700 dark:text-gray-300 ml-1 font-medium">${Math.round((offer.match_score || 0.8) * 5 * 10) / 10}</span>
+                    </div>
+                </div>
+                
+                <!-- ASIA Badge -->
+                <div class="absolute top-3 left-3">
+                    <div class="bg-gradient-to-r from-red-500 to-red-600 text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg">
+                        ASIA
+                    </div>
+                </div>
+                
+                <!-- Match score badge -->
+                <div class="absolute bottom-3 right-3">
+                    <div class="bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg">
+                        ${Math.round((offer.match_score || 0.8) * 100)}%
                     </div>
                 </div>
             </div>
@@ -125,24 +152,24 @@ const OfferDisplay = {
                     <span>Départ: ${offer.departure_city}</span>
                 </div>
                 
-                <!-- Highlights (simplified) -->
+                <!-- Highlights from database -->
                 <div class="mb-4">
                     <div class="flex flex-wrap gap-1">
-                        ${offer.highlights.slice(0, 2).map(highlight => `
+                        ${highlights.map(highlight => `
                             <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs px-2 py-1 rounded-full">
-                                ${highlight.text}
+                                ${highlight}
                             </span>
                         `).join('')}
                     </div>
                 </div>
                 
-                <!-- Features -->
+                <!-- Features from database -->
                 <div class="mb-4">
                     <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        Inclus: Transport, Hôtel, Guide
+                        ${offer.offer_type || 'Circuit organisé'}
                     </div>
                 </div>
                 
@@ -150,11 +177,11 @@ const OfferDisplay = {
                 <div class="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
                     <div class="text-sm text-gray-500 dark:text-gray-400">
                         <span class="font-semibold text-green-600">€€€</span>
-                        <span class="ml-1">Petit groupe</span>
+                        <span class="ml-1">${offer.min_group_size ? `Groupe ${offer.min_group_size}-${offer.max_group_size || '18'}` : 'Petit groupe'}</span>
                     </div>
                     <div class="flex gap-2">
-                        ${offer.price_url ? `
-                            <a href="${offer.price_url}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm px-4 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
+                        ${reservationUrl ? `
+                            <a href="${reservationUrl}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm px-4 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
                                 Réserver
                             </a>
                         ` : ''}
@@ -206,6 +233,19 @@ const OfferDisplay = {
         // Clear previous content
         container.innerHTML = '';
         
+        // Get the best image from database
+        const mainImage = program.images && program.images.length > 0 ? program.images[0] : '/assets/images/placeholder-travel.svg';
+        
+        // Get reservation URL from database
+        const reservationUrl = program.reservation_urls && program.reservation_urls.length > 0 
+            ? program.reservation_urls[0] 
+            : program.price_url || '#';
+        
+        // Format destinations
+        const destinations = program.destinations && program.destinations.length > 0 
+            ? program.destinations.map(d => `${d.city} (${d.country})`).join(', ')
+            : '';
+        
         // Create detailed view
         const detailView = document.createElement('div');
         detailView.className = 'bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden mb-6';
@@ -213,11 +253,11 @@ const OfferDisplay = {
         // Header section with image
         detailView.innerHTML = `
             <div class="relative">
-                <img src="/assets/images/placeholder-travel.jpg" alt="${program.product_name}" class="w-full h-64 object-cover">
+                <img src="${mainImage}" alt="${program.product_name}" class="w-full h-64 object-cover" onerror="this.src='/assets/images/placeholder-travel.svg'">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 p-6 text-white">
                     <h2 class="text-2xl font-bold mb-2">${program.product_name}</h2>
-                    <p class="text-sm opacity-90">${program.overview.short_description || ''}</p>
+                    <p class="text-sm opacity-90">${program.description || ''}</p>
                 </div>
             </div>
             
@@ -233,7 +273,7 @@ const OfferDisplay = {
                                 </svg>
                                 <h4 class="font-semibold text-gray-900 dark:text-white">Durée</h4>
                             </div>
-                            <p class="text-gray-600 dark:text-gray-300">${program.overview.duration || ''} jours</p>
+                            <p class="text-gray-600 dark:text-gray-300">${program.duration || 0} jours</p>
                         </div>
                         <div class="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-lg">
                             <div class="flex items-center mb-2">
@@ -243,7 +283,7 @@ const OfferDisplay = {
                                 </svg>
                                 <h4 class="font-semibold text-gray-900 dark:text-white">Destinations</h4>
                             </div>
-                            <p class="text-gray-600 dark:text-gray-300">${program.overview.destinations || ''}</p>
+                            <p class="text-gray-600 dark:text-gray-300">${destinations}</p>
                         </div>
                         <div class="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-lg">
                             <div class="flex items-center mb-2">
@@ -252,177 +292,89 @@ const OfferDisplay = {
                                 </svg>
                                 <h4 class="font-semibold text-gray-900 dark:text-white">Type</h4>
                             </div>
-                            <p class="text-gray-600 dark:text-gray-300">${program.overview.type || ''}</p>
+                            <p class="text-gray-600 dark:text-gray-300">${program.offer_type || 'Circuit organisé'}</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Highlights -->
+                <!-- Highlights from database -->
                 <div class="mb-6">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Points forts</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        ${program.highlights.map(highlight => `
+                        ${program.highlights && program.highlights.length > 0 ? program.highlights.map(highlight => `
                             <div class="flex items-start">
                                 <svg class="w-5 h-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
                                 </svg>
-                                <p class="text-gray-700 dark:text-gray-300">${highlight.text}</p>
+                                <p class="text-gray-700 dark:text-gray-300">${highlight.text || highlight.title || highlight}</p>
                             </div>
-                        `).join('')}
+                        `).join('') : '<p class="text-gray-500 dark:text-gray-400">Aucun point fort spécifié</p>'}
                     </div>
                 </div>
                 
-                <!-- Itinerary -->
+                <!-- Programme from database -->
                 <div class="mb-6">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Itinéraire</h3>
-                    <div class="space-y-4">
-                        ${program.itinerary.map((day, index) => `
-                            <div class="border-l-4 border-blue-500 pl-4 pb-4">
-                                <h4 class="font-bold text-gray-900 dark:text-white mb-2">Jour ${index + 1}: ${day.title}</h4>
-                                <p class="text-gray-600 dark:text-gray-400 mb-3">${day.description}</p>
-                                ${day.activities ? `
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        <span class="font-medium">Activités:</span> ${day.activities}
-                                    </div>
-                                ` : ''}
-                                ${day.accommodation ? `
-                                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                                        <span class="font-medium">Hébergement:</span> ${day.accommodation}
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `).join('')}
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Programme</h3>
+                    <div class="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-lg">
+                        <p class="text-gray-700 dark:text-gray-300 whitespace-pre-line">${program.programme || 'Programme détaillé non disponible'}</p>
                     </div>
                 </div>
                 
-                <!-- Map -->
+                <!-- Dates from database -->
                 <div class="mb-6">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Carte de l'itinéraire</h3>
-                    <div id="program-map" class="bg-gray-100 dark:bg-gray-700 rounded-lg h-64">
-                        <!-- Map will be loaded here -->
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Dates de départ</h3>
+                    <div class="flex flex-wrap gap-2">
+                        ${program.dates && program.dates.length > 0 ? program.dates.map(date => `
+                            <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm">
+                                ${date}
+                            </span>
+                        `).join('') : '<p class="text-gray-500 dark:text-gray-400">Dates non disponibles</p>'}
                     </div>
                 </div>
                 
-                <!-- Included/Not Included -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Ce qui est inclus</h3>
-                        <ul class="space-y-2">
-                            ${program.included.map(item => `
-                                <li class="flex items-start">
-                                    <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                    <span class="text-gray-600 dark:text-gray-300">${item}</span>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Non inclus</h3>
-                        <ul class="space-y-2">
-                            ${program.not_included.map(item => `
-                                <li class="flex items-start">
-                                    <svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                    <span class="text-gray-600 dark:text-gray-300">${item}</span>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Practical Info -->
+                <!-- Group size from database -->
                 <div class="mb-6">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Informations pratiques</h3>
-                    <div class="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-lg">
-                        <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
-                            ${Object.entries(program.practical_info).map(([key, value]) => `
-                                <div class="mb-2">
-                                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">${key}</dt>
-                                    <dd class="text-gray-700 dark:text-gray-300">${value}</dd>
-                                </div>
-                            `).join('')}
-                        </dl>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-lg">
+                            <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Taille du groupe</h4>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                ${program.min_group_size ? `${program.min_group_size} - ${program.max_group_size || '18'} participants` : 'Groupe non spécifié'}
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-lg">
+                            <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Ville de départ</h4>
+                            <p class="text-gray-600 dark:text-gray-300">${program.departure_city || 'Non spécifié'}</p>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Call to Action -->
+                <!-- Call to Action with database URLs -->
                 <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 rounded-xl border border-blue-100 dark:border-blue-800/30 text-center">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Intéressé par ce voyage?</h3>
                     <p class="text-gray-600 dark:text-gray-400 mb-4">Contactez-nous pour plus d'informations ou pour réserver</p>
-                    <button class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg font-medium">
-                        Demander un devis
-                    </button>
+                    <div class="flex gap-3 justify-center">
+                        ${reservationUrl ? `
+                            <a href="${reservationUrl}" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg font-medium">
+                                Réserver maintenant
+                            </a>
+                        ` : ''}
+                        <button onclick="OfferDisplay.closeDetails()" class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg font-medium">
+                            Fermer
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
         
         container.appendChild(detailView);
-        
-        // Render the map after the detailed view is added to the DOM
-        setTimeout(() => {
-            // Check if the map container exists
-            const mapContainer = document.getElementById('program-map');
-            if (!mapContainer) return;
-            
-            try {
-                // Extract destinations from the itinerary
-                const destinations = program.itinerary.map(day => {
-                    const title = day.title || '';
-                    return title.includes(':') ? title.split(':')[1].trim() : title;
-                });
-                
-                // Create a visual representation of the itinerary
-                let mapHtml = `
-                    <div class="h-full p-4 flex flex-col justify-center">
-                        <div class="flex items-center justify-center space-x-2 overflow-x-auto py-4 px-2">
-                `;
-                
-                // Add destinations with connecting lines
-                destinations.forEach((destination, index) => {
-                    // Add destination point
-                    mapHtml += `
-                        <div class="flex flex-col items-center min-w-max">
-                            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold shadow-lg">
-                                ${index + 1}
-                            </div>
-                            <p class="text-xs text-center mt-2 max-w-[80px] line-clamp-2">${destination}</p>
-                        </div>
-                    `;
-                    
-                    // Add connecting line (except for the last destination)
-                    if (index < destinations.length - 1) {
-                        mapHtml += `
-                            <div class="h-0.5 w-12 bg-blue-300 flex-shrink-0"></div>
-                        `;
-                    }
-                });
-                
-                mapHtml += `
-                        </div>
-                        <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
-                            Carte simplifiée de l'itinéraire. Une carte interactive sera bientôt disponible.
-                        </p>
-                    </div>
-                `;
-                
-                // Set the HTML content
-                mapContainer.innerHTML = mapHtml;
-            } catch (error) {
-                console.error('Error rendering map:', error);
-                mapContainer.innerHTML = `
-                    <div class="h-full flex items-center justify-center">
-                        <div class="text-center">
-                            <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
-                            </svg>
-                            <p class="text-gray-500 dark:text-gray-400">Carte interactive bientôt disponible</p>
-                        </div>
-                    </div>
-                `;
-            }
-        }, 100); // Small delay to ensure the DOM is ready
+    },
+    
+    // Close details view
+    closeDetails: function() {
+        const container = document.getElementById('detailed-program-container');
+        if (container) {
+            container.innerHTML = '';
+        }
     }
 };

@@ -4,6 +4,7 @@ Intelligent AI Pipeline for ASIA.fr Agent
 - No hardcoded conditions - everything is AI-driven
 - Intelligent preference extraction and offer matching
 - Enhanced error handling and robustness
+- Optimized for speed and performance
 """
 
 import os
@@ -17,6 +18,7 @@ from dataclasses import dataclass
 from pydantic import BaseModel, Field
 from sentence_transformers import SentenceTransformer
 import numpy as np
+from functools import lru_cache
 
 from core.config import config
 from core.constants import LLMProvider
@@ -68,14 +70,20 @@ class IntelligentPipeline:
     - Intelligent offer matching
     - Natural conversation flow
     - Enhanced error handling and robustness
+    - Optimized for speed and performance
+    
     """
     
     def __init__(self, data_path: str = None):
         debug_print("🚀 Initializing IntelligentPipeline")
         self.data_path = data_path or config.data_path
-        self.setup_models()
-        self.setup_data()
-        self.setup_memory()
+        
+        # Initialize core components
+        self._models_initialized = False
+        self._data_initialized = False
+        self._memory_initialized = False
+        
+        # Initialize conversation context immediately
         self.conversation_context = ConversationContext(
             user_preferences={},
             chat_history="",
@@ -85,7 +93,30 @@ class IntelligentPipeline:
             last_response_type="",
             confidence_score=0.0
         )
+        
+        # Cache for performance
+        self._orchestration_cache = {}
+        self._preference_cache = {}
+        
         debug_print("✅ IntelligentPipeline initialization complete")
+    
+    def _ensure_models_loaded(self):
+        """Lazy load models only when needed"""
+        if not self._models_initialized:
+            self.setup_models()
+            self._models_initialized = True
+    
+    def _ensure_data_loaded(self):
+        """Lazy load data only when needed"""
+        if not self._data_initialized:
+            self.setup_data()
+            self._data_initialized = True
+    
+    def _ensure_memory_loaded(self):
+        """Lazy load memory only when needed"""
+        if not self._memory_initialized:
+            self.setup_memory()
+            self._memory_initialized = True
     
     def setup_models(self):
         """Setup all AI models for the pipeline using environment configuration"""
@@ -107,9 +138,8 @@ class IntelligentPipeline:
             matcher_config = models_config["matcher_model"]
             self.matcher = self._setup_model_from_config(matcher_config, "matching")
             
-            # 4. Embedding Model - Semantic search
-            embedding_config = models_config["embedding_model"]
-            self.embedding_model = self._setup_embedding_model_from_config(embedding_config)
+            # 4. Embedding Model - Semantic search (lazy load)
+            self._embedding_config = models_config["embedding_model"]
             
             debug_print("✅ AI models setup complete")
             
@@ -195,17 +225,22 @@ class IntelligentPipeline:
             return None
     
     def setup_data(self):
-        """Setup data processor"""
+        """Setup data processor with lazy loading"""
         debug_print("📊 Setting up data processor...")
         json_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "asia", "data.json")
-        self.data_processor = DataProcessor(json_file_path)
-        self.data_processor.load_offers()
-        debug_print(f"📊 Loaded {len(self.data_processor.offers)} offers")
+        
+        try:
+            self.data_processor = DataProcessor(json_file_path)
+            debug_print(f"📊 Loaded {len(self.data_processor.offers)} offers")
+        except Exception as e:
+            debug_print(f"❌ Data processor setup failed: {e}")
+            self.data_processor = None
     
     def setup_memory(self):
-        """Setup conversation memory"""
+        """Setup memory system"""
         debug_print("🧠 Setting up memory...")
         self.memory = SimpleMemory()
+        debug_print("✅ Memory setup complete")
     
     def _call_llm_with_retry(self, llm, prompt: str, max_retries: int = 3, timeout: int = 30):
         """Call LLM with retry logic and enhanced error handling"""
@@ -237,34 +272,45 @@ class IntelligentPipeline:
         
         raise Exception(f"LLM call failed after {max_retries} attempts")
 
-    def process_user_input(self, user_input: str, conversation_id: str = None) -> Dict[str, Any]:
+    def process_user_input(self, user_input: str) -> Dict[str, Any]:
         """
-        Main entry point - processes user input using intelligent AI orchestration
+        Main method to process user input and generate appropriate response
+        Optimized for speed and performance
         """
+        start_time = time.time()
+        
         try:
-            debug_print(f"🎯 Processing user input: {user_input[:50]}...")
+            # Lazy load components only when needed
+            self._ensure_models_loaded()
             
             # Update conversation context
             self.conversation_context.turn_count += 1
-            if conversation_id:
-                self.conversation_context.conversation_id = conversation_id
+            self.conversation_context.chat_history += f"\nUser: {user_input}"
             
-            # Step 1: Orchestrate the conversation
-            orchestration_result = self._orchestrate_conversation(user_input)
+            # Check cache for similar inputs
+            cache_key = f"{user_input[:50]}_{self.conversation_context.turn_count}"
+            if cache_key in self._orchestration_cache:
+                debug_print("⚡ Using cached orchestration result")
+                orchestration_result = self._orchestration_cache[cache_key]
+            else:
+                # Use orchestrator to make intelligent decisions
+                orchestration_result = self._orchestrate_conversation(user_input)
+                # Cache the result
+                self._orchestration_cache[cache_key] = orchestration_result
             
-            # Step 2: Extract preferences intelligently
+            # Extract preferences intelligently
             preferences = self._extract_preferences_intelligently(user_input, orchestration_result)
             
-            # Step 3: Update conversation context
+            # Update conversation context with new preferences
             self._update_context(preferences, orchestration_result)
             
-            # Step 4: Generate response based on orchestration
-            response_data = self._generate_intelligent_response(user_input, orchestration_result, preferences)
+            # Generate response based on orchestration result
+            response = self._generate_intelligent_response(user_input, orchestration_result, preferences)
             
-            # Step 5: Add to memory
-            self._add_to_memory(user_input, response_data.get("response", ""))
+            processing_time = time.time() - start_time
+            debug_print(f"⚡ Processing completed in {processing_time:.2f}s")
             
-            return response_data
+            return response
             
         except Exception as e:
             debug_print(f"❌ Error in process_user_input: {e}")
@@ -276,7 +322,15 @@ class IntelligentPipeline:
     def _orchestrate_conversation(self, user_input: str) -> Dict[str, Any]:
         """
         Use the orchestrator model to make intelligent decisions about the conversation
+        Optimized with caching and faster processing
         """
+        # Check if we can use a simple heuristic for common cases
+        if self._is_simple_confirmation(user_input):
+            return self._fast_confirmation_response()
+        
+        if self._is_simple_greeting(user_input):
+            return self._fast_greeting_response()
+        
         prompt = f"""
 You are ASIA.fr Agent, an intelligent travel specialist. You MUST ALWAYS RESPOND IN FRENCH. Analyze this user input and decide the best course of action.
 
@@ -286,84 +340,94 @@ CONVERSATION CONTEXT:
 - Turn count: {self.conversation_context.turn_count}
 - Current preferences: {json.dumps(self.conversation_context.user_preferences, indent=2)}
 - Current state: {self.conversation_context.current_state}
-- Chat history: {self.conversation_context.chat_history[-500:] if self.conversation_context.chat_history else "None"}
-- Last response type: {self.conversation_context.last_response_type}
+- Chat history: {self.conversation_context.chat_history[-300:] if self.conversation_context.chat_history else "None"}
 
-USER INPUT: {user_input}
+USER INPUT: "{user_input}"
 
-ANALYZE AND DECIDE:
-1. What is the user's intent? (greeting, preference_sharing, recommend_place, offer_request, question, confirmation, modification, etc.)
-2. What information do we need to gather?
-3. Should we show offers now? (yes/no)
-4. How many offers should we show? (0-3)
-5. What type of response should we give? (greeting, question, offer_display, detailed_info, confirmation_request, etc.)
-6. Do we need confirmation before showing offers? (yes/no)
-
-CONFIRMATION FLOW RULES:
-- When user provides sufficient details (destination + duration OR destination + style + budget), ALWAYS ask for confirmation FIRST
-- Sufficient details = at least 2 key preferences (destination, duration, style, budget, travelers)
-- NEVER show offers immediately when user has sufficient details - ALWAYS ask for confirmation first
-- Only show offers after user explicitly confirms
-- If user says "yes", "confirm", "perfect", "sounds good", "show me", "oui", "parfait", "c'est bon", treat as confirmation
-- If user says "no", "modify", "change", "different", "non", "modifier", "changer", treat as modification request
-
-CRITICAL RULES:
-- Set intent to "recommend_place" when user asks for recommendations, suggestions, or wants to see places
-- Show exactly 3 offers ONLY when user explicitly confirms they want to see offers
-- NEVER show offers immediately when user has sufficient preferences - ALWAYS ask for confirmation first
-- Never show more than 3 offers
-- Be natural and conversational in French
-- Build on previous context
-- Ask MULTIPLE preference questions at once to speed up the conversation (like Layla.ai)
-- Use Layla.ai style - charismatic, knowledgeable, friendly
-- If user mentions "Japan" and "cultural experience" together, show offers immediately
-
-INTENT DETECTION RULES:
-- "recommend_place": User asks for recommendations, suggestions, "show me places", "what should I visit", etc.
-- "offer_request": User specifically asks for offers, deals, packages
-- "preference_sharing": User shares travel preferences
-- "greeting": Hello, hi, how are you, etc.
-- "question": General questions about travel
-- "confirmation": User confirms or agrees to something
-- "modification": User wants to change or modify preferences
-
-YOU MUST RESPOND WITH VALID JSON ONLY. NO OTHER TEXT. ALL REASONING AND ANALYSIS MUST BE IN FRENCH.
-
-RESPOND IN THIS EXACT JSON FORMAT:
+ANALYZE THE USER INPUT AND PROVIDE A JSON RESPONSE WITH THE FOLLOWING STRUCTURE:
 {{
-    "intent": "user's primary intent",
-    "confidence": 0.95,
-    "missing_info": ["list", "of", "missing", "preferences"],
-    "should_show_offers": true,
+    "intent": "question|confirmation|modification|booking|general",
+    "confidence": 0.0-1.0,
+    "response_type": "question|confirmation|offers|modification",
+    "needs_confirmation": true/false,
+    "has_sufficient_details": true/false,
+    "should_show_offers": true/false,
     "offer_count": 3,
-    "response_type": "type of response to give",
-    "reasoning": "step-by-step reasoning for the decision in French",
-    "next_action": "what to do next",
-    "needs_confirmation": false,
-    "has_sufficient_details": false
+    "reasoning": "Your reasoning in French"
 }}
 
-JSON Response:
+DETECTION RULES:
+1. If user says "oui", "parfait", "c'est bon", "ok", "d'accord", "confirmer", "montrer les offres", "voir les offres" AND we have sufficient details → intent: "confirmation", should_show_offers: true
+2. If user wants to modify preferences → intent: "modification", response_type: "modification"
+3. If we have all required preferences (destination, duration, budget, travel_style) → has_sufficient_details: true
+4. If user confirms and we have sufficient details → should_show_offers: true, offer_count: 3
+
+REQUIRED PREFERENCES FOR OFFERS:
+- destination (country/city)
+- duration (number of days)
+- budget (price range)
+- travel_style (luxury, adventure, cultural, etc.)
+
+RESPOND ONLY WITH VALID JSON:
 """
         
         try:
-            response = self._call_llm_with_retry(self.orchestrator, prompt)
-            result = self._parse_json_safely(response)
-            debug_print(f"🎯 Orchestration result: {result}")
-            return result
+            response = self.orchestrator.invoke(prompt)
+            debug_print(f"🎯 Orchestrator response: {response}")
+            
+            # Extract content from response object
+            response_text = response.content if hasattr(response, 'content') else str(response)
+            debug_print(f"🎯 Orchestrator response text: {response_text}")
+            
+            # Extract JSON from response
+            json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+            if json_match:
+                result = json.loads(json_match.group())
+                debug_print(f"✅ Orchestration result: {result}")
+                return result
+            else:
+                debug_print(f"❌ No JSON found in orchestrator response")
+                return self._default_orchestration()
+                
         except Exception as e:
             debug_print(f"❌ Orchestration failed: {e}")
-            # Fallback orchestration
-            return {
-                "intent": "general",
-                "confidence": 0.5,
-                "missing_info": [],
-                "should_show_offers": False,
-                "offer_count": 0,
-                "response_type": "question",
-                "reasoning": "Fallback due to orchestration error",
-                "next_action": "ask_for_preferences"
-            }
+            return self._default_orchestration()
+    
+    def _is_simple_confirmation(self, user_input: str) -> bool:
+        """Fast check for simple confirmation responses"""
+        confirmation_words = ["oui", "parfait", "c'est bon", "ok", "d'accord", "confirmer", "exactement", "précisément"]
+        return any(word in user_input.lower() for word in confirmation_words)
+    
+    def _is_simple_greeting(self, user_input: str) -> bool:
+        """Fast check for simple greetings"""
+        greeting_words = ["bonjour", "hello", "salut", "hi", "hey"]
+        return any(word in user_input.lower() for word in greeting_words)
+    
+    def _fast_confirmation_response(self) -> Dict[str, Any]:
+        """Fast response for confirmations without LLM call"""
+        return {
+            "intent": "confirmation",
+            "confidence": 0.9,
+            "response_type": "confirmation",
+            "needs_confirmation": False,
+            "has_sufficient_details": len(self.conversation_context.user_preferences) >= 3,
+            "should_show_offers": len(self.conversation_context.user_preferences) >= 3,
+            "offer_count": 3,
+            "reasoning": "Utilisateur a confirmé ses préférences"
+        }
+    
+    def _fast_greeting_response(self) -> Dict[str, Any]:
+        """Fast response for greetings without LLM call"""
+        return {
+            "intent": "general",
+            "confidence": 0.8,
+            "response_type": "question",
+            "needs_confirmation": False,
+            "has_sufficient_details": False,
+            "should_show_offers": False,
+            "offer_count": 0,
+            "reasoning": "Utilisateur a salué, nécessite de recueillir les préférences"
+        }
     
     def _extract_preferences_intelligently(self, user_input: str, orchestration_result: Dict) -> Dict[str, Any]:
         """
@@ -488,16 +552,37 @@ JSON Response:
         self.conversation_context.confidence_score = orchestration_result.get("confidence", 0.0)
         self.conversation_context.last_response_type = orchestration_result.get("response_type", "")
         
-        # Check if we have sufficient details for confirmation
-        has_sufficient_details = self._check_sufficient_details()
+        # Handle confirmation flow based on orchestration results
         needs_confirmation = orchestration_result.get("needs_confirmation", False)
+        has_sufficient_details = orchestration_result.get("has_sufficient_details", False)
+        should_show_offers = orchestration_result.get("should_show_offers", False)
         
-        if has_sufficient_details and needs_confirmation:
+        # Check if user is confirming (intent is confirmation)
+        is_confirmation = orchestration_result.get("intent") == "confirmation"
+        
+        if has_sufficient_details and needs_confirmation and not is_confirmation:
+            # User has provided sufficient details, ask for confirmation through text
             self.conversation_context.current_state = "confirmation"
-            self.conversation_context.needs_confirmation = True
-            self.conversation_context.confirmation_summary = self._generate_confirmation_summary()
-        elif orchestration_result.get("should_show_offers", False):
+            self.conversation_context.needs_confirmation = False  # No UI card needed
+            debug_print(f"📋 Setting confirmation state - user has sufficient details (text-based)")
+        elif is_confirmation and should_show_offers:
+            # User has confirmed, show offers
             self.conversation_context.current_state = "showing_offers"
+            self.conversation_context.needs_confirmation = False
+            debug_print(f"🎯 User confirmed - showing offers")
+        elif orchestration_result.get("intent") == "modification":
+            # User wants to modify preferences
+            self.conversation_context.current_state = "gathering_preferences"
+            self.conversation_context.needs_confirmation = False
+            debug_print(f"🔄 User wants to modify preferences")
+        elif should_show_offers and not needs_confirmation:
+            # Direct offer request (e.g., user explicitly asks for offers)
+            self.conversation_context.current_state = "showing_offers"
+            self.conversation_context.needs_confirmation = False
+            debug_print(f"🎯 Direct offer request - showing offers")
+        else:
+            # Continue gathering preferences
+            self.conversation_context.current_state = "gathering_preferences"
             self.conversation_context.needs_confirmation = False
         
         debug_print(f"🔄 Updated context: {self.conversation_context.user_preferences}, State: {self.conversation_context.current_state}")
@@ -514,30 +599,33 @@ JSON Response:
         return preference_count >= 2
     
     def _generate_confirmation_summary(self) -> str:
-        """Generate a summary of preferences for confirmation in French"""
+        """Generate a concise summary of preferences for confirmation in French"""
         preferences = self.conversation_context.user_preferences
         
         summary_parts = []
         
         if preferences.get('destination'):
-            summary_parts.append(f"Destination : {preferences['destination']}")
+            summary_parts.append(f"• Destination : {preferences['destination']}")
         
         if preferences.get('duration'):
-            summary_parts.append(f"Durée : {preferences['duration']} jours")
+            summary_parts.append(f"• Durée : {preferences['duration']}")
         
         if preferences.get('style'):
-            summary_parts.append(f"Style : {preferences['style']}")
+            summary_parts.append(f"• Style : {preferences['style']}")
         
         if preferences.get('budget'):
-            summary_parts.append(f"Budget : {preferences['budget']}")
+            summary_parts.append(f"• Budget : {preferences['budget']}")
         
-        if preferences.get('travelers'):
-            summary_parts.append(f"Voyageurs : {preferences['travelers']}")
+        if preferences.get('group_size'):
+            summary_parts.append(f"• Voyageurs : {preferences['group_size']}")
         
         if preferences.get('timing'):
-            summary_parts.append(f"Période : {preferences['timing']}")
+            summary_parts.append(f"• Période : {preferences['timing']}")
         
-        return " | ".join(summary_parts) if summary_parts else "Aucune préférence définie"
+        if summary_parts:
+            return "\n".join(summary_parts)
+        else:
+            return "Aucune préférence définie"
     
     def _generate_intelligent_response(self, user_input: str, orchestration_result: Dict, preferences: Dict) -> Dict[str, Any]:
         """
@@ -546,63 +634,63 @@ JSON Response:
         should_show_offers = orchestration_result.get("should_show_offers", False)
         offer_count = orchestration_result.get("offer_count", 0)
         response_type = orchestration_result.get("response_type", "question")
+        needs_confirmation = orchestration_result.get("needs_confirmation", False)
+        has_sufficient_details = orchestration_result.get("has_sufficient_details", False)
+        is_confirmation = orchestration_result.get("intent") == "confirmation"
         
         # Generate the response text
-        response_text = self._generate_response_text(user_input, orchestration_result, preferences)
+        response = self._generate_response_text(user_input, orchestration_result, preferences)
         
-        # Prepare response data
-        response_data = {
-            "response": response_text,
-            "conversation_id": self.conversation_context.conversation_id,
-            "status": "success"
+        # Initialize response structure
+        response = {
+            "response": response,
+            "preferences": preferences,
+            "intent": orchestration_result.get("intent", "general"),
+            "confidence": orchestration_result.get("confidence", 0.0),
+            "response_type": response_type,
+            "needs_confirmation": needs_confirmation,
+            "has_sufficient_details": has_sufficient_details
         }
         
-        # Add confirmation information if needed
-        if self.conversation_context.needs_confirmation:
-            response_data["needs_confirmation"] = True
-            response_data["confirmation_summary"] = self.conversation_context.confirmation_summary
-        
-        # Add conversation state
-        response_data["conversation_state"] = {
-            "conversation_id": self.conversation_context.conversation_id,
-            "user_preferences": self.conversation_context.user_preferences,
-            "current_state": self.conversation_context.current_state,
-            "needs_confirmation": self.conversation_context.needs_confirmation,
-            "confirmation_summary": self.conversation_context.confirmation_summary,
-            "turn_count": self.conversation_context.turn_count,
-            "last_response_type": self.conversation_context.last_response_type
-        }
-        
-        # Add offers if needed
-        if should_show_offers and offer_count > 0:
-            # Use the OfferService instead of our own offer matching
+        # Handle offer display when user confirms or explicitly requests offers
+        if should_show_offers and has_sufficient_details:
             try:
-                from services.offer_service import OfferService
-                from services.data_service import DataService
+                # Step 1: Use sentence transformer to find similar offers
+                search_query = self._build_preference_query(preferences)
+                debug_print(f"🔍 Building search query: {search_query}")
                 
-                # Initialize services
-                ds = DataService()
-                os = OfferService(ds)
+                # Step 2: Use semantic search to find candidates
+                vector_results = self._vector_search_offers(search_query, top_k=6)
+                debug_print(f"🔍 Semantic search found {len(vector_results)} candidates")
                 
-                # Get offers using our tested OfferService
-                offers = os.match_offers(preferences, max_offers=offer_count)
-                if offers:
-                    response_data["offers"] = offers
-                    debug_print(f"🎯 Added {len(offers)} offers using OfferService")
+                # Step 3: Use MATCHER LLM to refine and rank offers
+                ai_refined_offers = self._ai_refine_offers(vector_results, preferences, max_offers=offer_count)
+                debug_print(f"🔍 AI refinement selected {len(ai_refined_offers)} offers")
+                
+                if ai_refined_offers:
+                    response["offers"] = ai_refined_offers
+                    response["response_type"] = "offers"
+                    debug_print(f"🎯 Generated {len(ai_refined_offers)} AI-selected offers using sentence transformer + matcher LLM")
+                else:
+                    debug_print("❌ No offers found through semantic search")
+                    response["response"] += "\n\nJe n'ai pas trouvé d'offres correspondant exactement à vos critères. Pouvez-vous ajuster vos préférences ?"
+                    
             except Exception as e:
-                debug_print(f"❌ Error using OfferService: {e}")
-                # Fallback to our own method
-                offers = self._get_intelligent_offers(preferences, offer_count)
-                if offers:
-                    response_data["offers"] = offers
-                    debug_print(f"🎯 Added {len(offers)} offers using fallback method")
+                debug_print(f"❌ Error in offer pipeline: {e}")
+                response["response"] += "\n\nDésolé, j'ai rencontré une erreur lors de la recherche d'offres. Pouvez-vous réessayer ?"
         
-        return response_data
+        return response
     
     def _generate_response_text(self, user_input: str, orchestration_result: Dict, preferences: Dict) -> str:
         """
         Generate natural response text using the generator model
+        Focus on essential criteria only and format lists properly
         """
+        response_type = orchestration_result.get("response_type", "question")
+        needs_confirmation = orchestration_result.get("needs_confirmation", False)
+        has_sufficient_details = orchestration_result.get("has_sufficient_details", False)
+        is_confirmation = orchestration_result.get("intent") == "confirmation"
+        
         prompt = f"""
 You are ASIA.fr Agent, a charismatic and knowledgeable travel specialist specializing in Asian travel. You MUST ALWAYS RESPOND IN FRENCH.
 
@@ -616,41 +704,45 @@ CONVERSATION CONTEXT:
 
 USER INPUT: {user_input}
 
-GENERATE A NATURAL RESPONSE IN FRENCH following these rules:
-1. Be charismatic, knowledgeable, and friendly in French
-2. Use casual, engaging French language with emojis sparingly
-3. Ask MULTIPLE preference questions at once to speed up the conversation (like Layla.ai)
-4. Build on what users say, don't repeat yourself
-5. Be professional but friendly, knowledgeable but approachable
-6. Avoid repetitive phrases
-7. Make travel planning fun and exciting
-8. If showing offers, mention exactly 3 offers
-9. If asking for preferences, be specific and helpful
-10. If user mentions Japan + cultural experience, show excitement and offer to show relevant offers
+GENERATE A NATURAL RESPONSE IN FRENCH following these CRITICAL RULES:
 
-CONFIRMATION FLOW:
-- If asking for confirmation, summarize their preferences and ask if they want to proceed
-- Be enthusiastic about their choices and make them feel confident
-- Offer to show them the best 3 offers that match their preferences
-- If they want to modify, be helpful and ask what they'd like to change
+1. **FOCUS ONLY ON ESSENTIAL CRITERIA**: Only ask about these 4 core criteria:
+   - Destination (pays/ville)
+   - Durée (nombre de jours)
+   - Budget (faible/moyen/élevé)
+   - Style de voyage (culturel, aventure, luxe, détente, etc.)
 
-MULTIPLE QUESTIONS STYLE (like Layla.ai):
-- When gathering preferences, ask 2-3 related questions at once
-- Format questions as a proper list with line breaks between each item
-- Example: "Parfait ! Pour vous proposer les meilleures offres, j'aimerais savoir :
+2. **FORMAT LISTS PROPERLY**: When asking multiple questions, use proper formatting:
+   ```
+   • Question 1
+   • Question 2  
+   • Question 3
+   ```
+   NOT like this: "• Question 1 • Question 2 • Question 3"
 
-• Quelle destination vous attire le plus en Asie ?
-• Pour combien de jours souhaitez-vous partir ?
-• Quel est votre budget approximatif ?"
+3. **BE CONCISE**: Don't ask unnecessary questions about:
+   - Hébergements spécifiques
+   - Activités détaillées
+   - Centres d'intérêt spécifiques
+   - Plans d'activités
+   - Expériences culinaires
+   - Onsen, temples, etc.
 
-- Group related preferences together naturally
-- Make it conversational, not interrogative
-- Use bullet points (•) with proper line breaks for clarity
-- Avoid wall of text - each question should be on its own line
+4. **ASK EFFICIENTLY**: If multiple criteria are missing, ask them all at once in a clean list format.
 
-RESPONSE TYPE: {orchestration_result.get("response_type", "question")}
+5. **BE FRIENDLY**: Use casual, engaging French with occasional emojis.
 
-Generate a natural, conversational response in French:
+6. **AVOID REPETITION**: Don't repeat what the user already told you.
+
+RESPONSE EXAMPLES:
+✅ GOOD: "Parfait ! Pour finaliser votre voyage au Japon, j'ai besoin de savoir :
+• Quelle durée prévoyez-vous ?
+• Quel est votre budget (faible/moyen/élevé) ?
+• Quel style de voyage préférez-vous (culturel, aventure, détente) ?"
+
+❌ BAD: "Superbe choix, le Japon pendant la saison des cerisiers en fleurs est tout simplement magnifique ! 💕 Pour vous proposer des offres de voyage qui correspondent parfaitement à vos attentes, j'aimerais savoir : • Quels sont vos centres d'intérêt au Japon ? Les temples et les sites historiques, la nourriture japonaise, les onsen (sources chaudes), les parcs nationaux, ou autre chose ? • Avez-vous des préférences pour les hébergements ? Des hôtels traditionnels ryokan, des auberges de jeunesse, ou des appartements meublés ? • Quels sont vos plans pour les activités ? Vous préférez les visites guidées, les excursions en solo, ou les expériences culinaires ? Plus j'en saurai sur vos préférences, mieux je pourrai vous proposer des offres de voyage qui correspondent à vos attentes ! 😊"
+
+Generate your response in French:
 """
         
         try:
@@ -658,7 +750,24 @@ Generate a natural, conversational response in French:
             return response.strip()
         except Exception as e:
             debug_print(f"❌ Response generation failed: {e}")
-            return "Je suis là pour vous aider à planifier votre parfait voyage en Asie ! Quel type de voyage rêvez-vous de faire ?"
+            return self._generate_fallback_response(user_input, preferences)
+    
+    def _generate_fallback_response(self, user_input: str, preferences: Dict) -> str:
+        """Generate a simple fallback response focusing on essential criteria"""
+        missing_criteria = []
+        
+        if not preferences.get('duration'):
+            missing_criteria.append("durée")
+        if not preferences.get('budget'):
+            missing_criteria.append("budget")
+        if not preferences.get('style'):
+            missing_criteria.append("style de voyage")
+        
+        if missing_criteria:
+            criteria_list = "\n• ".join(missing_criteria)
+            return f"Parfait ! Pour finaliser votre voyage, j'ai besoin de savoir :\n• {criteria_list}"
+        else:
+            return "Parfait ! J'ai toutes les informations nécessaires pour vous proposer des offres personnalisées."
     
     def _get_intelligent_offers(self, preferences: Dict, max_offers: int = 3) -> List[Dict]:
         """
@@ -670,7 +779,7 @@ Generate a natural, conversational response in French:
             debug_print(f"🔍 Search query: {search_query}")
             
             # Use vector search for semantic matching
-            vector_results = self._vector_search_offers(search_query, max_offers * 2)
+            vector_results = self._vector_search_offers(search_query, top_k=max_offers * 2)
             
             # Use AI to refine and rank the vector results
             refined_offers = self._ai_refine_offers(vector_results, preferences, max_offers)
@@ -974,6 +1083,247 @@ Select exactly {max_offers} offers:
         self.conversation_context.turn_count = 0
         debug_print("✅ Memory cleared")
 
+    def _build_preference_query(self, preferences: Dict) -> str:
+        """Build a comprehensive search query from user preferences"""
+        query_parts = []
+        
+        if preferences.get('destination'):
+            query_parts.append(f"voyage au {preferences['destination']}")
+        
+        if preferences.get('duration'):
+            query_parts.append(f"durée {preferences['duration']}")
+        
+        if preferences.get('style'):
+            query_parts.append(f"style {preferences['style']}")
+        
+        if preferences.get('budget'):
+            query_parts.append(f"budget {preferences['budget']}")
+        
+        if preferences.get('group_size'):
+            query_parts.append(f"groupe {preferences['group_size']}")
+        
+        if preferences.get('timing'):
+            query_parts.append(f"période {preferences['timing']}")
+        
+        # Add some context words for better matching
+        query_parts.extend(["circuit organisé", "voyage guidé", "découverte culturelle"])
+        
+        return " ".join(query_parts)
+    
+    def _vector_search_offers(self, query: str, top_k: int = 6) -> List[Dict]:
+        """Use sentence transformers for semantic search"""
+        try:
+            # Initialize semantic service if not already done
+            if not hasattr(self, 'semantic_service'):
+                from services.optimized_semantic_service import OptimizedSemanticService
+                self.semantic_service = OptimizedSemanticService()
+                debug_print("🔍 Initialized semantic service")
+            
+            # Use the semantic service to find similar offers
+            search_results = self.semantic_service.search(query, top_k)
+            debug_print(f"🔍 Semantic search found {len(search_results)} results")
+            
+            return search_results
+            
+        except Exception as e:
+            debug_print(f"❌ Vector search failed: {e}")
+            # Fallback to basic search
+            return self._fallback_text_search(query, top_k)
+    
+    def _fallback_text_search(self, query: str, top_k: int = 6) -> List[Dict]:
+        """Fallback text-based search if semantic search fails"""
+        try:
+            # Ensure data is loaded
+            self._ensure_data_loaded()
+            
+            # Get all offers from the data processor
+            all_offers = self.data_processor.get_all_offers()
+            if not all_offers:
+                debug_print("❌ No offers available in data processor")
+                return []
+            
+            # Simple text-based matching
+            matching_offers = []
+            query_lower = query.lower()
+            
+            for offer in all_offers:
+                score = 0
+                offer_text = f"{offer.get('product_name', '')} {offer.get('description', '')} {offer.get('destinations', [])}"
+                offer_text_lower = offer_text.lower()
+                
+                # Simple keyword matching
+                for word in query_lower.split():
+                    if word in offer_text_lower:
+                        score += 1
+                
+                if score > 0:
+                    offer['match_score'] = score / len(query_lower.split())
+                    matching_offers.append(offer)
+            
+            # Sort by match score and return top_k
+            matching_offers.sort(key=lambda x: x.get('match_score', 0), reverse=True)
+            return matching_offers[:top_k]
+            
+        except Exception as e:
+            debug_print(f"❌ Fallback search failed: {e}")
+            return []
+    
+    def _ai_refine_offers(self, vector_results: List[Dict], preferences: Dict, max_offers: int = 3) -> List[Dict]:
+        """Use the MATCHER LLM to refine and rank offers based on preferences"""
+        try:
+            if not vector_results:
+                return []
+            
+            # Ensure models are loaded
+            self._ensure_models_loaded()
+            
+            # Create a prompt specifically for the MATCHER LLM
+            prompt = f"""
+You are an expert travel agent specializing in matching offers to user preferences. Your job is to rank and select the best {max_offers} offers.
+
+USER PREFERENCES:
+{json.dumps(preferences, indent=2, ensure_ascii=False)}
+
+SEMANTIC SEARCH RESULTS (from sentence transformer):
+{json.dumps(vector_results, indent=2, ensure_ascii=False)}
+
+TASK: As the MATCHER LLM, analyze each offer and select the {max_offers} best matches. Consider:
+1. Destination compatibility (exact match gets highest score)
+2. Duration appropriateness (within ±2 days of preference)
+3. Budget level compatibility (low/medium/high)
+4. Travel style alignment (cultural, adventure, luxury, etc.)
+5. Overall relevance and quality
+
+For each selected offer, add a 'match_score' field (0.0-1.0) based on how well it matches preferences.
+
+Return ONLY a JSON array of the selected offers with match scores:
+"""
+            
+            # Use the MATCHER LLM specifically for this task
+            response = self._call_llm_with_retry(self.matcher, prompt)
+            selected_offers = self._parse_json_response(response)
+            
+            if isinstance(selected_offers, list):
+                # Ensure each offer has a match score
+                for offer in selected_offers:
+                    if 'match_score' not in offer:
+                        offer['match_score'] = 0.8  # Default score
+                return selected_offers[:max_offers]
+            else:
+                # Fallback: return top results by semantic similarity score
+                return sorted(vector_results, key=lambda x: x.get('similarity_score', 0), reverse=True)[:max_offers]
+                
+        except Exception as e:
+            debug_print(f"❌ AI refinement failed: {e}")
+            # Fallback: return top results by semantic similarity score
+            return sorted(vector_results, key=lambda x: x.get('similarity_score', 0), reverse=True)[:max_offers]
+    
+    def _get_ai_selected_offers(self, preferences: Dict, offer_count: int = 3) -> List[Dict]:
+        """
+        Get AI-selected offers using the sophisticated semantic search pipeline
+        Optimized for speed with caching
+        """
+        # Create cache key based on preferences
+        cache_key = f"{hash(str(sorted(preferences.items())))}"
+        if hasattr(self, '_offers_cache') and cache_key in self._offers_cache:
+            debug_print("⚡ Using cached offers")
+            return self._offers_cache[cache_key]
+        
+        try:
+            # Build a comprehensive query from preferences
+            query = self._build_preference_query(preferences)
+            debug_print(f"🔍 Building semantic search query: {query}")
+            
+            # Step 1: Use vector search with sentence transformers
+            vector_results = self._vector_search_offers(query, top_k=6)
+            debug_print(f"🔍 Vector search found {len(vector_results)} candidates")
+            
+            # Step 2: Use AI to refine and rank the results
+            ai_refined_offers = self._ai_refine_offers(vector_results, preferences, max_offers=offer_count)
+            debug_print(f"🔍 AI refinement selected {len(ai_refined_offers)} offers")
+            
+            if ai_refined_offers:
+                # Convert to the expected format
+                result = []
+                for offer in ai_refined_offers:
+                    # Add match score from AI refinement
+                    offer_with_score = offer.copy()
+                    offer_with_score['match_score'] = offer.get('ai_score', 0.8)
+                    result.append(offer_with_score)
+                
+                # Cache the result
+                if not hasattr(self, '_offers_cache'):
+                    self._offers_cache = {}
+                self._offers_cache[cache_key] = result
+                
+                debug_print(f"✅ Found {len(result)} AI-selected offers with semantic matching")
+                return result
+            else:
+                debug_print("⚠️ No offers found through semantic search")
+                return []
+                
+        except Exception as e:
+            debug_print(f"❌ Error in semantic offer selection: {e}")
+            # Fallback to basic matching
+            return self._fallback_offer_selection(preferences, offer_count)
+    
+    def _fallback_offer_selection(self, preferences: Dict, offer_count: int = 3) -> List[Dict]:
+        """Fallback to basic offer selection if semantic search fails"""
+        try:
+            from services.offer_service import OfferService
+            from services.data_service import DataService
+            
+            # Initialize services
+            ds = DataService()
+            os = OfferService(ds)
+            
+            # Get raw offers from database
+            raw_offers = ds.get_offers()
+            
+            # Calculate match scores for all offers
+            scored_offers = []
+            for offer in raw_offers:
+                try:
+                    score = os._calculate_match_score(offer, preferences)
+                    if score > 0.5:  # Minimum match threshold
+                        # Add match score to the raw offer data
+                        offer_with_score = offer.copy()
+                        offer_with_score['match_score'] = score
+                        scored_offers.append(offer_with_score)
+                except Exception as e:
+                    debug_print(f"❌ Error scoring offer {offer.get('reference', 'unknown')}: {e}")
+                    continue
+            
+            # Sort by match score and limit results
+            scored_offers.sort(key=lambda x: x.get('match_score', 0), reverse=True)
+            result = scored_offers[:offer_count]
+            
+            if result:
+                debug_print(f"✅ Fallback: Found {len(result)} offers with basic matching")
+                return result
+            else:
+                debug_print("⚠️ No offers found in fallback")
+                return []
+                
+        except Exception as e:
+            debug_print(f"❌ Error in fallback offer selection: {e}")
+            return []
+    
+    def _default_orchestration(self) -> Dict[str, Any]:
+        """
+        Default orchestration when the main orchestration fails
+        """
+        return {
+            "intent": "general",
+            "confidence": 0.5,
+            "response_type": "question",
+            "needs_confirmation": False,
+            "has_sufficient_details": False,
+            "should_show_offers": False,
+            "offer_count": 0,
+            "reasoning": "Fallback orchestration due to error"
+        }
+
 class ASIAConcreteAgent:
     """
     Main agent class that uses the intelligent pipeline
@@ -981,13 +1331,36 @@ class ASIAConcreteAgent:
     
     def __init__(self, data_path: str = None):
         self.pipeline = IntelligentPipeline(data_path)
+        # Store conversation contexts by conversation_id
+        self.conversation_contexts = {}
     
-    def chat(self, user_input: str) -> Dict[str, Any]:
-        """Main chat method"""
+    def _get_or_create_context(self, conversation_id: str = None) -> ConversationContext:
+        """Get or create conversation context for a specific conversation"""
+        if not conversation_id:
+            conversation_id = "default"
+        
+        if conversation_id not in self.conversation_contexts:
+            self.conversation_contexts[conversation_id] = ConversationContext(
+                user_preferences={},
+                chat_history="",
+                current_intent="",
+                conversation_id=conversation_id,
+                turn_count=0,
+                last_response_type="",
+                confidence_score=0.0
+            )
+        
+        return self.conversation_contexts[conversation_id]
+    
+    def chat(self, user_input: str, conversation_id: str = None) -> Dict[str, Any]:
+        """Main chat method with conversation context support"""
+        # Set the conversation context for this conversation
+        context = self._get_or_create_context(conversation_id)
+        self.pipeline.conversation_context = context
         return self.pipeline.process_user_input(user_input)
     
-    def chat_stream(self, user_input: str):
-        """Streaming chat method that yields chunks"""
+    async def chat_stream(self, user_input: str):
+        """Streaming chat method that yields chunks with natural typing effect"""
         try:
             # Get the full response first
             result = self.chat(user_input)
@@ -995,9 +1368,28 @@ class ASIAConcreteAgent:
             # Extract the response text
             response_text = result.get("response", "") if isinstance(result, dict) else str(result)
             
-            # Yield the response character by character for streaming effect
-            for char in response_text:
-                yield char
+            # Split into words for more natural streaming
+            words = response_text.split()
+            
+            # Stream word by word with natural delays
+            for i, word in enumerate(words):
+                # Add space before word (except first word)
+                if i > 0:
+                    yield " " + word
+                else:
+                    yield word
+                
+                # Add natural typing delay
+                # Shorter delay for short words, longer for longer words
+                delay = min(0.1 + (len(word) * 0.02), 0.3)  # Between 0.1 and 0.3 seconds
+                
+                # Add extra delay after punctuation for more natural flow
+                if word.endswith(('.', '!', '?', ':', ';')):
+                    delay += 0.2
+                
+                # Use asyncio.sleep instead of time.sleep for non-blocking delay
+                import asyncio
+                await asyncio.sleep(delay)
             
         except Exception as e:
             debug_print(f"❌ Streaming failed: {e}")
@@ -1011,8 +1403,18 @@ class ASIAConcreteAgent:
         """Clear user preferences"""
         self.pipeline.clear_preferences()
     
-    def clear_memory(self):
-        """Clear conversation memory"""
+    def clear_memory(self, conversation_id: str = None):
+        """Clear conversation memory for specific conversation or all"""
+        if conversation_id:
+            if conversation_id in self.conversation_contexts:
+                del self.conversation_contexts[conversation_id]
+                debug_print(f"🧹 Cleared memory for conversation: {conversation_id}")
+        else:
+            # Clear all conversations
+            self.conversation_contexts.clear()
+            debug_print("🧹 Cleared all conversation memory")
+        
+        # Also clear the pipeline's current context
         self.pipeline.clear_memory()
     
     def get_status(self) -> Dict[str, Any]:
