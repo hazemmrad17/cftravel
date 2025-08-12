@@ -19,11 +19,11 @@ const Config = {
         if (hostname === 'localhost' || 
             hostname === '127.0.0.1' ||
             hostname.includes('local')) {
-            return 'http://localhost:8001';
+            return 'http://localhost:8000';
         }
         
         // Default fallback
-        return 'http://localhost:8001';
+        return 'http://localhost:8000';
     },
     
     // Debug mode
