@@ -55,6 +55,36 @@ def test_pipeline():
         else:
             print(f"📊 Response: {str(result)[:100]}...")
         
+        # Test with a more complete query that should trigger offers
+        print("\n📝 Testing with complete query: 'Japan for 2 weeks, medium budget, cultural adventure'")
+        
+        result2 = agent.chat("Japan for 2 weeks, medium budget, cultural adventure")
+        
+        if isinstance(result2, dict):
+            print(f"📊 Response: {result2.get('response', 'No response')[:100]}...")
+            
+            if 'offers' in result2:
+                offers = result2['offers']
+                print(f"🎯 Found {len(offers)} offers")
+                
+                for i, offer in enumerate(offers):
+                    print(f"\n📋 Offer {i+1}:")
+                    print(f"   Product: {offer.get('product_name', 'N/A')}")
+                    print(f"   Reference: {offer.get('reference', 'N/A')}")
+                    print(f"   Duration: {offer.get('duration', 'N/A')}")
+                    print(f"   Match Score: {offer.get('match_score', 'N/A')}")
+                    print(f"   Destinations: {offer.get('destinations', [])}")
+                    
+                    # Check if this is a real offer (not fake)
+                    if offer.get('product_name') and not offer.get('product_name').startswith('TEST-'):
+                        print("   ✅ This appears to be a REAL offer from the database")
+                    else:
+                        print("   ❌ This appears to be a FAKE offer")
+            else:
+                print("❌ No offers found in result2")
+        else:
+            print(f"📊 Response: {str(result2)[:100]}...")
+        
         print("\n✅ Test completed successfully!")
         
     except Exception as e:

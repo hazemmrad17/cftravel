@@ -83,7 +83,7 @@ async def startup_event():
     logger.info("✅ Server startup complete")
         
 @app.on_event("shutdown")
-async def shutdown_event():
+async def shutdown_event():     
     """Cleanup on shutdown"""
     logger.info("🛑 Shutting down ASIA.fr Agent...")
 
