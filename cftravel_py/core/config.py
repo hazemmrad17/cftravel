@@ -4,148 +4,121 @@ Uses Groq models for all LLM operations - fully configurable via environment var
 """
 
 import os
-from enum import Enum
-from typing import Dict, Any, Optional
-from dataclasses import dataclass
-from dotenv import load_dotenv
 from pathlib import Path
-
-# Load .env file from the current directory or parent
-current_dir = Path(__file__).parent.parent
-env_path = current_dir / '.env'
-if not env_path.exists():
-    # Try parent directory
-    env_path = current_dir.parent / '.env'
-if not env_path.exists():
-    # Try root directory
-    env_path = current_dir.parent.parent / '.env'
-
-print(f"Loading .env from: {env_path}")
-print(f"File exists: {env_path.exists()}")
-if env_path.exists():
-    load_dotenv(dotenv_path=env_path)
-else:
-    print("⚠️ No .env file found - using environment variables only")
-
-class LLMProvider(Enum):
-    """Available LLM providers"""
-    GROQ = "groq"  # Only Groq is supported
-
-@dataclass
-class LLMConfig:
-    """Configuration for LLM providers"""
-    provider: LLMProvider
-    model_name: str
-    temperature: float = 0.7
-    max_tokens: Optional[int] = None
-    api_key: Optional[str] = None
-    base_url: Optional[str] = None
+from typing import List
 
 class Config:
-    """Main configuration class - fully environment-driven"""
+    """Centralized configuration for ASIA.fr Agent"""
     
     def __init__(self):
-        self.data_path = os.getenv("DATA_PATH", "data")
-        self.debug = os.getenv("DEBUG", "false").lower() == "true"
-        self.groq_api_key = os.getenv("GROQ_API_KEY")
-        # Force the correct base URL for Groq API
-        self.groq_base_url = "https://api.groq.com/openai/v1"
-        
-        # Validate required configuration
-        if not self.groq_api_key:
-            print("⚠️ WARNING: GROQ_API_KEY not set - AI functionality will be limited")
-            print("🔄 Server will run in fallback mode with basic functionality")
+        self._detect_environment()
+        self._setup_config()
     
-    def get_model_config(self, model_type: str) -> Dict[str, Any]:
-        """Get configuration for a specific model type from environment variables"""
-        if not self.groq_api_key:
-            raise ValueError(f"GROQ_API_KEY required for {model_type}")
+    def _detect_environment(self):
+        """Detect if we're running in production or development"""
+        # Check for production indicators
+        self.is_production = any([
+            os.getenv('NODE_ENV') == 'production',
+            os.getenv('ENVIRONMENT') == 'production',
+            'cftravel.net' in os.getenv('HOSTNAME', ''),
+            'asia-iagent.cftravel.net' in os.getenv('HOSTNAME', ''),
+            'ovg-iagent.cftravel.net' in os.getenv('HOSTNAME', ''),
+            os.path.exists('/var/www'),  # Common production path
+            os.path.exists('/var/repo'),  # Git repo path
+            os.getenv('PORT') == '8000'  # Production port
+        ])
         
-        # Model-specific environment variables
-        model_env_var = f"{model_type.upper()}_MODEL"
-        temp_env_var = f"{model_type.upper()}_TEMPERATURE"
-        tokens_env_var = f"{model_type.upper()}_MAX_TOKENS"
+        # Check for development indicators
+        self.is_development = any([
+            os.getenv('NODE_ENV') == 'development',
+            os.getenv('ENVIRONMENT') == 'development',
+            'localhost' in os.getenv('HOSTNAME', ''),
+            '127.0.0.1' in os.getenv('HOSTNAME', ''),
+            os.getenv('PORT') == '8002'  # Development port
+        ])
         
-        # Default values for each model type - Using Kimi K2 for better performance
-        defaults = {
-            "reasoning": {
-                "model": "moonshotai/kimi-k2-instruct",
-                "temperature": 0.1,
-                "max_tokens": 2048
-            },
-            "generation": {
-                "model": "moonshotai/kimi-k2-instruct",
-                "temperature": 0.7,
-                "max_tokens": 2048
-            },
-            "matcher": {
-                "model": "moonshotai/kimi-k2-instruct",
-                "temperature": 0.3,
-                "max_tokens": 2048
-            },
-            "extractor": {
-                "model": "moonshotai/kimi-k2-instruct",
-                "temperature": 0.1,
-                "max_tokens": 1024
-            }
-        }
+        # Default to development if unclear
+        if not self.is_production and not self.is_development:
+            self.is_development = True
+    
+    def _setup_config(self):
+        """Setup configuration based on environment"""
+        if self.is_production:
+            self._setup_production()
+        else:
+            self._setup_development()
+    
+    def _setup_production(self):
+        """Production configuration"""
+        self.API_PORT = 8000
+        self.API_HOST = "0.0.0.0"
         
-        default = defaults.get(model_type, defaults["generation"])
+        # Auto-detect domain from environment or file system
+        hostname = os.getenv('HOSTNAME', '')
+        current_path = os.getcwd()
         
+        # Check if we're in the Asia domain
+        if ('asia-iagent.cftravel.net' in hostname or 
+            'asia' in current_path.lower() or
+            os.path.exists('/var/www/asia-iagent.cftravel.net')):
+            self.BASE_URL = "https://asia-iagent.cftravel.net"
+            self.DOMAIN = "asia-iagent.cftravel.net"
+        else:
+            self.BASE_URL = "https://ovg-iagent.cftravel.net"
+            self.DOMAIN = "ovg-iagent.cftravel.net"
+        
+        self.ALLOWED_ORIGINS = [
+            "https://asia-iagent.cftravel.net",
+            "https://ovg-iagent.cftravel.net",
+            "https://iagent.cftravel.net"
+        ]
+        self.DEBUG = False
+        self.LOG_LEVEL = "INFO"
+        
+    def _setup_development(self):
+        """Development configuration"""
+        self.API_PORT = 8002
+        self.API_HOST = "0.0.0.0"
+        self.BASE_URL = "http://localhost:8002"
+        self.ALLOWED_ORIGINS = [
+            "http://localhost:8000",
+            "http://localhost:8002",
+            "http://localhost:3000",
+            "http://127.0.0.1:8000",
+            "http://127.0.0.1:8002",
+            "http://127.0.0.1:3000"
+        ]
+        self.DEBUG = True
+        self.LOG_LEVEL = "DEBUG"
+    
+    @property
+    def cors_origins(self) -> List[str]:
+        """Get CORS origins for current environment"""
+        return self.ALLOWED_ORIGINS
+    
+    @property
+    def server_config(self) -> dict:
+        """Get server configuration"""
         return {
-            "provider": "groq",
-            "model": default["model"],  # Use default models instead of env vars
-            "temperature": float(os.getenv(temp_env_var, str(default["temperature"]))),
-            "max_tokens": int(os.getenv(tokens_env_var, str(default["max_tokens"]))),
-            "api_key": self.groq_api_key,
-            "base_url": self.groq_base_url
+            "host": self.API_HOST,
+            "port": self.API_PORT,
+            "debug": self.DEBUG
         }
     
-    def get_embedding_config(self) -> Dict[str, Any]:
-        """Get embedding model configuration"""
+    def get_logging_config(self) -> dict:
+        """Get logging configuration"""
         return {
-            "model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
-            "provider": "sentence-transformers"
+            "level": self.LOG_LEVEL,
+            "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         }
-    
-    def get_all_models_config(self) -> Dict[str, Any]:
-        """Get configuration for all models"""
-        if not self.groq_api_key:
-            raise ValueError("GROQ_API_KEY environment variable is required")
-        
-        return {
-            "reasoning_model": self.get_model_config("reasoning"),
-            "generation_model": self.get_model_config("generation"),
-            "matcher_model": self.get_model_config("matcher"),
-            "extractor_model": self.get_model_config("extractor"),
-            "embedding_model": self.get_embedding_config()
-        }
-    
-    def print_configuration(self):
-        """Print current configuration for debugging"""
-        print("\n=== ASIA.fr Agent Configuration ===")
-        print(f"Debug Mode: {self.debug}")
-        print(f"Data Path: {self.data_path}")
-        print(f"Groq API Key: {'Set' if self.groq_api_key else 'Not set'}")
-        print(f"Groq Base URL: {self.groq_base_url}")
-        
-        if self.groq_api_key:
-            print("\nModel Configuration:")
-            try:
-                models = self.get_all_models_config()
-                for model_name, config in models.items():
-                    if model_name != "embedding_model":
-                        print(f"  {model_name}: {config['model']} (temp: {config['temperature']}, tokens: {config['max_tokens']})")
-                    else:
-                        print(f"  {model_name}: {config['model']}")
-            except Exception as e:
-                print(f"  Error loading model config: {e}")
-        
-        print("================================\n")
 
-# Global config instance
+# Global configuration instance
 config = Config()
 
-# Print configuration on import
-if __name__ != "__main__":
-    config.print_configuration() 
+# Export commonly used values
+API_PORT = config.API_PORT
+API_HOST = config.API_HOST
+BASE_URL = config.BASE_URL
+ALLOWED_ORIGINS = config.ALLOWED_ORIGINS
+DEBUG = config.DEBUG
+LOG_LEVEL = config.LOG_LEVEL 

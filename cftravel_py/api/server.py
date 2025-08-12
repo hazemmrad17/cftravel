@@ -19,24 +19,27 @@ from pathlib import Path
 from pipelines.concrete_pipeline import ASIAConcreteAgent, IntelligentPipeline
 from services.memory_service import MemoryService
 
+# Import centralized configuration
+from core.config import config
+
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=config.LOG_LEVEL)
 logger = logging.getLogger(__name__)
+
+# Log environment detection
+logger.info(f"🌍 Environment: {'Production' if config.is_production else 'Development'}")
+logger.info(f"🔧 Server Config: {config.server_config}")
+if config.is_production:
+    logger.info(f"🌐 Production Domain: {config.DOMAIN}")
+    logger.info(f"🔗 Base URL: {config.BASE_URL}")
 
 # Initialize FastAPI app
 app = FastAPI(title="ASIA.fr Agent API", version="1.0.0")
 
-# Add CORS middleware for production
+# Add CORS middleware with dynamic configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://ovg-iagent.cftravel.net",
-        "https://iagent.cftravel.net", 
-        "http://localhost:8000",
-        "http://localhost:3000",
-        "http://127.0.0.1:8000",
-        "http://127.0.0.1:3000"
-    ],
+    allow_origins=config.cors_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
@@ -99,6 +102,20 @@ async def read_home(request: Request):
     """Serve the home page"""
     templates = get_templates()
     return templates.TemplateResponse("chat/index.html.twig", {"request": request})
+
+@app.get("/status")
+async def status():
+    """Status endpoint showing current configuration"""
+    return {
+        "status": "running",
+        "environment": "production" if config.is_production else "development",
+        "domain": getattr(config, 'DOMAIN', 'unknown'),
+        "base_url": config.BASE_URL,
+        "port": config.API_PORT,
+        "cors_origins": config.cors_origins,
+        "agent_loaded": _agent is not None,
+        "memory_service_loaded": _memory_service is not None
+    }
 
 @app.post("/memory/clear")
 async def clear_memory(request: Request):
@@ -188,26 +205,26 @@ async def chat_stream(request: Request):
                             delay += 0.1
                         
                         await asyncio.sleep(delay)
-            
-            # Send end marker
-            yield f"data: {json.dumps({'type': 'end'})}\n\n"
-            
-        except Exception as e:
+                
+                # Send end marker
+                yield f"data: {json.dumps({'type': 'end'})}\n\n"
+                
+            except Exception as e:
                 logger.error(f"❌ Error in streaming: {e}")
                 error_message = f"Je suis désolé, j'ai rencontré une erreur: {str(e)}"
                 yield f"data: {json.dumps({'type': 'content', 'chunk': error_message})}\n\n"
                 yield f"data: {json.dumps({'type': 'end'})}\n\n"
-    
-    return StreamingResponse(
+        
+        return StreamingResponse(
             generate_stream(),
-        media_type="text/plain",
-        headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "Content-Type": "text/event-stream",
-        }
-    )
-
+            media_type="text/plain",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Content-Type": "text/event-stream",
+            }
+        )
+        
     except Exception as e:
         logger.error(f"❌ Error in chat stream: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -219,7 +236,7 @@ if static_dir.exists():
 
 if __name__ == "__main__":
     import uvicorn
-    # Production: port 8000, Local: port 8002
-    import os
-    port = int(os.getenv("PORT", 8000))  # Default to 8000 for production
-    uvicorn.run(app, host="0.0.0.0", port=port) 
+    # Use centralized configuration
+    server_config = config.server_config
+    logger.info(f"🚀 Starting server on {server_config['host']}:{server_config['port']}")
+    uvicorn.run(app, host=server_config['host'], port=server_config['port']) 
