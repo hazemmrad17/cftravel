@@ -1078,8 +1078,16 @@ Select exactly {max_offers} offers:
         """Build a comprehensive search query from user preferences for sentence transformer"""
         query_parts = []
         
+        # Prioritize destination - make it the most important part
         if preferences.get('destination'):
-            query_parts.append(f"voyage au {preferences['destination']}")
+            destination = preferences['destination']
+            # Add multiple variations for better matching
+            query_parts.extend([
+                f"Japon {destination}",
+                f"voyage {destination}",
+                f"circuit {destination}",
+                f"découverte {destination}"
+            ])
         
         if preferences.get('duration'):
             query_parts.append(f"durée {preferences['duration']}")
@@ -1100,32 +1108,6 @@ Select exactly {max_offers} offers:
         query_parts.extend(["circuit organisé", "voyage guidé", "découverte culturelle"])
         
         return " ".join(query_parts)
-    
-    def _parse_json_response(self, response: str) -> List[Dict]:
-        """Parse JSON response from LLM with error handling"""
-        try:
-            # Clean the response
-            cleaned_response = response.strip()
-            
-            # Try to find JSON array in the response
-            start_idx = cleaned_response.find('[')
-            end_idx = cleaned_response.rfind(']')
-            
-            if start_idx != -1 and end_idx != -1:
-                json_str = cleaned_response[start_idx:end_idx + 1]
-                parsed = json.loads(json_str)
-                debug_print(f"✅ JSON parsed successfully: {len(parsed)} items")
-                return parsed
-            else:
-                debug_print("❌ No JSON array found in response")
-                return []
-                
-        except json.JSONDecodeError as e:
-            debug_print(f"❌ JSON decode error: {e}")
-            return []
-        except Exception as e:
-            debug_print(f"❌ Error parsing JSON: {e}")
-            return []
     
     def _vector_search_offers(self, query: str, top_k: int = 10) -> List[Dict]:
         """Use sentence transformers to find top 10 closest offers from JSON database"""
