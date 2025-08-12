@@ -12,7 +12,7 @@ const Config = {
         if (hostname === 'ovg-iagent.cftravel.net' || 
             hostname === 'iagent.cftravel.net' ||
             hostname.includes('cftravel.net')) {
-            return 'https://ovg-iagent.cftravel.net';
+            return 'https://ovg-iagent.cftravel.net/api-proxy.php';
         }
         
         // Local development
