@@ -181,26 +181,26 @@ async def chat_stream(request: Request):
                             delay += 0.1
                         
                         await asyncio.sleep(delay)
-            
-            # Send end marker
-            yield f"data: {json.dumps({'type': 'end'})}\n\n"
-            
-        except Exception as e:
+                
+                # Send end marker
+                yield f"data: {json.dumps({'type': 'end'})}\n\n"
+                
+            except Exception as e:
                 logger.error(f"❌ Error in streaming: {e}")
                 error_message = f"Je suis désolé, j'ai rencontré une erreur: {str(e)}"
                 yield f"data: {json.dumps({'type': 'content', 'chunk': error_message})}\n\n"
                 yield f"data: {json.dumps({'type': 'end'})}\n\n"
-    
-    return StreamingResponse(
+        
+        return StreamingResponse(
             generate_stream(),
-        media_type="text/plain",
-        headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "Content-Type": "text/event-stream",
-        }
-    )
-
+            media_type="text/plain",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Content-Type": "text/event-stream",
+            }
+        )
+        
     except Exception as e:
         logger.error(f"❌ Error in chat stream: {e}")
         raise HTTPException(status_code=500, detail=str(e))

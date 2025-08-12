@@ -1081,13 +1081,23 @@ Select exactly {max_offers} offers:
         # Prioritize destination - make it the most important part
         if preferences.get('destination'):
             destination = preferences['destination']
-            # Add multiple variations for better matching
-            query_parts.extend([
-                f"Japon {destination}",
-                f"voyage {destination}",
-                f"circuit {destination}",
-                f"découverte {destination}"
-            ])
+            # For Japan, use specific Japanese terms and variations
+            if destination.lower() in ['japan', 'japon', 'japanese']:
+                query_parts.extend([
+                    "Japon Tokyo Kyoto Osaka",
+                    "voyage Japon",
+                    "circuit Japon",
+                    "découverte Japon",
+                    "Japon culturel",
+                    "Japon traditionnel"
+                ])
+            else:
+                # For other destinations
+                query_parts.extend([
+                    f"voyage {destination}",
+                    f"circuit {destination}",
+                    f"découverte {destination}"
+                ])
         
         if preferences.get('duration'):
             query_parts.append(f"durée {preferences['duration']}")
