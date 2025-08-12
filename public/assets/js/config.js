@@ -19,11 +19,13 @@ const Config = {
         if (hostname === 'localhost' || 
             hostname === '127.0.0.1' ||
             hostname.includes('local')) {
-            return 'http://localhost:8001';
+            // Use HTTPS if the page is served over HTTPS, otherwise HTTP
+            const protocol = window.location.protocol;
+            return `${protocol}//localhost:8002`;
         }
         
         // Default fallback
-        return 'http://localhost:8001';
+        return 'http://localhost:8002';
     },
     
     // Debug mode
