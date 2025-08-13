@@ -24,7 +24,7 @@ const Config = {
         if (hostname === 'ovg-iagent.cftravel.net' || 
             hostname === 'iagent.cftravel.net' ||
             hostname.includes('cftravel.net')) {
-            return 'https://ovg-iagent.cftravel.net:8000'; // Python API on same server
+            return 'http://ovg-iagent.cftravel.net:8000'; // Python API on same server
         }
         
         // Default fallback

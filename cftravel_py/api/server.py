@@ -31,7 +31,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://ovg-iagent.cftravel.net",
-        "https://iagent.cftravel.net", 
+        "https://iagent.cftravel.net",
+        "http://ovg-iagent.cftravel.net",
+        "http://iagent.cftravel.net", 
         "http://localhost:8000",
         "http://localhost:8002",
         "http://localhost:3000",
