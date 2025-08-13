@@ -364,33 +364,3 @@ html.light .chat-messages div[class*="bg-chat-ai"] {
     background: #e5e7eb;
   }
 }
-
-/* Typing cursor indicator for streaming effect */
-.typing-indicator {
-  display: inline-block;
-  width: 2px;
-  height: 1.2em;
-  background: #3b82f6;
-  margin-left: 2px;
-  animation: blink 1s infinite;
-  vertical-align: middle;
-}
-
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
-/* Dark mode typing cursor */
-.dark .typing-indicator {
-  background: #60a5fa;
-}
-
-/* Streaming message styling */
-.message-text.streaming {
-  position: relative;
-}
-
-.message-text.streaming .typing-indicator {
-  animation: blink 0.8s infinite;
-}

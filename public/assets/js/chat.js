@@ -1422,6 +1422,47 @@ document.addEventListener('DOMContentLoaded', function() {
   
 
 
+  async function streamMessageWithEffect(messageElement, fullMessage) {
+    // Simulate streaming by displaying the message word by word
+    const textElement = messageElement.querySelector('.message-text');
+    if (!textElement) return;
+    
+    // Split the message into words
+    const words = fullMessage.split(/\s+/);
+    let currentText = '';
+    
+    // Clear any initial content
+    textElement.textContent = '';
+    
+    // Display words one by one with delays
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
+      
+      // Add space before word (except first word)
+      if (i > 0) {
+        currentText += ' ' + word;
+      } else {
+        currentText += word;
+      }
+      
+      // Update the display
+      updateStreamingMessage(messageElement, currentText);
+      
+      // Add delay between words (shorter for faster response)
+      const delay = Math.min(50 + (word.length * 5), 150); // Between 50ms and 150ms
+      
+      // Extra delay after punctuation for natural flow
+      if (word.match(/[.!?:;]$/)) {
+        await new Promise(resolve => setTimeout(resolve, delay + 100));
+      } else {
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+    
+    // Finalize the message
+    finalizeStreamingMessage(messageElement, currentText);
+  }
+
   function finalizeStreamingMessage(messageElement, content) {
     // Finalize the streaming message
     const textElement = messageElement.querySelector('.message-text');
@@ -1447,66 +1488,6 @@ document.addEventListener('DOMContentLoaded', function() {
         chatArea.scrollTop = chatArea.scrollHeight;
       }, 100);
     }
-  }
-
-  // JavaScript streaming effect function
-  async function streamTextEffect(messageElement, fullText) {
-    const textElement = messageElement.querySelector('.message-text');
-    if (!textElement) return;
-    
-    // Split text into words, punctuation, and emojis
-    const tokens = fullText.split(/(\s+|[^\w\s]|[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])/u);
-    let currentText = '';
-    
-    // Add typing indicator
-    textElement.innerHTML = '<span class="typing-indicator"></span>';
-    textElement.classList.add('streaming');
-    
-    // Stream each token with a delay
-    for (let i = 0; i < tokens.length; i++) {
-      const token = tokens[i];
-      currentText += token;
-      
-      // Format the text (handle line breaks, bullet points, etc.)
-      const formattedText = currentText
-        .replace(/\n/g, '<br>')
-        .replace(/•\s*/g, '<br>• ')
-        .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
-      
-      // Update the text content
-      textElement.innerHTML = formattedText + '<span class="typing-indicator"></span>';
-      
-      // Scroll to bottom
-      chatArea.scrollTop = chatArea.scrollHeight;
-      
-      // Add delay based on token type
-      let delay;
-      if (token.trim() === '') {
-        delay = 10; // Very fast for spaces
-      } else if (token.match(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u)) {
-        delay = 30; // Fast for emojis
-      } else if (token.match(/[^\w\s]/)) {
-        delay = 20; // Fast for punctuation
-      } else {
-        delay = 40 + Math.random() * 80; // 40-120ms for words
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-    
-    // Remove typing indicator and finalize
-    const finalFormattedText = currentText
-      .replace(/\n/g, '<br>')
-      .replace(/•\s*/g, '<br>• ')
-      .replace(/^\s*<br>/, '');
-    
-    textElement.innerHTML = finalFormattedText;
-    textElement.classList.remove('streaming');
-    
-    // Final scroll to bottom
-    setTimeout(() => {
-      chatArea.scrollTop = chatArea.scrollHeight;
-    }, 100);
   }
 
   // Render conversation history from database
@@ -1609,15 +1590,15 @@ document.addEventListener('DOMContentLoaded', function() {
       isAITyping = true;
       updateSendStateIndicator();
       
-      // Use regular API and implement JavaScript streaming effect
-      console.log('[DEBUG] Making API request to:', `${API_BASE_URL}/chat/message`);
+      // Try streaming first, fallback to regular API
+      console.log('[DEBUG] Making API request to:', `${API_BASE_URL}/chat/stream`);
       console.log('[DEBUG] Request body:', JSON.stringify({
         message: message,
         conversation_id: conversationId,
         user_id: "1"
       }));
       
-      const response = await fetch(`${API_BASE_URL}/chat/message`, {
+      const streamResponse = await fetch(`${API_BASE_URL}/chat/stream`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1629,21 +1610,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }),
       });
       
-      if (response.ok) {
-        console.log('✅ Response received, implementing JS streaming effect...');
-        
-        const responseData = await response.json();
-        const assistantMessage = responseData.response || responseData.message || 'Désolé, je n\'ai pas pu traiter votre demande.';
+      if (streamResponse.ok) {
+        console.log('✅ Streaming response received, processing...');
         
         // Remove loading indicator and create assistant message element for streaming
         hideLoading();
         const assistantMessageElement = appendMessage('', false, false, [], true);
         
-        // Implement JavaScript streaming effect
-        await streamTextEffect(assistantMessageElement, assistantMessage);
+        // Get the full response text
+        const responseText = await streamResponse.text();
         
-        // Assistant message received successfully
-        console.log('✅ Assistant message received:', assistantMessage);
+        // Extract the actual message from the response
+        let fullMessage = '';
+        const lines = responseText.split('\n');
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.type === 'content' && data.chunk) {
+                fullMessage += data.chunk;
+              }
+            } catch (e) {
+              console.warn('⚠️ Error parsing streaming data:', e);
+            }
+          }
+        }
+        
+        if (fullMessage) {
+          // Use JavaScript streaming effect
+          await streamMessageWithEffect(assistantMessageElement, fullMessage);
+        } else {
+          // Fallback: show the message immediately
+          finalizeStreamingMessage(assistantMessageElement, fullMessage);
+        }
         
         // Reset AI typing state and unblock UI
         isAITyping = false;
@@ -1651,8 +1650,72 @@ document.addEventListener('DOMContentLoaded', function() {
         chatInputEl && chatInputEl.focus();
         return;
       } else {
-        console.log('⚠️ API request failed');
-        appendMessage('Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants.', false, true, [], false);
+        console.log('⚠️ Streaming failed, falling back to regular API');
+        isAITyping = true; // Still waiting for AI response
+        updateSendStateIndicator();
+        
+        // Fallback to regular API
+        const resp = await fetch(`${API_BASE_URL}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: message,
+            conversation_id: conversationId,
+            user_id: "1"
+        }),
+      });
+        
+      hideLoading();
+        
+      if (resp.ok) {
+        const data = await resp.json();
+        
+        // Get assistant response
+        const assistantMessage = data.response || data.conversation_state?.conversation?.slice(-1)[0]?.content || 'No response';
+        
+        // Assistant message received successfully
+        console.log('✅ Assistant message received:', assistantMessage);
+        
+        // Create message element for streaming effect
+        const assistantMessageElement = appendMessage('', false, false, [], true);
+        
+        // Check if we need confirmation
+        if (data.needs_confirmation && data.confirmation_summary) {
+          // Use streaming effect for confirmation messages
+          await streamMessageWithEffect(assistantMessageElement, assistantMessage);
+          // Display confirmation request
+          if (typeof confirmationFlow !== 'undefined') {
+            confirmationFlow.displayConfirmationRequest(data.conversation_state.user_preferences, data.confirmation_summary);
+          }
+        }
+        // Check if we have offers to display
+        else if (data.offers && data.offers.length > 0) {
+          // Use streaming effect for offer messages
+          await streamMessageWithEffect(assistantMessageElement, assistantMessage);
+          // Extract preferences and display preference confirmation
+          const preferences = extractPreferencesFromMessage(message);
+          if (window.confirmationFlow && typeof window.confirmationFlow.displayPreferenceConfirmation === 'function') {
+            window.confirmationFlow.displayPreferenceConfirmation(preferences, data.offers);
+          } else if (window.confirmationFlow && typeof window.confirmationFlow.displayOffers === 'function') {
+            window.confirmationFlow.displayOffers(data.offers);
+          } else {
+            // Fallback to the existing displayOfferCards function
+            displayOfferCards(data.offers);
+          }
+        } else {
+          // Use streaming effect for regular messages
+          await streamMessageWithEffect(assistantMessageElement, assistantMessage);
+        }
+          
+          // Check if we have a detailed program to display
+          if (data.detailed_program) {
+            displayDetailedProgram(data.detailed_program);
+          }
+      } else {
+          appendMessage('Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants.', false, true, [], false);
+        }
         
         // Reset AI typing state and unblock UI
         isAITyping = false;
