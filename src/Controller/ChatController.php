@@ -381,6 +381,7 @@ class ChatController extends AbstractController
             ]);
 
             // Forward the request to Python API with the same body
+            // Note: Python API expects /memory/clear, not /chat/memory/clear
             $response = $this->httpClient->request('POST', $this->agentApiUrl . '/memory/clear', [
                 'json' => $requestData,
                 'timeout' => 30

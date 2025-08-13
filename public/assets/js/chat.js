@@ -515,7 +515,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       // Clear the chat area
-      const chatArea = document.querySelector('.p-5.py-12');
       if (chatArea) {
         chatArea.innerHTML = '';
       }
@@ -538,7 +537,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (error) {
       console.error('❌ Error creating new conversation:', error);
       // Still continue with new conversation even if memory clearing fails
-      const chatArea = document.querySelector('.p-5.py-12');
       if (chatArea) {
         chatArea.innerHTML = '';
       }
@@ -726,22 +724,23 @@ document.addEventListener('DOMContentLoaded', function() {
       // For AI messages
       if (shouldStream) {
         // Create empty message element for server streaming with proper initial state
+        console.log('📝 Creating streaming message element');
         const streamErrorClass = isError ? 'bg-red-100 dark:bg-red-500 text-red-700 dark:text-white rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl' : 'bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl';
         html = '<div class="' + streamErrorClass + '"><p class="text-gray-800 dark:text-white/90 font-normal message-text streaming" style="opacity: 0.8;"></p></div>';
         msgDiv.innerHTML = html;
         chatArea.appendChild(msgDiv);
+        console.log('📝 Streaming message element created and added to chat area');
         
         // Add a subtle typing indicator
         const textElement = msgDiv.querySelector('.message-text');
         if (textElement) {
           textElement.textContent = 'L\'IA prépare votre réponse...';
-          setTimeout(() => {
-            textElement.textContent = '';
-            textElement.classList.remove('streaming');
-          }, 500);
+          // Don't clear the text after 500ms - let streaming handle it
+          // The streaming will clear it when it starts receiving content
         }
         
         // Return the message element for streaming updates
+        console.log('📝 Returning streaming message element:', msgDiv);
         return msgDiv;
       } else {
         // Show immediately for loaded messages (no streaming)
@@ -1375,43 +1374,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updateStreamingMessage(messageElement, content) {
     // Update the message content with streaming text
+    console.log('🔄 Updating streaming message:', content.substring(0, 50) + '...');
     const textElement = messageElement.querySelector('.message-text');
     if (textElement) {
-      // Clear typing indicator if it's still showing
+      // Simple and responsive streaming effect
       const currentContent = textElement.textContent || '';
-      if (currentContent === 'L\'IA prépare votre réponse...' || currentContent === 'L\'IA rédige...') {
+      const newContent = content;
+      
+      // If content is the same, just scroll
+      if (currentContent === newContent) {
+      setTimeout(() => {
+          chatArea.scrollTo({
+            top: chatArea.scrollHeight,
+            behavior: 'smooth'
+          });
+      }, 50);
+        return;
+      }
+      
+      // Clear typing indicator if it's still showing
+      if (currentContent === 'L\'IA rédige...') {
         textElement.textContent = '';
         textElement.classList.remove('streaming');
         textElement.style.opacity = '1';
       }
       
-      // Always update content if we have new content
-      if (content && content.trim()) {
-        console.log('🔄 Updating streaming message, content length:', content.length);
-        
-        // Format content with proper line breaks and bullet points
-        const formattedContent = content
-          .replace(/\n/g, '<br>')
-          .replace(/•\s*/g, '<br>• ')
-          .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
-        
-        // Update with formatted content
-        textElement.innerHTML = formattedContent;
-        
-        // Add subtle visual effect
-        textElement.classList.add('streaming');
-        setTimeout(() => {
-          textElement.classList.remove('streaming');
-        }, 150);
-        
-        // Scroll to bottom
-        setTimeout(() => {
-          chatArea.scrollTo({
-            top: chatArea.scrollHeight,
-            behavior: 'smooth'
-          });
-        }, 10);
-      }
+      // Format content with proper line breaks and bullet points
+      const formattedContent = newContent
+        .replace(/\n/g, '<br>')
+        .replace(/•\s*/g, '<br>• ')
+        .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
+      
+      // Update with formatted content
+      textElement.innerHTML = formattedContent;
+      
+      // Add subtle visual effect
+      textElement.classList.add('streaming');
+      setTimeout(() => {
+        textElement.classList.remove('streaming');
+      }, 150);
+      
+      // Scroll to bottom
+      setTimeout(() => {
+        chatArea.scrollTo({
+          top: chatArea.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 10);
     }
   }
   
@@ -1419,26 +1428,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function finalizeStreamingMessage(messageElement, content) {
     // Finalize the streaming message
+    console.log('✅ Finalizing streaming message:', content.substring(0, 50) + '...');
     const textElement = messageElement.querySelector('.message-text');
     if (textElement) {
-      console.log('🏁 Finalizing streaming message, content length:', content ? content.length : 0);
+      // Format content with proper line breaks and bullet points
+      const formattedContent = content
+        .replace(/\n/g, '<br>')
+        .replace(/•\s*/g, '<br>• ')
+        .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
       
-      // Ensure we have content to display
-      if (content && content.trim()) {
-        // Format content with proper line breaks and bullet points
-        const formattedContent = content
-          .replace(/\n/g, '<br>')
-          .replace(/•\s*/g, '<br>• ')
-          .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
-        
-        // Set final content without cursor
-        textElement.innerHTML = formattedContent;
-        console.log('✅ Final content set, HTML length:', textElement.innerHTML.length);
-      }
-      
-      // Remove streaming class and ensure proper styling
+      // Set final content without cursor
+      textElement.innerHTML = formattedContent;
       textElement.classList.remove('streaming');
-      textElement.style.opacity = '1';
       
       // Remove typing indicator
       const typingIndicator = messageElement.querySelector('.typing-indicator');
@@ -1579,6 +1580,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Remove loading indicator and create assistant message element for streaming
         hideLoading();
         const assistantMessageElement = appendMessage('', false, false, [], true);
+        console.log('🎯 Created assistant message element for streaming:', assistantMessageElement);
         
         const reader = streamResponse.body.getReader();
         const decoder = new TextDecoder();
@@ -1599,7 +1601,6 @@ document.addEventListener('DOMContentLoaded', function() {
                   
                   if (data.type === 'content' && data.chunk) {
                     assistantMessage += data.chunk;
-                    console.log('📝 Streaming chunk received, total length:', assistantMessage.length);
                     // Update immediately for responsive streaming
                     updateStreamingMessage(assistantMessageElement, assistantMessage);
                     } else if (data.type === 'offers' && data.offers) {
@@ -1613,7 +1614,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Display the detailed program
                     displayDetailedProgram(data.detailed_program);
                   } else if (data.type === 'end') {
-                    console.log('✅ Streaming completed, finalizing message with length:', assistantMessage.length);
+                    console.log('✅ Streaming completed');
                     finalizeStreamingMessage(assistantMessageElement, assistantMessage);
                     
                     // Assistant message received successfully
