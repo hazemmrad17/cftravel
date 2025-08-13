@@ -24,7 +24,7 @@ class ChatController extends AbstractController
         // Environment-based API URL configuration
         $environment = $_ENV['ENVIRONMENT'] ?? 'local';
         if ($environment === 'production') {
-            $this->agentApiUrl = $_ENV['AGENT_API_URL'] ?? 'https://asia-iagent.cftravel.net';
+            $this->agentApiUrl = 'http://localhost:8000'; // Use local Python API in production
         } else {
             $this->agentApiUrl = $_ENV['AGENT_API_URL'] ?? 'http://localhost:8002';
         }
@@ -372,8 +372,8 @@ class ChatController extends AbstractController
         }
         
         try {
-            // Use the proxy route instead of direct API call
-            $response = $this->httpClient->request('POST', 'http://localhost:8000/memory/clear', [
+            // Use the same API URL as other routes
+            $response = $this->httpClient->request('POST', $this->agentApiUrl . '/memory/clear', [
                 'timeout' => 30
             ]);
 
