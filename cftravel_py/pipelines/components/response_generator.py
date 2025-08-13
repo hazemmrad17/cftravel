@@ -283,14 +283,16 @@ RESPOND ONLY WITH THE RESPONSE TEXT:
     
     async def _generate_preference_summary_response(self, context: PipelineContext) -> Dict[str, Any]:
         """Generate preference summary response"""
+        offers = context.get_metadata('offers', [])
+        
         # Create a detailed preference summary text
         summary_text = self._create_preference_summary_text(context.user_preferences)
         
         return {
             'text': f"J'ai bien noté vos préférences de voyage. Voici un récapitulatif de ce que j'ai compris :\n\n{summary_text}\n\nSi ces préférences vous conviennent, je vais vous montrer les meilleures offres. Si vous souhaitez modifier quelque chose, dites-moi simplement ce que vous voulez changer.",
             'type': 'preference_summary',
-            'show_preference_summary': True,
-            'needs_confirmation': True
+            'offers': offers,
+            'show_preference_summary': True
         }
     
     def _create_preference_summary_text(self, preferences: Dict[str, Any]) -> str:

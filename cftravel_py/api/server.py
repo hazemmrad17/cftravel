@@ -159,17 +159,29 @@ async def chat_stream(request: Request):
                 # Extract response text
                 response_text = result.get("response", "") if isinstance(result, dict) else str(result)
                 
-                # Check if we need to show offers
+                # Check if we need to show preference confirmation
                 if isinstance(result, dict) and result.get("offers"):
-                    # Send offers data first
+                    # Extract user preferences from the result
+                    user_preferences = result.get("user_preferences", {})
                     offers = result["offers"]
-                    yield f"data: {json.dumps({'type': 'offers', 'offers': [offer.model_dump() if hasattr(offer, 'model_dump') else offer for offer in offers]})}\n\n"
                     
-                    # For offers, send a short intro message only
-                    intro_message = "Voici les offres qui correspondent parfaitement à vos critères :"
-                    yield f"data: {json.dumps({'type': 'content', 'chunk': intro_message})}\n\n"
+                    # Send confirmation data with preferences and offers
+                    yield f"data: {json.dumps({'type': 'confirmation', 'needs_confirmation': True, 'user_preferences': user_preferences, 'offers': [offer.model_dump() if hasattr(offer, 'model_dump') else offer for offer in offers]})}\n\n"
                     
-                    # Send end marker immediately after offers
+                    # Send the response text (preference summary) as content
+                    words = response_text.split()
+                    for i, word in enumerate(words):
+                        if i > 0:
+                            yield f"data: {json.dumps({'type': 'content', 'chunk': ' ' + word})}\n\n"
+                        else:
+                            yield f"data: {json.dumps({'type': 'content', 'chunk': word})}\n\n"
+                        
+                        if i < len(words) - 1:
+                            delay = min(0.05 + (len(word) * 0.01), 0.15)
+                            if word.endswith(('.', '!', '?', ':', ';')):
+                                delay += 0.1
+                            await asyncio.sleep(delay)
+                    
                     yield f"data: {json.dumps({'type': 'end'})}\n\n"
                     return
                 
