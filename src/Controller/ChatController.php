@@ -423,4 +423,65 @@ class ChatController extends AbstractController
             ], 500);
         }
     }
+
+    #[Route('/api-proxy.php/{path}', name: 'api_proxy', requirements: ['path' => '.+'], methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])]
+    public function apiProxy(Request $request, string $path = ''): Response
+    {
+        // Handle preflight OPTIONS request
+        if ($request->getMethod() === 'OPTIONS') {
+            return new Response('', 200, $this->addCorsHeaders());
+        }
+
+        try {
+            // Build the Python API URL
+            $pythonApiUrl = 'http://localhost:8000/' . $path;
+            
+            // Get request body
+            $requestBody = $request->getContent();
+            
+            // Prepare headers
+            $headers = [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ];
+
+            $this->logger->info('Proxying request to Python API', [
+                'url' => $pythonApiUrl,
+                'method' => $request->getMethod(),
+                'path' => $path
+            ]);
+
+            // Make request to Python API
+            $response = $this->httpClient->request($request->getMethod(), $pythonApiUrl, [
+                'headers' => $headers,
+                'body' => $requestBody,
+                'timeout' => 30
+            ]);
+
+            // Get response content and status
+            $responseContent = $response->getContent();
+            $responseStatusCode = $response->getStatusCode();
+
+            // Return the response with CORS headers
+            return new Response(
+                $responseContent,
+                $responseStatusCode,
+                $this->addCorsHeaders([
+                    'Content-Type' => 'application/json'
+                ])
+            );
+
+        } catch (\Exception $e) {
+            $this->logger->error('Error in API proxy', [
+                'error' => $e->getMessage(),
+                'path' => $path
+            ]);
+
+            return new JsonResponse([
+                'error' => 'API Server Error',
+                'message' => 'Unable to connect to Python API server',
+                'details' => $e->getMessage()
+            ], 500, $this->addCorsHeaders());
+        }
+    }
 }
