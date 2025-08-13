@@ -372,7 +372,8 @@ class ChatController extends AbstractController
         }
         
         try {
-            $response = $this->httpClient->request('POST', $this->agentApiUrl . '/memory/clear', [
+            // Use the proxy route instead of direct API call
+            $response = $this->httpClient->request('POST', 'http://localhost:8000/memory/clear', [
                 'timeout' => 30
             ]);
 
@@ -474,13 +475,17 @@ class ChatController extends AbstractController
         } catch (\Exception $e) {
             $this->logger->error('Error in API proxy', [
                 'error' => $e->getMessage(),
-                'path' => $path
+                'path' => $path,
+                'trace' => $e->getTraceAsString()
             ]);
 
+            // Return a more detailed error for debugging
             return new JsonResponse([
                 'error' => 'API Server Error',
                 'message' => 'Unable to connect to Python API server',
-                'details' => $e->getMessage()
+                'details' => $e->getMessage(),
+                'path' => $path,
+                'url' => $pythonApiUrl ?? 'unknown'
             ], 500, $this->addCorsHeaders());
         }
     }
