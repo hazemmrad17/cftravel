@@ -39,7 +39,9 @@ return [
     // API CONFIGURATION
     // =============================================================================
     'api' => [
-        'base_url' => $_ENV['ENVIRONMENT'] === 'production' ? '/api' : 'http://localhost:8000',
+        'base_url' => ($_ENV['ENVIRONMENT'] === 'production' || 
+                      (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], ':8001') !== false)) 
+                      ? '/api' : 'http://localhost:8000',
         'timeout' => 30,
         'retry_attempts' => 3,
         'endpoints' => [
