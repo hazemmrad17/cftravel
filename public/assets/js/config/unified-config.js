@@ -50,25 +50,33 @@ if (typeof UnifiedConfig === 'undefined') {
          */
         loadFallbackConfig() {
             const hostname = window.location.hostname;
+            const port = window.location.port;
             const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
             
+            // Force Symfony proxy if we're on a different port than the main server
+            // or if explicitly requested via URL parameter
+            const forceProxy = window.location.search.includes('proxy=true') || 
+                              (isLocal && port !== '8000' && port !== '80' && port !== '443');
+            
+            const isLocalDevelopment = isLocal && !forceProxy && (port === '8001' || port === '8000');
+            
             return {
-                environment: isLocal ? 'local' : 'production',
-                debug: isLocal,
+                environment: isLocalDevelopment ? 'local' : 'production',
+                debug: isLocalDevelopment,
                 servers: {
                     frontend: {
                         host: hostname,
-                        port: window.location.port || (window.location.protocol === 'https:' ? '443' : '80'),
+                        port: port || (window.location.protocol === 'https:' ? '443' : '80'),
                         url: window.location.origin
                     },
                     backend: {
-                        host: isLocal ? 'localhost' : 'localhost',
-                        port: isLocal ? 8000 : 8000,
-                        url: isLocal ? 'http://localhost:8000' : 'http://localhost:8000'
+                        host: isLocalDevelopment ? 'localhost' : 'localhost',
+                        port: isLocalDevelopment ? 8000 : 8000,
+                        url: isLocalDevelopment ? 'http://localhost:8000' : 'http://localhost:8000'
                     }
                 },
                 api: {
-                    base_url: isLocal ? 'http://localhost:8000' : '/api',
+                    base_url: isLocalDevelopment ? 'http://localhost:8000' : '/api',
                     timeout: 30000,
                     retry_attempts: 3,
                     endpoints: {
