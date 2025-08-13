@@ -20,11 +20,11 @@ const Config = {
             return 'http://localhost:8002';
         }
         
-        // Production - use PHP proxy to Python API
+        // Production - use Python API directly
         if (hostname === 'ovg-iagent.cftravel.net' || 
             hostname === 'iagent.cftravel.net' ||
             hostname.includes('cftravel.net')) {
-            return '/api-proxy.php'; // PHP proxy to Python API
+            return 'https://ovg-iagent.cftravel.net:8000'; // Python API on same server
         }
         
         // Default fallback
