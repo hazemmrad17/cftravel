@@ -4,7 +4,9 @@
 
 // API Configuration
 export const API_CONFIG = {
-    BASE_URL: 'http://localhost:8002',
+    BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:8002' 
+        : 'https://asia-iagent.cftravel.net',
     ENDPOINTS: {
         CHAT: '/chat',
         CHAT_STREAM: '/chat/stream',
