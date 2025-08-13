@@ -11,8 +11,11 @@ let typingSoundEnabled = false; // Typing sound effect (disabled by default)
 let typingAudioContext = null; // Audio context for typing sounds
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Clear memory on page load/refresh to start fresh
-  clearMemory();
+  // Clear memory on page load/refresh to start fresh with error handling
+  clearMemory().catch(error => {
+    console.warn('⚠️ Failed to clear memory on page load:', error);
+    // Continue with page load even if memory clearing fails
+  });
   
   // Initialize streaming placeholder effect
   initializeStreamingPlaceholder();
@@ -504,36 +507,56 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function createNewConversation() {
-    // Clear memory first
-    await clearMemory();
-    
-    // Clear the chat area
-    const chatArea = document.querySelector('.p-5.py-12');
-    if (chatArea) {
-      chatArea.innerHTML = '';
-    }
-    
-    // Reset conversation ID
-    currentConversationId = null;
-    
-    // Update URL to remove conversation ID
-    const url = new URL(window.location);
-    url.searchParams.delete('conversation_id');
-    window.history.pushState({}, '', url);
-    
-    // Show welcome message from agent
-    showWelcomeMessage();
-    
-    // Focus on input
-    if (chatInputEl) {
-      chatInputEl.focus();
+    try {
+      // Clear memory first with error handling
+      const memoryResult = await clearMemory();
+      if (memoryResult && memoryResult.status === 'error') {
+        console.warn('⚠️ Memory clearing failed, but continuing with new conversation:', memoryResult.message);
+      }
+      
+      // Clear the chat area
+      const chatArea = document.querySelector('.p-5.py-12');
+      if (chatArea) {
+        chatArea.innerHTML = '';
+      }
+      
+      // Reset conversation ID
+      currentConversationId = null;
+      
+      // Update URL to remove conversation ID
+      const url = new URL(window.location);
+      url.searchParams.delete('conversation_id');
+      window.history.pushState({}, '', url);
+      
+      // Show welcome message from agent
+      showWelcomeMessage();
+      
+      // Focus on input
+      if (chatInputEl) {
+        chatInputEl.focus();
+      }
+    } catch (error) {
+      console.error('❌ Error creating new conversation:', error);
+      // Still continue with new conversation even if memory clearing fails
+      const chatArea = document.querySelector('.p-5.py-12');
+      if (chatArea) {
+        chatArea.innerHTML = '';
+      }
+      currentConversationId = null;
+      if (chatInputEl) {
+        chatInputEl.focus();
+      }
     }
   }
 
   async function clearMemory(conversationId = null) {
     try {
-      const body = conversationId ? { conversation_id: conversationId } : {};
-      const response = await fetch(`${API_BASE_URL}/memory/clear`, {
+      // Prepare request body with default data if needed
+      const body = conversationId ? { conversation_id: conversationId } : { user_id: 1 };
+      
+      console.log('🧹 Clearing memory with body:', body);
+      
+      const response = await fetch(`${API_BASE_URL}/chat/memory/clear`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -542,12 +565,17 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       
       if (response.ok) {
-        console.log('✅ Memory cleared successfully');
+        const data = await response.json();
+        console.log('✅ Memory cleared successfully:', data);
+        return data;
       } else {
-        console.warn('⚠️ Failed to clear memory:', response.status);
+        const errorText = await response.text();
+        console.warn('⚠️ Failed to clear memory:', response.status, errorText);
+        return { status: 'error', message: `HTTP ${response.status}: ${errorText}` };
       }
     } catch (error) {
       console.warn('⚠️ Error clearing memory:', error);
+      return { status: 'error', message: error.message };
     }
   }
 
@@ -2007,7 +2035,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Clear memory when page is about to be unloaded (refresh/close)
   window.addEventListener('beforeunload', function() {
     // Use synchronous request to ensure it completes before page unloads
-    navigator.sendBeacon(`${API_BASE_URL}/memory/clear`, JSON.stringify({}));
+    navigator.sendBeacon(`${API_BASE_URL}/chat/memory/clear`, JSON.stringify({ user_id: 1 }));
   });
 
   // Function to play typing sound effect

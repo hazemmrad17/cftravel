@@ -372,8 +372,17 @@ class ChatController extends AbstractController
         }
         
         try {
-            // Use the same API URL as other routes
+            // Get request body and forward it to Python API
+            $requestBody = $request->getContent();
+            $requestData = json_decode($requestBody, true) ?: [];
+            
+            $this->logger->info('Clearing memory', [
+                'request_data' => $requestData
+            ]);
+
+            // Forward the request to Python API with the same body
             $response = $this->httpClient->request('POST', $this->agentApiUrl . '/memory/clear', [
+                'json' => $requestData,
                 'timeout' => 30
             ]);
 
@@ -386,7 +395,8 @@ class ChatController extends AbstractController
 
         } catch (\Exception $e) {
             $this->logger->error('Error clearing memory', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
 
             return new JsonResponse([
