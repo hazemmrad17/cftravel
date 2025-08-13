@@ -570,15 +570,15 @@ class ConfirmationFlow {
         
         // Color coding for match percentage with vibrant colors for 90+
         const getMatchColor = (score) => {
-            if (score >= 0.9) return 'from-blue-500 via-purple-500 to-pink-500';
-            if (score >= 0.7) return 'from-emerald-500 to-green-600';
-            if (score >= 0.5) return 'from-orange-500 to-amber-600';
+            if (score >= 0.9) return 'from-green-500 to-emerald-600';
+            if (score >= 0.7) return 'from-orange-500 to-amber-600';
+            if (score >= 0.5) return 'from-yellow-500 to-orange-500';
             return 'from-red-500 to-pink-600';
         };
         
         // Get animation class for 90+ scores
         const getMatchAnimation = (score) => {
-            if (score >= 0.9) return 'animate-pulse shadow-lg shadow-blue-400/50';
+            if (score >= 0.9) return 'animate-pulse shadow-lg shadow-green-400/50';
             return '';
         };
         
@@ -671,7 +671,7 @@ class ConfirmationFlow {
                     ${offer.match_score ? `
                         <div class="absolute bottom-3 right-3">
                             <div class="bg-gradient-to-r ${getMatchColor(offer.match_score)} ${getMatchAnimation(offer.match_score)} text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg border border-white/20 offer-card-badge"
-                                 style="${offer.match_score >= 0.9 ? 'background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899) !important; animation: pulse 2s infinite;' : ''}">
+                                 style="${offer.match_score >= 0.9 ? 'background: linear-gradient(to right, #10b981, #059669) !important; animation: pulse 2s infinite;' : ''}">
                                 ${Math.round(offer.match_score * 100)}%
                             </div>
                         </div>
@@ -743,7 +743,7 @@ class ConfirmationFlow {
                         <div class="mb-4 flex items-center justify-between">
                             <span class="text-sm text-mode-secondary">Match:</span>
                             <div class="bg-gradient-to-r ${getMatchColor(offer.match_score)} ${getMatchAnimation(offer.match_score)} text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg border border-white/20 offer-card-badge"
-                                 style="${offer.match_score >= 0.9 ? 'background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899) !important; animation: pulse 2s infinite;' : ''}">
+                                 style="${offer.match_score >= 0.9 ? 'background: linear-gradient(to right, #10b981, #059669) !important; animation: pulse 2s infinite;' : ''}">
                                 ${Math.round(offer.match_score * 100)}%
                             </div>
                         </div>
@@ -1376,13 +1376,13 @@ class ConfirmationFlow {
                                         <span class="text-gray-700 dark:text-gray-300 font-medium">Correspondance avec vos préférences</span>
                                     </div>
                                     <div class="bg-gradient-to-r ${this.getMatchColor(offerData.match_score)} ${this.getMatchAnimation(offerData.match_score)} text-white text-lg px-4 py-2 rounded-full font-bold shadow-lg border border-white/20"
-                                         style="${offerData.match_score >= 0.9 ? 'background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899) !important; animation: pulse 2s infinite;' : ''}">
+                                         style="${offerData.match_score >= 0.9 ? 'background: linear-gradient(to right, #10b981, #059669) !important; animation: pulse 2s infinite;' : ''}">
                                         ${Math.round(offerData.match_score * 100)}%
                                     </div>
                                 </div>
                                 <div class="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                                     <div class="bg-gradient-to-r ${this.getMatchColor(offerData.match_score)} ${this.getMatchAnimation(offerData.match_score)} h-3 rounded-full transition-all duration-1000" 
-                                         style="width: ${offerData.match_score * 100}%; ${offerData.match_score >= 0.9 ? 'background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899) !important; animation: pulse 2s infinite;' : ''}"></div>
+                                         style="width: ${offerData.match_score * 100}%; ${offerData.match_score >= 0.9 ? 'background: linear-gradient(to right, #10b981, #059669) !important; animation: pulse 2s infinite;' : ''}"></div>
                                 </div>
                             </div>
                         </div>

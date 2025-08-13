@@ -1544,6 +1544,29 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
+    // Check if user is confirming preferences and we have pending offers
+    const messageLower = message.toLowerCase();
+    const confirmationKeywords = ['oui', 'parfait', 'c\'est bon', 'ok', 'd\'accord', 'confirmer', 'exactement', 'précisément', 'montrer les offres', 'voir les offres', 'c\'est parfait', 'ça me convient', 'parfait', 'montrez-moi', 'je veux voir'];
+    const isConfirmation = confirmationKeywords.some(keyword => messageLower.includes(keyword));
+    
+    if (isConfirmation && window.pendingOffers && window.pendingOffers.length > 0) {
+      console.log('✅ User confirmed preferences, displaying pending offers');
+      // Display the pending offers
+      if (window.confirmationFlow && typeof window.confirmationFlow.displayOffers === 'function') {
+        window.confirmationFlow.displayOffers(window.pendingOffers);
+      } else {
+        // Fallback to the existing displayOfferCards function
+        displayOfferCards(window.pendingOffers);
+      }
+      // Clear pending offers
+      window.pendingOffers = null;
+    } else if (window.pendingOffers && window.pendingOffers.length > 0) {
+      // User is not confirming, so they might want to modify preferences
+      // Clear pending offers since they're not confirming
+      console.log('🔄 User not confirming, clearing pending offers for potential modification');
+      window.pendingOffers = null;
+    }
+    
     // Clear input now that we have the message
     chatInputEl.value = '';
     
@@ -1671,19 +1694,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check if we need to display offers or confirmation
         if (offers && offers.length > 0) {
           console.log('🎁 Offers found in streaming response:', offers);
-          // Display offers using confirmation flow
-          if (window.confirmationFlow && typeof window.confirmationFlow.displayOffers === 'function') {
-            window.confirmationFlow.displayOffers(offers);
-          } else {
-            // Fallback to the existing displayOfferCards function
-            displayOfferCards(offers);
-          }
-        } else if (needsConfirmation && confirmationSummary) {
+          // Store offers for later display after confirmation
+          window.pendingOffers = offers;
+          console.log('💾 Offers stored for later display');
+        } else if (needsConfirmation) {
           console.log('✅ Confirmation needed in streaming response');
-          // Display confirmation request
-          if (typeof confirmationFlow !== 'undefined') {
-            confirmationFlow.displayConfirmationRequest(userPreferences, confirmationSummary);
+          // Store offers if they exist in context for later display
+          if (offers && offers.length > 0) {
+            window.pendingOffers = offers;
           }
+          // The AI text already contains the confirmation prompt, so we just wait for user input
+          console.log('⏳ Waiting for user confirmation or modification');
         } else {
           // Debug: Check if the message contains confirmation keywords
           const messageLower = fullMessage.toLowerCase();
@@ -1735,25 +1756,20 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.needs_confirmation && data.confirmation_summary) {
           // Use streaming effect for confirmation messages
           await streamMessageWithEffect(assistantMessageElement, assistantMessage);
-          // Display confirmation request
-          if (typeof confirmationFlow !== 'undefined') {
-            confirmationFlow.displayConfirmationRequest(data.conversation_state.user_preferences, data.confirmation_summary);
+          // Store offers if they exist for later display
+          if (data.offers && data.offers.length > 0) {
+            window.pendingOffers = data.offers;
+            console.log('💾 Offers stored for later display (fallback API)');
           }
+          console.log('⏳ Waiting for user confirmation or modification (fallback API)');
         }
         // Check if we have offers to display
         else if (data.offers && data.offers.length > 0) {
           // Use streaming effect for offer messages
           await streamMessageWithEffect(assistantMessageElement, assistantMessage);
-          // Extract preferences and display preference confirmation
-          const preferences = extractPreferencesFromMessage(message);
-          if (window.confirmationFlow && typeof window.confirmationFlow.displayPreferenceConfirmation === 'function') {
-            window.confirmationFlow.displayPreferenceConfirmation(preferences, data.offers);
-          } else if (window.confirmationFlow && typeof window.confirmationFlow.displayOffers === 'function') {
-            window.confirmationFlow.displayOffers(data.offers);
-          } else {
-            // Fallback to the existing displayOfferCards function
-            displayOfferCards(data.offers);
-          }
+          // Store offers for later display after confirmation
+          window.pendingOffers = data.offers;
+          console.log('💾 Offers stored for later display (fallback API)');
         } else {
           // Use streaming effect for regular messages
           await streamMessageWithEffect(assistantMessageElement, assistantMessage);

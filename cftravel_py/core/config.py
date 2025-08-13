@@ -10,22 +10,31 @@ from dataclasses import dataclass
 from dotenv import load_dotenv
 from pathlib import Path
 
-# Load .env file from the current directory or parent
+# Load environment file from the current directory or parent
 current_dir = Path(__file__).parent.parent
-env_path = current_dir / '.env'
+env_path = None
+
+# First try to load env.local for local development
+env_path = current_dir / 'env.local'
 if not env_path.exists():
-    # Try parent directory
+    env_path = current_dir.parent / 'env.local'
+if not env_path.exists():
+    env_path = current_dir.parent.parent / 'env.local'
+
+# If env.local not found, try .env
+if not env_path.exists():
+    env_path = current_dir / '.env'
+if not env_path.exists():
     env_path = current_dir.parent / '.env'
 if not env_path.exists():
-    # Try root directory
     env_path = current_dir.parent.parent / '.env'
 
-print(f"Loading .env from: {env_path}")
+print(f"Loading environment from: {env_path}")
 print(f"File exists: {env_path.exists()}")
 if env_path.exists():
     load_dotenv(dotenv_path=env_path)
 else:
-    print("⚠️ No .env file found - using environment variables only")
+    print("⚠️ No environment file found - using environment variables only")
 
 class LLMProvider(Enum):
     """Available LLM providers"""

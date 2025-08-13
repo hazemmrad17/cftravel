@@ -87,6 +87,7 @@ class OrchestratorComponent(PipelineComponent):
             "needs_confirmation": False,
             "has_sufficient_details": len(context.user_preferences) >= 3,
             "should_show_offers": len(context.user_preferences) >= 3,
+            "show_preference_summary": False,  # Skip summary since user already confirmed
             "offer_count": 3,
             "reasoning": "Utilisateur a confirmé ses préférences"
         }
