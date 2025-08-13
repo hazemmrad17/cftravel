@@ -20,11 +20,11 @@ const Config = {
             return 'http://localhost:8002';
         }
         
-        // Production - use Python API directly
+        // Production - use Symfony proxy to Python API
         if (hostname === 'ovg-iagent.cftravel.net' || 
             hostname === 'iagent.cftravel.net' ||
             hostname.includes('cftravel.net')) {
-            return 'http://ovg-iagent.cftravel.net:8000'; // Python API on same server
+            return '/api'; // Symfony proxy to Python API
         }
         
         // Default fallback
