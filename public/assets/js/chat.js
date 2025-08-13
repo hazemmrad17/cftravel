@@ -1377,50 +1377,41 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update the message content with streaming text
     const textElement = messageElement.querySelector('.message-text');
     if (textElement) {
-      // Simple and responsive streaming effect
-      const currentContent = textElement.textContent || '';
-      const newContent = content;
-      
-      // If content is the same, just scroll
-      if (currentContent === newContent) {
-      setTimeout(() => {
-          chatArea.scrollTo({
-            top: chatArea.scrollHeight,
-            behavior: 'smooth'
-          });
-      }, 50);
-        return;
-      }
-      
       // Clear typing indicator if it's still showing
-      if (currentContent === 'L\'IA rédige...') {
+      const currentContent = textElement.textContent || '';
+      if (currentContent === 'L\'IA prépare votre réponse...' || currentContent === 'L\'IA rédige...') {
         textElement.textContent = '';
         textElement.classList.remove('streaming');
         textElement.style.opacity = '1';
       }
       
-      // Format content with proper line breaks and bullet points
-      const formattedContent = newContent
-        .replace(/\n/g, '<br>')
-        .replace(/•\s*/g, '<br>• ')
-        .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
-      
-      // Update with formatted content
-      textElement.innerHTML = formattedContent;
-      
-      // Add subtle visual effect
-      textElement.classList.add('streaming');
-      setTimeout(() => {
-        textElement.classList.remove('streaming');
-      }, 150);
-      
-      // Scroll to bottom
-      setTimeout(() => {
-        chatArea.scrollTo({
-          top: chatArea.scrollHeight,
-          behavior: 'smooth'
-        });
-      }, 10);
+      // Always update content if we have new content
+      if (content && content.trim()) {
+        console.log('🔄 Updating streaming message, content length:', content.length);
+        
+        // Format content with proper line breaks and bullet points
+        const formattedContent = content
+          .replace(/\n/g, '<br>')
+          .replace(/•\s*/g, '<br>• ')
+          .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
+        
+        // Update with formatted content
+        textElement.innerHTML = formattedContent;
+        
+        // Add subtle visual effect
+        textElement.classList.add('streaming');
+        setTimeout(() => {
+          textElement.classList.remove('streaming');
+        }, 150);
+        
+        // Scroll to bottom
+        setTimeout(() => {
+          chatArea.scrollTo({
+            top: chatArea.scrollHeight,
+            behavior: 'smooth'
+          });
+        }, 10);
+      }
     }
   }
   
@@ -1430,15 +1421,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Finalize the streaming message
     const textElement = messageElement.querySelector('.message-text');
     if (textElement) {
-      // Format content with proper line breaks and bullet points
-      const formattedContent = content
-        .replace(/\n/g, '<br>')
-        .replace(/•\s*/g, '<br>• ')
-        .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
+      console.log('🏁 Finalizing streaming message, content length:', content ? content.length : 0);
       
-      // Set final content without cursor
-      textElement.innerHTML = formattedContent;
+      // Ensure we have content to display
+      if (content && content.trim()) {
+        // Format content with proper line breaks and bullet points
+        const formattedContent = content
+          .replace(/\n/g, '<br>')
+          .replace(/•\s*/g, '<br>• ')
+          .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
+        
+        // Set final content without cursor
+        textElement.innerHTML = formattedContent;
+        console.log('✅ Final content set, HTML length:', textElement.innerHTML.length);
+      }
+      
+      // Remove streaming class and ensure proper styling
       textElement.classList.remove('streaming');
+      textElement.style.opacity = '1';
       
       // Remove typing indicator
       const typingIndicator = messageElement.querySelector('.typing-indicator');
@@ -1599,6 +1599,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   
                   if (data.type === 'content' && data.chunk) {
                     assistantMessage += data.chunk;
+                    console.log('📝 Streaming chunk received, total length:', assistantMessage.length);
                     // Update immediately for responsive streaming
                     updateStreamingMessage(assistantMessageElement, assistantMessage);
                     } else if (data.type === 'offers' && data.offers) {
@@ -1612,7 +1613,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Display the detailed program
                     displayDetailedProgram(data.detailed_program);
                   } else if (data.type === 'end') {
-                    console.log('✅ Streaming completed');
+                    console.log('✅ Streaming completed, finalizing message with length:', assistantMessage.length);
                     finalizeStreamingMessage(assistantMessageElement, assistantMessage);
                     
                     // Assistant message received successfully
