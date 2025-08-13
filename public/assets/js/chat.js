@@ -1620,15 +1620,39 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get the full response text
         const responseText = await streamResponse.text();
         
-        // Extract the actual message from the response
+        // Extract the actual message and check for offers from the response
         let fullMessage = '';
+        let offers = null;
+        let needsConfirmation = false;
+        let confirmationSummary = null;
+        let userPreferences = null;
+        
         const lines = responseText.split('\n');
+        console.log('📦 Raw streaming response lines:', lines.length);
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             try {
               const data = JSON.parse(line.slice(6));
+              console.log('📨 Parsed streaming data:', data);
+              
               if (data.type === 'content' && data.chunk) {
                 fullMessage += data.chunk;
+              } else if (data.type === 'offers' && data.offers) {
+                offers = data.offers;
+                console.log('🎁 Offers data found:', offers);
+              } else if (data.type === 'confirmation' && data.needs_confirmation) {
+                needsConfirmation = data.needs_confirmation;
+                confirmationSummary = data.confirmation_summary;
+                userPreferences = data.user_preferences;
+              } else if (data.offers && !offers) {
+                // Direct offers in the data
+                offers = data.offers;
+                console.log('🎁 Direct offers data found:', offers);
+              } else if (data.needs_confirmation && !needsConfirmation) {
+                // Direct confirmation data
+                needsConfirmation = data.needs_confirmation;
+                confirmationSummary = data.confirmation_summary;
+                userPreferences = data.user_preferences;
               }
             } catch (e) {
               console.warn('⚠️ Error parsing streaming data:', e);
@@ -1642,6 +1666,32 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
           // Fallback: show the message immediately
           finalizeStreamingMessage(assistantMessageElement, fullMessage);
+        }
+        
+        // Check if we need to display offers or confirmation
+        if (offers && offers.length > 0) {
+          console.log('🎁 Offers found in streaming response:', offers);
+          // Display offers using confirmation flow
+          if (window.confirmationFlow && typeof window.confirmationFlow.displayOffers === 'function') {
+            window.confirmationFlow.displayOffers(offers);
+          } else {
+            // Fallback to the existing displayOfferCards function
+            displayOfferCards(offers);
+          }
+        } else if (needsConfirmation && confirmationSummary) {
+          console.log('✅ Confirmation needed in streaming response');
+          // Display confirmation request
+          if (typeof confirmationFlow !== 'undefined') {
+            confirmationFlow.displayConfirmationRequest(userPreferences, confirmationSummary);
+          }
+        } else {
+          // Debug: Check if the message contains confirmation keywords
+          const messageLower = fullMessage.toLowerCase();
+          if (messageLower.includes('voici les offres') || messageLower.includes('offres qui correspondent')) {
+            console.log('🔍 Message contains offer keywords but no offers data found');
+            console.log('📄 Full message:', fullMessage);
+            console.log('📦 All parsed data:', { offers, needsConfirmation, confirmationSummary, userPreferences });
+          }
         }
         
         // Reset AI typing state and unblock UI
