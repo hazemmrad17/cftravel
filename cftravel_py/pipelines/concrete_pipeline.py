@@ -1063,6 +1063,10 @@ Select exactly {max_offers} offers:
         self.conversation_context.chat_history = ""
         self.conversation_context.turn_count = 0
         debug_print("✅ Memory cleared")
+        
+        # Add memory attribute to avoid AttributeError
+        if not hasattr(self, 'memory'):
+            self.memory = None
 
     def _build_preference_query(self, preferences: Dict) -> str:
         """Build a comprehensive search query from user preferences for sentence transformer"""
