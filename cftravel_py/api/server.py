@@ -165,11 +165,14 @@ async def chat_stream(request: Request):
                     user_preferences = result.get("user_preferences", {})
                     offers = result["offers"]
                     
+                    # Generate preference summary using LLM
+                    preference_summary = await _generate_preference_summary(user_preferences)
+                    
                     # Send confirmation data with preferences and offers
                     yield f"data: {json.dumps({'type': 'confirmation', 'needs_confirmation': True, 'user_preferences': user_preferences, 'offers': [offer.model_dump() if hasattr(offer, 'model_dump') else offer for offer in offers]})}\n\n"
                     
-                    # Send the response text (preference summary) as content
-                    words = response_text.split()
+                    # Send the preference summary as content
+                    words = preference_summary.split()
                     for i, word in enumerate(words):
                         if i > 0:
                             yield f"data: {json.dumps({'type': 'content', 'chunk': ' ' + word})}\n\n"
@@ -227,6 +230,63 @@ async def chat_stream(request: Request):
     except Exception as e:
         logger.error(f"❌ Error in chat stream: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+async def _generate_preference_summary(preferences: Dict) -> str:
+    """Generate a natural preference summary using LLM"""
+    try:
+        prompt = f"""
+You are ASIA.fr Agent, a friendly French travel specialist. Generate a natural summary of the user's travel preferences.
+
+USER PREFERENCES: {json.dumps(preferences, indent=2, ensure_ascii=False)}
+
+Generate a warm, natural summary in French that:
+1. Acknowledges their preferences with enthusiasm
+2. Summarizes their choices in a friendly way
+3. Asks for confirmation before showing offers
+4. Sounds conversational and excited
+
+Example: "Parfait ! J'ai bien noté que vous souhaitez partir au Japon pendant deux semaines avec un budget moyen pour un voyage culturel. Tout semble complet de mon côté ! Je suis prêt à vous proposer des offres personnalisées qui correspondent exactement à vos critères. Je vous propose donc 3 formules culturelles exceptionnelles pour votre séjour de 14 jours au Japon. Ça vous convient si je vous les présente maintenant ?"
+
+Keep it warm, natural and conversational. Don't use any hardcoded phrases like "Voici les offres qui correspondent parfaitement à vos critères".
+
+RESPOND ONLY WITH THE SUMMARY:
+"""
+        
+        # Use the pipeline's LLM service to generate the summary
+        pipeline = get_pipeline()
+        if hasattr(pipeline, 'services') and 'llm' in pipeline.services:
+            response = await pipeline.services['llm'].generate_text(prompt, model="generator")
+            return response.strip()
+        else:
+            # Fallback if LLM service not available
+            return _generate_fallback_preference_summary(preferences)
+            
+    except Exception as e:
+        logger.error(f"❌ Failed to generate preference summary: {e}")
+        return _generate_fallback_preference_summary(preferences)
+
+def _generate_fallback_preference_summary(preferences: Dict) -> str:
+    """Generate a simple fallback preference summary"""
+    parts = []
+    
+    if preferences.get('destination'):
+        parts.append(f"partir à {preferences['destination']}")
+    
+    if preferences.get('duration'):
+        parts.append(f"pendant {preferences['duration']}")
+    
+    if preferences.get('budget'):
+        parts.append(f"avec un budget {preferences['budget']}")
+    
+    if preferences.get('style'):
+        parts.append(f"pour un voyage {preferences['style']}")
+    
+    if parts:
+        summary = f"Parfait ! J'ai bien noté que vous souhaitez {' '.join(parts)}. Tout semble complet de mon côté ! Je suis prêt à vous proposer des offres personnalisées qui correspondent exactement à vos critères. Ça vous convient si je vous les présente maintenant ?"
+    else:
+        summary = "Parfait ! J'ai toutes les informations nécessaires pour vous proposer des offres personnalisées. Ça vous convient si je vous les présente maintenant ?"
+    
+    return summary
 
 @app.post("/chat")
 async def chat(request: Request):

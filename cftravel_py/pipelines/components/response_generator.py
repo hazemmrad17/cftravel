@@ -106,7 +106,7 @@ RESPOND ONLY WITH THE INTRODUCTION TEXT:
             
         except Exception as e:
             self.logger.error(f"❌ Failed to generate offer intro: {e}")
-            return f"Voici {len(offers)} offres qui correspondent parfaitement à vos critères :"
+            return f"J'ai trouvé {len(offers)} offres parfaites pour vous !"
     
     async def _generate_confirmation_response(self, context: PipelineContext) -> Dict[str, Any]:
         """Generate response for user confirmations"""
