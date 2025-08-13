@@ -113,4 +113,91 @@ Response:
         return {
             "reasoning": cot_prompt,
             "response": response.content if hasattr(response, 'content') else str(response)
-        } 
+        }
+
+
+class LLMService:
+    """Service wrapper for LLM operations"""
+    
+    def __init__(self):
+        self._llm_instances = {}
+        self._configs = {}
+        self._setup_configs()
+    
+    def _setup_configs(self):
+        """Setup different LLM configurations for different use cases"""
+        from core.config import config
+        
+        base_config = config
+        
+        # Different configurations for different models
+        self._configs = {
+            "orchestrator": LLMConfig(
+                provider="groq",
+                api_key=base_config.groq_api_key,
+                base_url=base_config.groq_base_url,
+                model_name="moonshotai/kimi-k2-instruct",
+                temperature=0.1,
+                max_tokens=2048
+            ),
+            "extractor": LLMConfig(
+                provider="groq",
+                api_key=base_config.groq_api_key,
+                base_url=base_config.groq_base_url,
+                model_name="moonshotai/kimi-k2-instruct",
+                temperature=0.1,
+                max_tokens=1024
+            ),
+            "matcher": LLMConfig(
+                provider="groq",
+                api_key=base_config.groq_api_key,
+                base_url=base_config.groq_base_url,
+                model_name="moonshotai/kimi-k2-instruct",
+                temperature=0.3,
+                max_tokens=2048
+            ),
+            "generator": LLMConfig(
+                provider="groq",
+                api_key=base_config.groq_api_key,
+                base_url=base_config.groq_base_url,
+                model_name="moonshotai/kimi-k2-instruct",
+                temperature=0.7,
+                max_tokens=2048
+            ),
+            "default": LLMConfig(
+                provider="groq",
+                api_key=base_config.groq_api_key,
+                base_url=base_config.groq_base_url,
+                model_name="moonshotai/kimi-k2-instruct",
+                temperature=0.5,
+                max_tokens=2048
+            )
+        }
+    
+    def _get_llm(self, model: str = "default"):
+        """Get or create LLM instance for the specified model"""
+        if model not in self._llm_instances:
+            config = self._configs.get(model, self._configs["default"])
+            self._llm_instances[model] = LLMFactory.create_llm(config)
+        return self._llm_instances[model]
+    
+    async def generate_text(self, prompt: str, model: str = "default") -> str:
+        """Generate text using the specified model"""
+        try:
+            llm = self._get_llm(model)
+            response = llm.invoke(prompt)
+            return response.content if hasattr(response, 'content') else str(response)
+        except Exception as e:
+            print(f"❌ LLM generation failed: {e}")
+            # Return a fallback response
+            return "Je suis désolé, j'ai rencontré une difficulté technique. Pouvez-vous reformuler votre demande ?"
+    
+    def generate_text_sync(self, prompt: str, model: str = "default") -> str:
+        """Synchronous version of generate_text"""
+        try:
+            llm = self._get_llm(model)
+            response = llm.invoke(prompt)
+            return response.content if hasattr(response, 'content') else str(response)
+        except Exception as e:
+            print(f"❌ LLM generation failed: {e}")
+            return "Je suis désolé, j'ai rencontré une difficulté technique. Pouvez-vous reformuler votre demande ?" 

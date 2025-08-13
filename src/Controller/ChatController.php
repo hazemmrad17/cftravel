@@ -106,7 +106,17 @@ class ChatController extends AbstractController
             return $this->chatMessage($request);
         }
         
-        return $this->render('chat/chat.html.twig');
+        return $this->render('chat/index.html.twig', [
+            'mostRecentConversationId' => null,
+            'currentConversationId' => null,
+            'agent' => 'layla',
+            'conversations' => [],
+            'conversationsToday' => [],
+            'conversationsYesterday' => [],
+            'conversationsPrevious' => [],
+            'today' => new \DateTime(),
+            'user_id' => 1
+        ]);
     }
 
     #[Route('/status', name: 'status_page')]

@@ -1,11 +1,17 @@
 """
-Pipelines module for ASIA.fr Agent
+Pipeline package for ASIA.fr Agent
 """
 
-from .concrete_pipeline import ASIAConcreteAgent
-from .langchain_pipeline import LangChainPipeline
+from .concrete_pipeline import ASIAConcreteAgent, IntelligentPipeline
+from .modular_pipeline import ASIAModularPipeline
+from .core import Pipeline, PipelineContext, PipelineComponent, PipelineBuilder
 
 __all__ = [
     'ASIAConcreteAgent',
-    'LangChainPipeline'
+    'IntelligentPipeline', 
+    'ASIAModularPipeline',
+    'Pipeline',
+    'PipelineContext', 
+    'PipelineComponent',
+    'PipelineBuilder'
 ] 

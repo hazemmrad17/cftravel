@@ -124,6 +124,37 @@ class MemoryService:
         
         return conversation.user_preferences or {}
     
+    def update_user_preferences(self, conversation_id: str, preferences: Dict[str, Any]) -> bool:
+        """Update multiple user preferences at once, prioritizing newer values"""
+        try:
+            conversation = self.get_conversation(conversation_id)
+            if not conversation:
+                conversation = self.create_conversation(conversation_id)
+            
+            if not conversation.user_preferences:
+                conversation.user_preferences = {}
+            
+            # Update preferences, newer values override older ones
+            for key, value in preferences.items():
+                if value:  # Only update if value is not empty/None
+                    conversation.user_preferences[key] = value
+                    logger.debug(f"✅ Updated preference {key}={value} for conversation {conversation_id}")
+            
+            conversation.updated_at = datetime.utcnow().isoformat()
+            return True
+            
+        except Exception as e:
+            raise MemoryError(f"Failed to update preferences: {e}")
+    
+    def get_latest_preferences(self, conversation_id: str) -> Dict[str, Any]:
+        """Get the most recent user preferences, ensuring we have the latest values"""
+        conversation = self.get_conversation(conversation_id)
+        if not conversation:
+            return {}
+        
+        # Return a copy to prevent external modifications
+        return conversation.user_preferences.copy() if conversation.user_preferences else {}
+    
     def get_user_preference(self, conversation_id: str, key: str, default: Any = None) -> Any:
         """Get specific user preference"""
         preferences = self.get_user_preferences(conversation_id)

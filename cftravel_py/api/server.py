@@ -16,48 +16,47 @@ import os
 from pathlib import Path
 
 # Import the pipeline
-from pipelines.concrete_pipeline import ASIAConcreteAgent, IntelligentPipeline
+from pipelines.modular_pipeline import ASIAModularPipeline
 from services.memory_service import MemoryService
 
-# Import centralized configuration
-from core.config import config
-
 # Configure logging
-logging.basicConfig(level=config.LOG_LEVEL)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Log environment detection
-logger.info(f"🌍 Environment: {'Production' if config.is_production else 'Development'}")
-logger.info(f"🔧 Server Config: {config.server_config}")
-if config.is_production:
-    logger.info(f"🌐 Production Domain: {config.DOMAIN}")
-    logger.info(f"🔗 Base URL: {config.BASE_URL}")
 
 # Initialize FastAPI app
 app = FastAPI(title="ASIA.fr Agent API", version="1.0.0")
 
-# Add CORS middleware with dynamic configuration
+# Add CORS middleware for production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=config.cors_origins,
+    allow_origins=[
+        "https://ovg-iagent.cftravel.net",
+        "https://iagent.cftravel.net", 
+        "http://localhost:8000",
+        "http://localhost:8002",
+        "http://localhost:3000",
+        "http://127.0.0.1:8000",
+        "http://127.0.0.1:8002",
+        "http://127.0.0.1:3000"
+    ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
 # Global variables for lazy loading
-_agent = None
+_pipeline = None
 _memory_service = None
 _templates = None
 
-def get_agent():
-    """Lazy load the agent only when needed"""
-    global _agent
-    if _agent is None:
-        logger.info("🚀 Initializing ASIA.fr Agent...")
-        _agent = ASIAConcreteAgent()
-        logger.info("✅ ASIA.fr Agent initialized successfully")
-    return _agent
+def get_pipeline():
+    """Lazy load the pipeline only when needed"""
+    global _pipeline
+    if _pipeline is None:
+        logger.info("🚀 Initializing ASIA.fr Pipeline...")
+        _pipeline = ASIAModularPipeline()
+        logger.info("✅ ASIA.fr Pipeline initialized successfully")
+    return _pipeline
 
 def get_memory_service():
     """Lazy load memory service only when needed"""
@@ -103,20 +102,6 @@ async def read_home(request: Request):
     templates = get_templates()
     return templates.TemplateResponse("chat/index.html.twig", {"request": request})
 
-@app.get("/status")
-async def status():
-    """Status endpoint showing current configuration"""
-    return {
-        "status": "running",
-        "environment": "production" if config.is_production else "development",
-        "domain": getattr(config, 'DOMAIN', 'unknown'),
-        "base_url": config.BASE_URL,
-        "port": config.API_PORT,
-        "cors_origins": config.cors_origins,
-        "agent_loaded": _agent is not None,
-        "memory_service_loaded": _memory_service is not None
-    }
-
 @app.post("/memory/clear")
 async def clear_memory(request: Request):
     """Clear conversation memory"""
@@ -136,10 +121,10 @@ async def clear_memory(request: Request):
             memory_service.clear_all_conversations()
             logger.info("🧹 Memory service cleared all conversations")
         
-        # Also clear agent memory if it exists
-        if _agent:
-            _agent.clear_memory(conversation_id)
-            logger.info("🧹 Agent memory cleared successfully")
+        # Also clear pipeline memory if it exists
+        if _pipeline:
+            _pipeline.clear_memory(conversation_id)
+            logger.info("🧹 Pipeline memory cleared successfully")
         
         return {"message": "Memory cleared successfully"}
     except Exception as e:
@@ -160,14 +145,14 @@ async def chat_stream(request: Request):
         
         logger.info(f"📨 Received streaming message: {user_message[:50]}...")
         
-        # Lazy load agent only when first message is received
-        agent = get_agent()
+        # Lazy load pipeline only when first message is received
+        pipeline = get_pipeline()
         
         async def generate_stream():
             """Generate streaming response with optimized performance"""
             try:
                 # Process the message with conversation context
-                result = agent.chat(user_message, conversation_id)
+                result = await pipeline.process_user_input(user_message, conversation_id)
                 
                 # Extract response text
                 response_text = result.get("response", "") if isinstance(result, dict) else str(result)
@@ -176,7 +161,7 @@ async def chat_stream(request: Request):
                 if isinstance(result, dict) and result.get("offers"):
                     # Send offers data first
                     offers = result["offers"]
-                    yield f"data: {json.dumps({'offers': [offer.model_dump() if hasattr(offer, 'model_dump') else offer for offer in offers], 'type': 'offers'})}\n\n"
+                    yield f"data: {json.dumps({'type': 'offers', 'offers': [offer.model_dump() if hasattr(offer, 'model_dump') else offer for offer in offers]})}\n\n"
                     
                     # For offers, send a short intro message only
                     intro_message = "Voici les offres qui correspondent parfaitement à vos critères :"
@@ -229,6 +214,46 @@ async def chat_stream(request: Request):
         logger.error(f"❌ Error in chat stream: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/chat")
+async def chat(request: Request):
+    """Regular chat endpoint (fallback for non-streaming)"""
+    try:
+        # Parse request body
+        body = await request.json()
+        user_message = body.get("message", "").strip()
+        conversation_id = body.get("conversation_id")
+        
+        if not user_message:
+            raise HTTPException(status_code=400, detail="Message is required")
+        
+        logger.info(f"📨 Received regular message: {user_message[:50]}...")
+        
+        # Get pipeline
+        pipeline = get_pipeline()
+        
+        # Process the message
+        result = await pipeline.process_user_input(user_message, conversation_id)
+        
+        # Extract response text
+        response_text = result.get("response", "") if isinstance(result, dict) else str(result)
+        
+        # Prepare response
+        response_data = {
+            "response": response_text,
+            "conversation_id": conversation_id,
+            "status": "success"
+        }
+        
+        # Add offers if present
+        if isinstance(result, dict) and result.get("offers"):
+            response_data["offers"] = result["offers"]
+        
+        return response_data
+        
+    except Exception as e:
+        logger.error(f"❌ Error in regular chat: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Mount static files
 static_dir = Path(__file__).parent.parent.parent / "public"
 if static_dir.exists():
@@ -236,7 +261,4 @@ if static_dir.exists():
 
 if __name__ == "__main__":
     import uvicorn
-    # Use centralized configuration
-    server_config = config.server_config
-    logger.info(f"🚀 Starting server on {server_config['host']}:{server_config['port']}")
-    uvicorn.run(app, host=server_config['host'], port=server_config['port']) 
+    uvicorn.run(app, host="0.0.0.0", port=8002) 

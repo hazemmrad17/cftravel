@@ -8,9 +8,9 @@ class ConfirmationFlow {
         this.API_BASE_URL = Config.getApiBaseUrl();
         this.currentState = null;
         this.preferences = {};
+        this.offersData = new Map(); // Store offers data separately to avoid HTML attribute size limits
         
-        // Initialize test functionality
-        this.initializeTestButton();
+
         this.init();
         
         // Initialize Lucide icons with a small delay to ensure DOM is ready
@@ -54,192 +54,7 @@ class ConfirmationFlow {
             }, 500);
         }
     }
-    
-    /**
-     * Initialize the test button for UI preview
-     */
-    initializeTestButton() {
-        const testButton = document.getElementById('test-ui-btn');
-        if (testButton) {
-            testButton.addEventListener('click', () => {
-                this.showTestUI();
-            });
-        }
-    }
-    
-    /**
-     * Show test UI components (confirmation + offers)
-     */
-    showTestUI() {
-        // Sample preferences for testing
-        const testPreferences = {
-            destination: 'Japon',
-            duration: '14',
-            style: 'Culture et découverte',
-            budget: '3000-5000€',
-            travelers: '2',
-            timing: 'Avril 2024'
-        };
-        
-        // Sample offers for testing
-        const testOffers = [
-            {
-                reference: 'TEST-001',
-                product_name: 'Découverte du Japon Traditionnel',
-                description: 'Un voyage immersif à travers les traditions séculaires du Japon, de Kyoto à Tokyo, en passant par les temples zen et les jardins japonais.',
-                duration: 14,
-                departure_city: 'Paris',
-                destinations: [
-                    { city: 'Tokyo', country: 'Japon' },
-                    { city: 'Kyoto', country: 'Japon' },
-                    { city: 'Osaka', country: 'Japon' }
-                ],
-                highlights: [
-                    { text: 'Visite des temples de Kyoto' },
-                    { text: 'Expérience onsen traditionnelle' },
-                    { text: 'Cérémonie du thé' },
-                    { text: 'Marché de Tsukiji' }
-                ],
-                images: ['/assets/images/placeholder-travel.jpg'],
-                match_score: 0.95,
-                price_url: '#'
-            },
-            {
-                reference: 'TEST-002',
-                product_name: 'Aventure Thaïlandaise Premium',
-                description: 'Explorez les merveilles de la Thaïlande, des plages paradisiaques de Phuket aux temples dorés de Bangkok.',
-                duration: 12,
-                departure_city: 'Paris',
-                destinations: [
-                    { city: 'Bangkok', country: 'Thaïlande' },
-                    { city: 'Phuket', country: 'Thaïlande' },
-                    { city: 'Chiang Mai', country: 'Thaïlande' }
-                ],
-                highlights: [
-                    { text: 'Temples dorés de Bangkok' },
-                    { text: 'Plages de Phuket' },
-                    { text: 'Marchés flottants' },
-                    { text: 'Massage traditionnel' }
-                ],
-                images: ['/assets/images/placeholder-travel.jpg'],
-                match_score: 0.88,
-                price_url: '#'
-            },
-            {
-                reference: 'TEST-003',
-                product_name: 'Vietnam Authentique',
-                description: 'Découvrez l\'authenticité du Vietnam, de la baie d\'Halong aux rues animées de Hanoï et Ho Chi Minh Ville.',
-                duration: 10,
-                departure_city: 'Paris',
-                destinations: [
-                    { city: 'Hanoï', country: 'Vietnam' },
-                    { city: 'Ho Chi Minh Ville', country: 'Vietnam' },
-                    { city: 'Halong', country: 'Vietnam' }
-                ],
-                highlights: [
-                    { text: 'Croisière baie d\'Halong' },
-                    { text: 'Vieille ville de Hanoï' },
-                    { text: 'Delta du Mékong' },
-                    { text: 'Cuisine vietnamienne' }
-                ],
-                images: ['/assets/images/placeholder-travel.jpg'],
-                match_score: 0.82,
-                price_url: '#'
-            }
-        ];
-        
-        // Clear any existing UI
-        this.removeConfirmationUI();
-        
-        // Show confirmation card first
-        this.displayConfirmationRequest(testPreferences, 'Test confirmation summary');
-        
-        // Show offers after a short delay
-        setTimeout(() => {
-            this.displayOffers(testOffers);
-        }, 1000);
-        
-        // Scroll to bottom
-        const chatArea = document.querySelector('.p-5.py-12');
-        if (chatArea) {
-            chatArea.scrollTop = chatArea.scrollHeight;
-        }
-    }
 
-    /**
-     * Display only test offers without confirmation card
-     */
-    displayTestOffers() {
-        // Sample offers for testing
-        const testOffers = [
-            {
-                reference: 'TEST-001',
-                product_name: 'Découverte du Japon Traditionnel',
-                description: 'Un voyage immersif à travers les traditions séculaires du Japon, de Kyoto à Tokyo, en passant par les temples zen et les jardins japonais.',
-                duration: 14,
-                departure_city: 'Paris',
-                destinations: [
-                    { city: 'Tokyo', country: 'Japon' },
-                    { city: 'Kyoto', country: 'Japon' },
-                    { city: 'Osaka', country: 'Japon' }
-                ],
-                highlights: [
-                    { text: 'Visite des temples de Kyoto' },
-                    { text: 'Expérience onsen traditionnelle' },
-                    { text: 'Cérémonie du thé' },
-                    { text: 'Marché de Tsukiji' }
-                ],
-                images: ['/assets/images/placeholder-travel.jpg'],
-                match_score: 0.95,
-                price_url: '#'
-            },
-            {
-                reference: 'TEST-002',
-                product_name: 'Aventure Thaïlandaise Premium',
-                description: 'Explorez les merveilles de la Thaïlande, des plages paradisiaques de Phuket aux temples dorés de Bangkok.',
-                duration: 12,
-                departure_city: 'Paris',
-                destinations: [
-                    { city: 'Bangkok', country: 'Thaïlande' },
-                    { city: 'Phuket', country: 'Thaïlande' },
-                    { city: 'Chiang Mai', country: 'Thaïlande' }
-                ],
-                highlights: [
-                    { text: 'Temples dorés de Bangkok' },
-                    { text: 'Plages de Phuket' },
-                    { text: 'Marchés flottants' },
-                    { text: 'Massage traditionnel' }
-                ],
-                images: ['/assets/images/placeholder-travel.jpg'],
-                match_score: 0.88,
-                price_url: '#'
-            },
-            {
-                reference: 'TEST-003',
-                product_name: 'Vietnam Authentique',
-                description: 'Découvrez l\'authenticité du Vietnam, de la baie d\'Halong aux rues animées de Hanoï et Ho Chi Minh Ville.',
-                duration: 10,
-                departure_city: 'Paris',
-                destinations: [
-                    { city: 'Hanoï', country: 'Vietnam' },
-                    { city: 'Ho Chi Minh Ville', country: 'Vietnam' },
-                    { city: 'Halong', country: 'Vietnam' }
-                ],
-                highlights: [
-                    { text: 'Croisière baie d\'Halong' },
-                    { text: 'Vieille ville de Hanoï' },
-                    { text: 'Delta du Mékong' },
-                    { text: 'Cuisine vietnamienne' }
-                ],
-                images: ['/assets/images/placeholder-travel.jpg'],
-                match_score: 0.82,
-                price_url: '#'
-            }
-        ];
-        
-        // Display only the offers
-        this.displayOffers(testOffers);
-    }
 
     // Helper methods for color management
     getCurrentMode() {
@@ -644,8 +459,8 @@ class ConfirmationFlow {
                         this.displayOffers(data.offers);
                     }
                 } else {
-                    // If no offers returned, show test offers for demonstration
-                    this.displayTestOffers();
+                    // If no offers returned, show error message
+                    this.showError('Aucune offre trouvée pour vos critères. Veuillez essayer avec des préférences différentes.');
                 }
             } else {
                 this.showError('Failed to modify preferences. Please try again.');
@@ -654,14 +469,14 @@ class ConfirmationFlow {
             console.error('Error modifying preferences:', error);
             this.showError('Network error. Please check your connection and try again.');
             
-            // Fallback: show test offers even if there's an error
-            setTimeout(() => {
-                this.displayTestOffers();
-            }, 1000);
+            // Fallback: show error message
+            this.showError('Erreur réseau. Veuillez vérifier votre connexion et réessayer.');
         } finally {
             this.hideLoadingState();
         }
     }
+
+
 
     /**
      * Display offers in a beautiful card layout
@@ -669,6 +484,9 @@ class ConfirmationFlow {
     displayOffers(offers) {
         const chatArea = document.querySelector('.p-5.py-12');
         if (!chatArea) return;
+        
+        // Clear previous offers data
+        this.offersData.clear();
 
         const offersHTML = `
             <div class="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl rounded-bl-lg p-8 max-w-6xl border border-gray-100 dark:border-gray-700 backdrop-blur-sm relative overflow-hidden">
@@ -714,15 +532,19 @@ class ConfirmationFlow {
     }
 
     /**
-     * Create a beautiful offer card
+     * Create a beautiful offer card with enhanced JSON information
      */
     createOfferCard(offer, index) {
         const destinations = offer.destinations.map(d => `${d.city} (${d.country})`).join(', ');
         const highlights = offer.highlights.map(h => h.text).join(', ');
         
-        // Use better travel images based on destination
+        // Use images from the dataset if available, otherwise fallback to destination-based images
         let imageUrl = '/assets/images/placeholder-travel.jpg';
-        if (offer.destinations && offer.destinations.length > 0) {
+        if (offer.images && offer.images.length > 0) {
+            // Use the first image from the dataset
+            imageUrl = offer.images[0];
+        } else if (offer.destinations && offer.destinations.length > 0) {
+            // Fallback to destination-based images
             const country = offer.destinations[0].country.toLowerCase();
             if (country.includes('japon') || country.includes('japan')) {
                 imageUrl = 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&h=600&fit=crop';
@@ -746,27 +568,77 @@ class ConfirmationFlow {
         // Staggered animation delay
         const animationDelay = index * 200;
         
-        // Color coding for match percentage
+        // Color coding for match percentage with vibrant colors for 90+
         const getMatchColor = (score) => {
-            if (score >= 0.9) return 'from-emerald-500 to-green-600';
-            if (score >= 0.8) return 'from-yellow-500 to-orange-600';
+            if (score >= 0.9) return 'from-blue-500 via-purple-500 to-pink-500';
+            if (score >= 0.7) return 'from-emerald-500 to-green-600';
+            if (score >= 0.5) return 'from-orange-500 to-amber-600';
             return 'from-red-500 to-pink-600';
         };
         
-        // Add getMatchColor method to the class
-        this.getMatchColor = getMatchColor;
-        
-        // Price range display
-        const getPriceRange = (index) => {
-            const ranges = ['€€€', '€€€€', '€€€€€'];
-            return ranges[index % ranges.length];
+        // Get animation class for 90+ scores
+        const getMatchAnimation = (score) => {
+            if (score >= 0.9) return 'animate-pulse shadow-lg shadow-blue-400/50';
+            return '';
         };
+        
+        // Add getMatchColor and getMatchAnimation methods to the class
+        this.getMatchColor = getMatchColor;
+        this.getMatchAnimation = getMatchAnimation;
+        
+        // Enhanced price range display based on offer type and group size
+        const getPriceRange = (offer) => {
+            if (offer.offer_type && offer.offer_type.toLowerCase().includes('luxe')) {
+                return '€€€€€';
+            } else if (offer.offer_type && offer.offer_type.toLowerCase().includes('premium')) {
+                return '€€€€';
+            } else {
+                return '€€€';
+            }
+        };
+        
+        // Get group size information
+        const getGroupSize = (offer) => {
+            if (offer.min_group_size && offer.max_group_size) {
+                if (offer.min_group_size === offer.max_group_size) {
+                    return `${offer.min_group_size} personnes`;
+                } else {
+                    return `${offer.min_group_size}-${offer.max_group_size} personnes`;
+                }
+            } else if (offer.min_group_size) {
+                return `${offer.min_group_size}+ personnes`;
+            } else {
+                return 'Petit groupe';
+            }
+        };
+        
+        // Get travel style from offer type
+        const getTravelStyle = (offer) => {
+            if (offer.offer_type) {
+                return offer.offer_type;
+            }
+            return 'Premium';
+        };
+        
+        // Get dates information
+        const getDatesInfo = (offer) => {
+            if (offer.dates && offer.dates.length > 0) {
+                if (offer.dates.length === 1) {
+                    return offer.dates[0];
+                } else {
+                    return `${offer.dates.length} dates disponibles`;
+                }
+            }
+            return 'Dates flexibles';
+        };
+        
+        // Store offer data in the Map instead of HTML attribute
+        this.offersData.set(offer.reference, offer);
         
         return `
             <div class="offer-card group" 
                  style="animation-delay: ${animationDelay}ms;"
-                 data-offer-reference="${offer.reference}" 
-                 data-offer-data='${JSON.stringify(offer)}'>
+                 data-offer-reference="${offer.reference}">
                 <div class="relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-br ${gradient} opacity-10 group-hover:opacity-25 transition-opacity duration-500"></div>
                     <img src="${imageUrl}" alt="${offer.product_name}" class="offer-card-image" onerror="this.src='/assets/images/placeholder-travel.jpg'">
@@ -798,7 +670,8 @@ class ConfirmationFlow {
                     <!-- Compact Match score badge with color coding -->
                     ${offer.match_score ? `
                         <div class="absolute bottom-3 right-3">
-                            <div class="bg-gradient-to-r ${getMatchColor(offer.match_score)} text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg border border-white/20 offer-card-badge">
+                            <div class="bg-gradient-to-r ${getMatchColor(offer.match_score)} ${getMatchAnimation(offer.match_score)} text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg border border-white/20 offer-card-badge"
+                                 style="${offer.match_score >= 0.9 ? 'background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899) !important; animation: pulse 2s infinite;' : ''}">
                                 ${Math.round(offer.match_score * 100)}%
                             </div>
                         </div>
@@ -819,46 +692,82 @@ class ConfirmationFlow {
                         <span class="line-clamp-1 font-medium text-sm">${destinations}</span>
                     </div>
                     
-                    <!-- Compact Departure -->
+                    <!-- Enhanced Departure and Dates -->
                     <div class="flex items-center text-sm text-mode-secondary mb-3">
                         <div class="w-6 h-6 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mr-2">
                             <i data-lucide="calendar" class="w-3 h-3"></i>
                         </div>
-                        <span class="font-medium text-sm">Départ: ${offer.departure_city}</span>
+                        <span class="font-medium text-sm">Départ: ${offer.departure_city} • ${getDatesInfo(offer)}</span>
                     </div>
                     
-                    <!-- Compact Description -->
+                    <!-- Enhanced Group Size and Travel Style -->
+                    <div class="flex items-center text-sm text-mode-secondary mb-3">
+                        <div class="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mr-2">
+                            <i data-lucide="users" class="w-3 h-3"></i>
+                        </div>
+                        <span class="font-medium text-sm">${getGroupSize(offer)} • ${getTravelStyle(offer)}</span>
+                    </div>
+                    
+                    <!-- Compact Description - Truncated -->
                     <p class="text-sm text-mode-tertiary mb-4 line-clamp-3 leading-relaxed">
-                        ${offer.description}
+                        ${offer.description && offer.description.length > 150 ? 
+                            offer.description.substring(0, 150) + '...' : 
+                            offer.description
+                        }
                     </p>
+                    
+                    <!-- Enhanced Highlights (if available) - Truncated -->
+                    ${offer.highlights && offer.highlights.length > 0 ? `
+                        <div class="mb-4">
+                            <div class="space-y-2">
+                                ${offer.highlights.slice(0, 2).map(highlight => `
+                                    <div class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                                        <span class="font-medium text-gray-700 dark:text-gray-300">•</span> 
+                                        ${(highlight.text || highlight).length > 120 ? 
+                                            (highlight.text || highlight).substring(0, 120) + '...' : 
+                                            (highlight.text || highlight)
+                                        }
+                                    </div>
+                                `).join('')}
+                                ${offer.highlights.length > 2 ? `
+                                    <div class="text-xs text-gray-500 dark:text-gray-500 italic">
+                                        +${offer.highlights.length - 2} autres points forts...
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
                     
                     <!-- Match Score (simplified) -->
                     ${offer.match_score ? `
                         <div class="mb-4 flex items-center justify-between">
                             <span class="text-sm text-mode-secondary">Match:</span>
-                            <div class="bg-gradient-to-r ${getMatchColor(offer.match_score)} text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg border border-white/20 offer-card-badge">
+                            <div class="bg-gradient-to-r ${getMatchColor(offer.match_score)} ${getMatchAnimation(offer.match_score)} text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg border border-white/20 offer-card-badge"
+                                 style="${offer.match_score >= 0.9 ? 'background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899) !important; animation: pulse 2s infinite;' : ''}">
                                 ${Math.round(offer.match_score * 100)}%
                             </div>
                         </div>
                     ` : ''}
                     
-                    <!-- Compact Action Buttons -->
+                    <!-- Enhanced Action Buttons with forced red Réserver button -->
                     <div class="flex gap-2 justify-center pt-4 border-t border-gray-300 dark:border-gray-600 mt-auto">
-                        <a href="${offer.price_url || '#'}" target="_blank" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-md font-bold flex items-center border border-red-500">
+                        <a href="${offer.price_url || '#'}" target="_blank" 
+                           class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-md font-bold flex items-center border border-red-500"
+                           style="background: linear-gradient(to right, #dc2626, #b91c1c, #991b1b) !important;">
                             <i data-lucide="plus" class="w-3 h-3 mr-1 hover:animate-pulse"></i>
                             Réserver
                         </a>
-                        <button onclick="confirmationFlow.showOfferDetails('${offer.reference}')" class="bg-gray-800 hover:bg-gray-900 text-white text-xs px-3 py-2 rounded-lg font-bold flex items-center justify-center border border-gray-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-md">
+                        <button onclick="window.confirmationFlow.showOfferDetails('${offer.reference}')" class="bg-gray-800 hover:bg-gray-900 text-white text-xs px-3 py-2 rounded-lg font-bold flex items-center justify-center border border-gray-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg shadow-md">
                             <i data-lucide="eye" class="w-3 h-3 mr-1 hover:animate-bounce"></i>
                             Détails
                         </button>
                     </div>
                     
-                    <!-- Price and Travel Type Info -->
+                    <!-- Enhanced Price and Travel Type Info -->
                     <div class="text-center pt-2">
                         <div class="text-sm text-mode-secondary">
-                            <span class="font-bold text-success-600 text-lg">${getPriceRange(index)}</span>
-                            <span class="ml-2 font-medium">Petit groupe • Premium</span>
+                            <span class="font-bold text-success-600 text-lg">${getPriceRange(offer)}</span>
+                            <span class="ml-2 font-medium">${getGroupSize(offer)} • ${getTravelStyle(offer)}</span>
                         </div>
                     </div>
                 </div>
@@ -867,18 +776,82 @@ class ConfirmationFlow {
     }
 
     /**
+     * Format programme text into readable paragraphs
+     */
+    formatProgrammeText(text) {
+        if (!text) return '<p>Programme détaillé non disponible</p>';
+        
+        // Split by common day patterns
+        const lines = text.split('\n');
+        let formattedHtml = '';
+        let currentParagraph = '';
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            
+            // Check if this is a day header (Jour X, Day X, etc.)
+            if (line.match(/^(Jour|Day)\s+\d+/i) || line.match(/^Étape\s+\d+/i)) {
+                // If we have accumulated content, close the previous paragraph
+                if (currentParagraph) {
+                    formattedHtml += `<p class="mb-4">${currentParagraph}</p>`;
+                    currentParagraph = '';
+                }
+                
+                // Add day header with special styling
+                formattedHtml += `<h4 class="font-bold text-lg text-blue-600 dark:text-blue-400 mb-3 mt-6 first:mt-0">${line}</h4>`;
+            }
+            // Check if this is a meal indicator
+            else if (line.match(/\([A-Za-z\.]+\)/)) {
+                if (currentParagraph) {
+                    currentParagraph += ' ';
+                }
+                currentParagraph += `<span class="font-semibold text-emerald-600 dark:text-emerald-400">${line}</span>`;
+            }
+            // Check if this is an empty line (paragraph break)
+            else if (line === '') {
+                if (currentParagraph) {
+                    formattedHtml += `<p class="mb-4">${currentParagraph}</p>`;
+                    currentParagraph = '';
+                }
+            }
+            // Regular content
+            else if (line) {
+                if (currentParagraph) {
+                    currentParagraph += ' ';
+                }
+                currentParagraph += line;
+            }
+        }
+        
+        // Add any remaining content
+        if (currentParagraph) {
+            formattedHtml += `<p class="mb-4">${currentParagraph}</p>`;
+        }
+        
+        return formattedHtml || `<p>${text}</p>`;
+    }
+
+
+
+    /**
      * Show offer details modal - Full screen with map and details
      */
     showOfferDetails(offerReference) {
-        // Find the offer data from the current offers
-        const offerCards = document.querySelectorAll('[data-offer-reference]');
-        let offerData = null;
+        console.log('🔍 Opening modal for offer:', offerReference);
         
-        offerCards.forEach(card => {
-            if (card.getAttribute('data-offer-reference') === offerReference) {
-                offerData = JSON.parse(card.getAttribute('data-offer-data') || '{}');
-            }
-        });
+        // Remove any existing modals first
+        const existingModals = document.querySelectorAll('.offer-details-modal');
+        existingModals.forEach(modal => modal.remove());
+        
+        // Get offer data from the Map instead of HTML attributes
+        const offerData = this.offersData.get(offerReference);
+        
+        if (!offerData) {
+            console.error('❌ No offer data found for reference:', offerReference);
+            return;
+        }
+        
+        console.log('✅ Offer data found:', offerData);
         
         // Get destinations for map
         const destinations = offerData?.destinations || [];
@@ -888,7 +861,7 @@ class ConfirmationFlow {
         const mapUrl = this.generateMapUrl(firstDestination);
         
         const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 bg-black/95 flex items-center justify-center z-50 backdrop-blur-md';
+        modal.className = 'offer-details-modal fixed inset-0 bg-black/95 flex items-center justify-center z-50 backdrop-blur-md';
         modal.innerHTML = `
             <div class="w-full h-full flex flex-col lg:flex-row bg-white dark:bg-gray-900 relative overflow-hidden">
                 <!-- Background Pattern -->
@@ -899,7 +872,7 @@ class ConfirmationFlow {
                 </div>
                 
                 <!-- Close button -->
-                <button onclick="this.closest('.fixed').remove()" class="absolute top-6 right-6 z-50 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full p-4 transition-all duration-300 shadow-lg border border-white/20">
+                <button onclick="this.closest('.offer-details-modal').remove()" class="absolute top-6 right-6 z-50 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full p-4 transition-all duration-300 shadow-lg border border-white/20">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
                 
@@ -983,7 +956,7 @@ class ConfirmationFlow {
                 </div>
                 
                 <!-- Right side - Enhanced Offer Details -->
-                <div class="w-full lg:w-1/2 h-1/2 lg:h-full overflow-y-auto bg-white dark:bg-gray-900 relative">
+                <div class="w-full lg:w-1/2 h-1/2 lg:h-full overflow-y-auto bg-white dark:bg-gray-900 relative pb-32">
                     <!-- Content Container -->
                     <div class="p-6 lg:p-8 relative z-10">
                         <!-- Enhanced Header -->
@@ -1032,7 +1005,7 @@ class ConfirmationFlow {
                     </div>
                         </div>
                     
-                    <!-- Enhanced Description Section -->
+                    <!-- Enhanced Description Section with Full Dataset Information -->
                     <div class="mb-10">
                         <div class="flex items-center mb-6">
                             <div class="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full mr-4"></div>
@@ -1046,6 +1019,23 @@ class ConfirmationFlow {
                                 
                                 <div class="relative z-10">
                                     <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-8 font-medium">${offerData?.description || 'Description détaillée de cette offre de voyage exceptionnelle.'}</p>
+                                    
+                                    <!-- Programme complet -->
+                                    ${offerData?.programme ? `
+                                        <div class="mb-8">
+                                            <h3 class="font-bold text-gray-900 dark:text-white mb-4 flex items-center text-lg">
+                                                <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mr-3">
+                                                    <i data-lucide="book-open" class="w-5 h-5 text-white"></i>
+                                                </div>
+                                                Programme Complet
+                                            </h3>
+                                            <div class="bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 dark:border-gray-600/50">
+                                                <div class="text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
+                                                    ${this.formatProgrammeText(offerData.programme)}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ` : ''}
                                     
                                     <!-- Enhanced Additional details -->
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1205,6 +1195,98 @@ class ConfirmationFlow {
                         </div>
                     `}
                     
+                    <!-- Services Inclus et Non Inclus -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Services Inclus & Non Inclus</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Services Inclus -->
+                            <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-6">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                                    <i data-lucide="check-circle" class="w-6 h-6 text-green-600 dark:text-green-400 mr-2"></i>
+                                    Services Inclus
+                                </h3>
+                                ${offerData?.included && offerData.included.length > 0 ? `
+                                    <div class="space-y-4">
+                                        ${offerData.included.map(item => `
+                                            <div class="flex items-start p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-green-200 dark:border-green-700/30">
+                                                <i data-lucide="check" class="w-4 h-4 text-green-600 dark:text-green-400 mr-3 mt-0.5 flex-shrink-0"></i>
+                                                <span class="text-gray-700 dark:text-gray-300 text-sm">${item}</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                ` : `
+                                    <div class="space-y-4">
+                                        <div class="flex items-start p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-green-200 dark:border-green-700/30">
+                                            <i data-lucide="check" class="w-4 h-4 text-green-600 dark:text-green-400 mr-3 mt-0.5 flex-shrink-0"></i>
+                                            <span class="text-gray-700 dark:text-gray-300 text-sm">Hébergement en hôtels sélectionnés</span>
+                                        </div>
+                                        <div class="flex items-start p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-green-200 dark:border-green-700/30">
+                                            <i data-lucide="check" class="w-4 h-4 text-green-600 dark:text-green-400 mr-3 mt-0.5 flex-shrink-0"></i>
+                                            <span class="text-gray-700 dark:text-gray-300 text-sm">Transport privé avec chauffeur</span>
+                                        </div>
+                                        <div class="flex items-start p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-green-200 dark:border-green-700/30">
+                                            <i data-lucide="check" class="w-4 h-4 text-green-600 dark:text-green-400 mr-3 mt-0.5 flex-shrink-0"></i>
+                                            <span class="text-gray-700 dark:text-gray-300 text-sm">Guide local francophone</span>
+                                        </div>
+                                    </div>
+                                `}
+                            </div>
+                            
+                            <!-- Services Non Inclus -->
+                            <div class="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl p-6">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                                    <i data-lucide="x-circle" class="w-6 h-6 text-red-600 dark:text-red-400 mr-2"></i>
+                                    Services Non Inclus
+                                </h3>
+                                ${offerData?.not_included && offerData.not_included.length > 0 ? `
+                                    <div class="space-y-4">
+                                        ${offerData.not_included.map(item => `
+                                            <div class="flex items-start p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-red-200 dark:border-red-700/30">
+                                                <i data-lucide="x" class="w-4 h-4 text-red-600 dark:text-red-400 mr-3 mt-0.5 flex-shrink-0"></i>
+                                                <span class="text-gray-700 dark:text-gray-300 text-sm">${item}</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                ` : `
+                                    <div class="space-y-4">
+                                        <div class="flex items-start p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-red-200 dark:border-red-700/30">
+                                            <i data-lucide="x" class="w-4 h-4 text-red-600 dark:text-red-400 mr-3 mt-0.5 flex-shrink-0"></i>
+                                            <span class="text-gray-700 dark:text-gray-300 text-sm">Vols internationaux</span>
+                                        </div>
+                                        <div class="flex items-start p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-red-200 dark:border-red-700/30">
+                                            <i data-lucide="x" class="w-4 h-4 text-red-600 dark:text-red-400 mr-3 mt-0.5 flex-shrink-0"></i>
+                                            <span class="text-gray-700 dark:text-gray-300 text-sm">Assurance voyage</span>
+                                        </div>
+                                        <div class="flex items-start p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-red-200 dark:border-red-700/30">
+                                            <i data-lucide="x" class="w-4 h-4 text-red-600 dark:text-red-400 mr-3 mt-0.5 flex-shrink-0"></i>
+                                            <span class="text-gray-700 dark:text-gray-300 text-sm">Dépenses personnelles</span>
+                                        </div>
+                                    </div>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations Pratiques -->
+                    ${offerData?.practical_info ? `
+                        <div class="mb-8">
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Informations Pratiques</h2>
+                            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    ${Object.entries(offerData.practical_info).map(([key, value]) => `
+                                        <div class="flex items-start p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-blue-200 dark:border-blue-700/30">
+                                            <i data-lucide="info" class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3 mt-0.5 flex-shrink-0"></i>
+                                            <div>
+                                                <h4 class="font-semibold text-gray-900 dark:text-white text-sm mb-1">${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</h4>
+                                                <p class="text-gray-700 dark:text-gray-300 text-sm">${value}</p>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+
                     <!-- Highlights -->
                     <div class="mb-8">
                         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Points Forts & Expériences</h2>
@@ -1293,19 +1375,21 @@ class ConfirmationFlow {
                                         <i data-lucide="target" class="w-6 h-6 text-purple-600 dark:text-purple-400 mr-3"></i>
                                         <span class="text-gray-700 dark:text-gray-300 font-medium">Correspondance avec vos préférences</span>
                                     </div>
-                                    <div class="bg-gradient-to-r ${offerData.match_score >= 0.9 ? 'from-emerald-500 to-green-600' : offerData.match_score >= 0.8 ? 'from-yellow-500 to-orange-600' : 'from-red-500 to-pink-600'} text-white text-lg px-4 py-2 rounded-full font-bold shadow-lg border border-white/20" style="background: ${offerData.match_score >= 0.9 ? 'linear-gradient(to right, #10b981, #059669)' : offerData.match_score >= 0.8 ? 'linear-gradient(to right, #f59e0b, #d97706)' : 'linear-gradient(to right, #ef4444, #dc2626)'} !important;">
+                                    <div class="bg-gradient-to-r ${this.getMatchColor(offerData.match_score)} ${this.getMatchAnimation(offerData.match_score)} text-white text-lg px-4 py-2 rounded-full font-bold shadow-lg border border-white/20"
+                                         style="${offerData.match_score >= 0.9 ? 'background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899) !important; animation: pulse 2s infinite;' : ''}">
                                         ${Math.round(offerData.match_score * 100)}%
                                     </div>
                                 </div>
                                 <div class="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                                    <div class="bg-gradient-to-r ${offerData.match_score >= 0.9 ? 'from-emerald-500 to-green-600' : offerData.match_score >= 0.8 ? 'from-yellow-500 to-orange-600' : 'from-red-500 to-pink-600'} h-3 rounded-full transition-all duration-1000" style="width: ${offerData.match_score * 100}%; background: ${offerData.match_score >= 0.9 ? 'linear-gradient(to right, #10b981, #059669)' : offerData.match_score >= 0.8 ? 'linear-gradient(to right, #f59e0b, #d97706)' : 'linear-gradient(to right, #ef4444, #dc2626)'} !important;"></div>
+                                    <div class="bg-gradient-to-r ${this.getMatchColor(offerData.match_score)} ${this.getMatchAnimation(offerData.match_score)} h-3 rounded-full transition-all duration-1000" 
+                                         style="width: ${offerData.match_score * 100}%; ${offerData.match_score >= 0.9 ? 'background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899) !important; animation: pulse 2s infinite;' : ''}"></div>
                                 </div>
                             </div>
                         </div>
                     ` : ''}
                     
                     <!-- Enhanced Action buttons with forced red background -->
-                    <div class="sticky bottom-0 bg-white dark:bg-gray-900 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div class="fixed bottom-0 left-1/2 right-0 bg-white dark:bg-gray-900 pt-6 border-t border-gray-200 dark:border-gray-700 z-10">
                         <div class="flex flex-col sm:flex-row gap-4">
                             <a href="${offerData?.price_url || '#'}" target="_blank" 
                                class="flex-1 bg-red-600 hover:bg-red-700 text-white px-8 py-5 rounded-2xl font-bold text-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-xl flex items-center justify-center group relative overflow-hidden"
@@ -1314,8 +1398,8 @@ class ConfirmationFlow {
                                 <i data-lucide="credit-card" class="w-6 h-6 mr-3 relative z-10 group-hover:animate-pulse text-white"></i>
                                 <span class="relative z-10 text-white">Réserver maintenant</span>
                             </a>
-                            <button onclick="this.closest('.fixed').remove()" 
-                                    class="px-8 py-5 bg-gradient-to-r from-gray-900 via-black to-gray-900 hover:from-black hover:via-gray-900 hover:to-black text-white border-2 border-gray-700 dark:border-gray-600 rounded-2xl transition-all duration-300 hover:shadow-2xl shadow-xl font-bold text-lg">
+                            <button onclick="this.closest('.offer-details-modal').remove()" 
+                                    class="flex-1 px-8 py-5 bg-gradient-to-r from-gray-900 via-black to-gray-900 hover:from-black hover:via-gray-900 hover:to-black text-white border-2 border-gray-700 dark:border-gray-600 rounded-2xl transition-all duration-300 hover:shadow-2xl shadow-xl font-bold text-lg">
                                 Annuler
                             </button>
                         </div>
@@ -1328,6 +1412,15 @@ class ConfirmationFlow {
         
         // Refresh Lucide icons for the modal
         this.refreshLucideIcons();
+        
+        console.log('✅ Modal created and added to document');
+        
+        // Add click outside to close
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
     }
     
     /**
@@ -1532,6 +1625,40 @@ class ConfirmationFlow {
             document.documentElement.style.setProperty('--text-mode-secondary', '#6b7280');
             document.documentElement.style.setProperty('--text-mode-tertiary', '#9ca3af');
         }
+    }
+
+    /**
+     * Show offers when user confirms preferences
+     */
+    showOffers() {
+        // Display the offers
+        if (this.currentOffers) {
+            this.displayOffers(this.currentOffers);
+        }
+    }
+
+    /**
+     * Show offers when user confirms preferences
+     */
+    showOffers() {
+        // Display the offers
+        if (this.currentOffers) {
+            this.displayOffers(this.currentOffers);
+        }
+    }
+
+    /**
+     * Modify preferences - send message to chat
+     */
+    modifyPreferences() {
+        // Remove the confirmation section
+        const confirmationSection = document.querySelector('.animate-fade-in');
+        if (confirmationSection) {
+            confirmationSection.remove();
+        }
+        
+        // Add a message asking user to modify preferences
+        this.addConfirmationMessage("Parfait ! Dites-moi ce que vous souhaitez modifier dans vos préférences de voyage. Par exemple : 'Je voudrais changer la destination pour les Philippines' ou 'Mon budget est plutôt entre 2000 et 3000€'.");
     }
 }
 

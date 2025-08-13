@@ -806,39 +806,29 @@ Generate your response in French:
         return " ".join(query_parts) if query_parts else "travel offers"
     
     def _vector_search_offers(self, query: str, top_k: int = 6) -> List[Dict]:
-        """Use Sentence Transformers for semantic search"""
+        """Use OptimizedSemanticService for semantic search"""
         try:
-            # Use the data processor's semantic search
-            search_results = self.data_processor.semantic_search(query, top_k=top_k)
+            # Initialize semantic service if not already done
+            if not hasattr(self, 'semantic_service'):
+                from services.optimized_semantic_service import OptimizedSemanticService
+                self.semantic_service = OptimizedSemanticService()
+                debug_print("🔍 Initialized semantic service")
             
-            # Convert to structured format
-            structured_results = []
-            for result in search_results:
-                offer = result.get('offer')
-                if offer:
-                    structured_result = {
-                        "product_name": offer.product_name,
-                        "reference": offer.reference,
-                        "destinations": offer.destinations,
-                        "departure_city": offer.departure_city,
-                        "dates": offer.dates,
-                        "duration": offer.duration,
-                        "offer_type": offer.offer_type,
-                        "description": offer.description,
-                        "highlights": offer.highlights,
-                        "images": getattr(offer, 'images', []),
-                        "price_url": f"https://example.com/offer/{offer.reference}",
-                        "vector_score": result.get('score', 0.0),
-                        "semantic_match": result.get('semantic_match', "")
-                    }
-                    structured_results.append(structured_result)
+            # Use sentence transformer to search the JSON database
+            search_results = self.semantic_service.search(query, top_k)
+            debug_print(f"🔍 Sentence transformer found {len(search_results)} closest offers")
             
-            return structured_results
+            # Debug: Show first offer to verify it's from database
+            if search_results:
+                first_offer = search_results[0]
+                debug_print(f"🔍 First offer from database: {first_offer.get('product_name', 'Unknown')} - {first_offer.get('destinations', [])}")
+            
+            return search_results
             
         except Exception as e:
-            debug_print(f"❌ Vector search failed: {e}")
+            debug_print(f"❌ Sentence transformer search failed: {e}")
             # Fallback to basic search
-            return self._basic_search_offers(query, top_k)
+            return self._fallback_text_search(query, top_k)
     
     def _basic_search_offers(self, query: str, top_k: int = 6) -> List[Dict]:
         """Basic text-based search fallback"""
@@ -1081,68 +1071,112 @@ Select exactly {max_offers} offers:
         # Prioritize destination - make it the most important part
         if preferences.get('destination'):
             destination = preferences['destination']
-            # For Japan, use specific Japanese terms and variations
-            if destination.lower() in ['japan', 'japon', 'japanese']:
-                query_parts.extend([
-                    "Japon Tokyo Kyoto Osaka",
-                    "voyage Japon",
-                    "circuit Japon",
-                    "découverte Japon",
-                    "Japon culturel",
-                    "Japon traditionnel"
-                ])
+            
+            # Enhanced destination mapping for better semantic search
+            destination_mappings = {
+                'japan': ['Japon', 'Tokyo', 'Kyoto', 'Osaka', 'Japonais', 'Japon traditionnel', 'Japon culturel'],
+                'japon': ['Japon', 'Tokyo', 'Kyoto', 'Osaka', 'Japonais', 'Japon traditionnel', 'Japon culturel'],
+                'philippines': ['Philippines', 'Manille', 'Cebu', 'Palawan', 'Philippin', 'Philippines culturel'],
+                'philippine': ['Philippines', 'Manille', 'Cebu', 'Palawan', 'Philippin', 'Philippines culturel'],
+                'thailand': ['Thaïlande', 'Bangkok', 'Phuket', 'Chiang Mai', 'Thaï', 'Thaïlande culturel'],
+                'thaïlande': ['Thaïlande', 'Bangkok', 'Phuket', 'Chiang Mai', 'Thaï', 'Thaïlande culturel'],
+                'vietnam': ['Vietnam', 'Hanoï', 'Ho Chi Minh', 'Halong', 'Vietnamien', 'Vietnam culturel'],
+                'china': ['Chine', 'Pékin', 'Shanghai', 'Chinois', 'Chine culturel'],
+                'chine': ['Chine', 'Pékin', 'Shanghai', 'Chinois', 'Chine culturel'],
+                'india': ['Inde', 'Delhi', 'Mumbai', 'Indien', 'Inde culturel'],
+                'inde': ['Inde', 'Delhi', 'Mumbai', 'Indien', 'Inde culturel'],
+                'indonesia': ['Indonésie', 'Bali', 'Jakarta', 'Indonésien', 'Indonésie culturel'],
+                'indonésie': ['Indonésie', 'Bali', 'Jakarta', 'Indonésien', 'Indonésie culturel'],
+                'malaysia': ['Malaisie', 'Kuala Lumpur', 'Malaisien', 'Malaisie culturel'],
+                'malaisie': ['Malaisie', 'Kuala Lumpur', 'Malaisien', 'Malaisie culturel'],
+                'singapore': ['Singapour', 'Singapourien', 'Singapour culturel'],
+                'singapour': ['Singapour', 'Singapourien', 'Singapour culturel'],
+                'cambodia': ['Cambodge', 'Phnom Penh', 'Cambodgien', 'Cambodge culturel'],
+                'cambodge': ['Cambodge', 'Phnom Penh', 'Cambodgien', 'Cambodge culturel'],
+                'laos': ['Laos', 'Vientiane', 'Laotien', 'Laos culturel'],
+                'myanmar': ['Myanmar', 'Rangoon', 'Myanmarais', 'Myanmar culturel'],
+                'sri lanka': ['Sri Lanka', 'Colombo', 'Sri Lankais', 'Sri Lanka culturel'],
+                'sri lanka': ['Sri Lanka', 'Colombo', 'Sri Lankais', 'Sri Lanka culturel'],
+                'nepal': ['Népal', 'Katmandou', 'Népalais', 'Népal culturel'],
+                'népal': ['Népal', 'Katmandou', 'Népalais', 'Népal culturel'],
+                'bhutan': ['Bhoutan', 'Thimphou', 'Bhoutanais', 'Bhoutan culturel'],
+                'mongolia': ['Mongolie', 'Oulan-Bator', 'Mongol', 'Mongolie culturel'],
+                'mongolie': ['Mongolie', 'Oulan-Bator', 'Mongol', 'Mongolie culturel']
+            }
+            
+            # Get destination terms or use generic approach
+            destination_lower = destination.lower()
+            if destination_lower in destination_mappings:
+                query_parts.extend(destination_mappings[destination_lower])
             else:
-                # For other destinations
+                # Generic approach for unknown destinations
                 query_parts.extend([
                     f"voyage {destination}",
                     f"circuit {destination}",
-                    f"découverte {destination}"
+                    f"découverte {destination}",
+                    f"{destination} culturel",
+                    f"{destination} traditionnel"
                 ])
         
+        # Add other preferences with enhanced context
         if preferences.get('duration'):
-            query_parts.append(f"durée {preferences['duration']}")
+            duration = preferences['duration']
+            query_parts.append(f"durée {duration}")
+            if 'semaine' in duration.lower() or 'week' in duration.lower():
+                query_parts.append("circuit organisé")
+            if 'jour' in duration.lower() or 'day' in duration.lower():
+                query_parts.append("voyage guidé")
         
         if preferences.get('style'):
-            query_parts.append(f"style {preferences['style']}")
+            style = preferences['style']
+            query_parts.append(f"style {style}")
+            # Add style-specific terms
+            if 'culturel' in style.lower() or 'cultural' in style.lower():
+                query_parts.extend(["découverte culturelle", "sites historiques", "traditions locales"])
+            elif 'aventure' in style.lower() or 'adventure' in style.lower():
+                query_parts.extend(["aventure", "expériences uniques", "activités outdoor"])
+            elif 'détente' in style.lower() or 'relax' in style.lower():
+                query_parts.extend(["détente", "plages", "bien-être"])
+            elif 'gastronomie' in style.lower() or 'food' in style.lower():
+                query_parts.extend(["gastronomie", "cuisine locale", "dégustations"])
         
         if preferences.get('budget'):
-            query_parts.append(f"budget {preferences['budget']}")
+            budget = preferences['budget']
+            query_parts.append(f"budget {budget}")
+            if 'moyen' in budget.lower() or 'medium' in budget.lower():
+                query_parts.append("prix moyen")
+            elif 'élevé' in budget.lower() or 'high' in budget.lower():
+                query_parts.append("luxe premium")
+            elif 'bas' in budget.lower() or 'low' in budget.lower():
+                query_parts.append("économique")
         
         if preferences.get('group_size'):
-            query_parts.append(f"groupe {preferences['group_size']}")
+            group_size = preferences['group_size']
+            query_parts.append(f"groupe {group_size}")
+            if 'petit' in group_size.lower() or 'small' in group_size.lower():
+                query_parts.append("petit groupe")
+            elif 'grand' in group_size.lower() or 'large' in group_size.lower():
+                query_parts.append("groupe important")
         
         if preferences.get('timing'):
-            query_parts.append(f"période {preferences['timing']}")
+            timing = preferences['timing']
+            query_parts.append(f"période {timing}")
         
-        # Add context words for better semantic matching
-        query_parts.extend(["circuit organisé", "voyage guidé", "découverte culturelle"])
+        # Add enhanced context words for better semantic matching
+        query_parts.extend([
+            "circuit organisé", 
+            "voyage guidé", 
+            "découverte culturelle",
+            "expérience authentique",
+            "voyage personnalisé",
+            "circuit premium"
+        ])
         
-        return " ".join(query_parts)
+        # Remove duplicates and join
+        unique_parts = list(dict.fromkeys(query_parts))  # Preserve order while removing duplicates
+        return " ".join(unique_parts)
     
-    def _vector_search_offers(self, query: str, top_k: int = 10) -> List[Dict]:
-        """Use sentence transformers to find top 10 closest offers from JSON database"""
-        try:
-            # Initialize semantic service if not already done
-            if not hasattr(self, 'semantic_service'):
-                from services.optimized_semantic_service import OptimizedSemanticService
-                self.semantic_service = OptimizedSemanticService()
-                debug_print("🔍 Initialized semantic service")
-            
-            # Use sentence transformer to search the JSON database
-            search_results = self.semantic_service.search(query, top_k)
-            debug_print(f"🔍 Sentence transformer found {len(search_results)} closest offers")
-            
-            # Debug: Show first offer to verify it's from database
-            if search_results:
-                first_offer = search_results[0]
-                debug_print(f"🔍 First offer from database: {first_offer.get('product_name', 'Unknown')} - {first_offer.get('destinations', [])}")
-            
-            return search_results
-            
-        except Exception as e:
-            debug_print(f"❌ Sentence transformer search failed: {e}")
-            # Fallback to basic search
-            return self._fallback_text_search(query, top_k)
+
     
     def _fallback_text_search(self, query: str, top_k: int = 6) -> List[Dict]:
         """Fallback text-based search if semantic search fails"""
@@ -1229,9 +1263,34 @@ Return ONLY a JSON array with the selected offers (include product_name for mapp
             # Use the MATCHER LLM specifically for this task
             response = self._call_llm_with_retry(self.matcher, prompt)
             debug_print(f"🔍 MATCHER LLM response: {response[:200]}...")
-            selected_simplified = self._parse_json_response(response)
+            # Try to parse as JSON array first
+            try:
+                # Clean the response
+                cleaned_response = response.strip()
+                
+                # Try to find JSON array in the response
+                start_idx = cleaned_response.find('[')
+                end_idx = cleaned_response.rfind(']')
+                
+                if start_idx != -1 and end_idx != -1:
+                    json_str = cleaned_response[start_idx:end_idx + 1]
+                    selected_simplified = json.loads(json_str)
+                    debug_print(f"✅ JSON array parsed successfully: {len(selected_simplified)} items")
+                else:
+                    # Try parsing as object with array
+                    selected_simplified = self._parse_json_safely(response)
+                    if isinstance(selected_simplified, dict) and 'offers' in selected_simplified:
+                        selected_simplified = selected_simplified['offers']
+                    elif isinstance(selected_simplified, dict) and 'matches' in selected_simplified:
+                        selected_simplified = selected_simplified['matches']
+                    else:
+                        selected_simplified = []
+                        
+            except Exception as e:
+                debug_print(f"❌ JSON parsing failed: {e}")
+                selected_simplified = []
             
-            if isinstance(selected_simplified, list):
+            if isinstance(selected_simplified, list) and selected_simplified:
                 # Map back to original offers and add match scores
                 selected_offers = []
                 for simplified in selected_simplified:
@@ -1269,6 +1328,16 @@ Return ONLY a JSON array with the selected offers (include product_name for mapp
         """
         # Create cache key based on preferences
         cache_key = f"{hash(str(sorted(preferences.items())))}"
+        
+        # Clear cache if preferences have changed significantly (especially destination)
+        if hasattr(self, '_last_preferences') and self._last_preferences != preferences:
+            if hasattr(self, '_offers_cache'):
+                debug_print("🔄 Preferences changed, clearing cache")
+                self._offers_cache.clear()
+        
+        # Store current preferences for next comparison
+        self._last_preferences = preferences.copy()
+        
         if hasattr(self, '_offers_cache') and cache_key in self._offers_cache:
             debug_print("⚡ Using cached offers")
             return self._offers_cache[cache_key]

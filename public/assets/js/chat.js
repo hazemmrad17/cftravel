@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Clear memory on page load/refresh to start fresh
   clearMemory();
   
+  // Initialize streaming placeholder effect
+  initializeStreamingPlaceholder();
+  
   // Cache input and button elements
   let chatInputEl = document.querySelector('#chat-input');
   let sendButtonEl = document.querySelector('#chat-send-btn');
@@ -74,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
       chatInputEl.readOnly = false;
       chatInputEl.style.pointerEvents = 'auto';
       chatInputEl.style.opacity = '1';
-      chatInputEl.placeholder = 'Dites-moi où vous voulez partir ou ce que vous cherchez...';
+      // Don't set placeholder here - let the streaming effect handle it
       
       // Re-enable the send button
       if (sendButtonEl) {
@@ -577,37 +580,96 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+  // Extract preferences from user message
+  function extractPreferencesFromMessage(message) {
+    const preferences = {};
+    
+    // Simple preference extraction based on common patterns
+    const messageLower = message.toLowerCase();
+    
+    // Destination extraction
+    const destinations = ['japon', 'japan', 'philippines', 'philippine', 'thaïlande', 'thailand', 'vietnam', 'chine', 'china', 'inde', 'india', 'indonésie', 'indonesia', 'malaisie', 'malaysia', 'singapour', 'singapore', 'cambodge', 'cambodia', 'laos', 'myanmar', 'sri lanka', 'népal', 'nepal', 'bhoutan', 'bhutan', 'mongolie', 'mongolia'];
+    
+    for (const dest of destinations) {
+      if (messageLower.includes(dest)) {
+        preferences.destination = dest.charAt(0).toUpperCase() + dest.slice(1);
+        break;
+      }
+    }
+    
+    // Duration extraction
+    if (messageLower.includes('semaine') || messageLower.includes('week')) {
+      const weekMatch = messageLower.match(/(\d+)\s*(semaine|week)/);
+      if (weekMatch) {
+        preferences.duration = `${weekMatch[1]} semaines`;
+      }
+    } else if (messageLower.includes('jour') || messageLower.includes('day')) {
+      const dayMatch = messageLower.match(/(\d+)\s*(jour|day)/);
+      if (dayMatch) {
+        preferences.duration = `${dayMatch[1]} jours`;
+      }
+    }
+    
+    // Budget extraction
+    if (messageLower.includes('budget') || messageLower.includes('prix')) {
+      if (messageLower.includes('moyen') || messageLower.includes('medium')) {
+        preferences.budget = 'Budget moyen';
+      } else if (messageLower.includes('élevé') || messageLower.includes('high') || messageLower.includes('luxe')) {
+        preferences.budget = 'Budget élevé';
+      } else if (messageLower.includes('bas') || messageLower.includes('low') || messageLower.includes('économique')) {
+        preferences.budget = 'Budget économique';
+      }
+    }
+    
+    // Style extraction
+    if (messageLower.includes('culturel') || messageLower.includes('cultural')) {
+      preferences.style = 'Culture et découverte';
+    } else if (messageLower.includes('aventure') || messageLower.includes('adventure')) {
+      preferences.style = 'Aventure';
+    } else if (messageLower.includes('détente') || messageLower.includes('relax')) {
+      preferences.style = 'Détente et bien-être';
+    } else if (messageLower.includes('gastronomie') || messageLower.includes('food')) {
+      preferences.style = 'Gastronomie';
+    }
+    
+    return preferences;
+  }
+
   function appendMessage(message, isUser, isError, offers, shouldStream = false) {
     // Remove previous offer cards before rendering new ones
     document.querySelectorAll('.chat-offer-card').forEach(el => el.remove());
 
-    // If offers are present, show only a short intro and the cards
+    // If offers are present, use the preference confirmation flow
     if (offers && offers.length > 0) {
-      // Show a single intro message
-      const introDiv = document.createElement('div');
-      introDiv.className = 'chat-message agent';
-      introDiv.textContent = "Voici quelques offres qui correspondent à votre demande :";
-      chatArea.appendChild(introDiv);
-
-      offers.forEach(offer => {
-        const offerDiv = document.createElement('div');
-        offerDiv.className = 'chat-offer-card';
-        let highlightsHtml = '';
-        if (offer.highlights && Array.isArray(offer.highlights) && offer.highlights.length > 0) {
-          highlightsHtml = '<ul style="margin: 0.5em 0 0.5em 1em;">' +
-            offer.highlights.map(h => `<li><strong>${h.title || ''}:</strong> ${h.text || ''}</li>`).join('') +
-            '</ul>';
-        }
-        offerDiv.innerHTML = `
-          <div style="margin: 1em 0; padding: 1em; border: 1px solid #eee; border-radius: 8px; background: #fafbff; transition: all 0.2s ease;">
-            <strong style="font-size: 1.1em;">${offer.product_name || ''}</strong><br>
-            ${highlightsHtml}
-            <span>${offer.description || ''}</span><br>
-                            <a href="${offer.price_url || '#'}" target="_blank" style="color: #dc2626; text-decoration: none; font-weight: 500;">Voir l'offre</a>
-          </div>
-        `;
-        chatArea.appendChild(offerDiv);
-      });
+      // Extract preferences from the current conversation context
+      const preferences = extractPreferencesFromMessage(message);
+      
+             // Display offers directly
+       if (window.confirmationFlow && typeof window.confirmationFlow.displayOffers === 'function') {
+        // Fallback to direct offer display
+        window.confirmationFlow.displayOffers(offers);
+      } else {
+        // Fallback to simple display if confirmation flow is not available
+        offers.forEach(offer => {
+          const offerDiv = document.createElement('div');
+          offerDiv.className = 'chat-offer-card';
+          let highlightsHtml = '';
+          if (offer.highlights && Array.isArray(offer.highlights) && offer.highlights.length > 0) {
+            highlightsHtml = '<ul style="margin: 0.5em 0 0.5em 1em;">' +
+              offer.highlights.map(h => `<li><strong>${h.title || ''}:</strong> ${h.text || ''}</li>`).join('') +
+              '</ul>';
+          }
+          offerDiv.innerHTML = `
+            <div style="margin: 1em 0; padding: 1em; border: 1px solid #eee; border-radius: 8px; background: #fafbff; transition: all 0.2s ease;">
+              <strong style="font-size: 1.1em;">${offer.product_name || ''}</strong><br>
+              ${highlightsHtml}
+              <span>${offer.description || ''}</span><br>
+                              <a href="${offer.price_url || '#'}" target="_blank" style="color: #dc2626; text-decoration: none; font-weight: 500;">Voir l'offre</a>
+            </div>
+          `;
+          chatArea.appendChild(offerDiv);
+        });
+      }
       return; // Do not render the full message if offers are present
     }
 
@@ -644,7 +706,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add a subtle typing indicator
         const textElement = msgDiv.querySelector('.message-text');
         if (textElement) {
-          textElement.textContent = 'L\'IA rédige...';
+          textElement.textContent = 'L\'IA prépare votre réponse...';
           setTimeout(() => {
             textElement.textContent = '';
             textElement.classList.remove('streaming');
@@ -657,11 +719,40 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show immediately for loaded messages (no streaming)
         const errorClass = isError ? 'bg-red-100 dark:bg-red-500 text-red-700 dark:text-white rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl' : 'bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl';
         // Format message with proper line breaks and bullet points
-        const formattedMessage = message
-          .replace(/\n/g, '<br>')
-          .replace(/•\s*/g, '<br>• ')
-          .replace(/^\s*<br>/, ''); // Remove leading <br> if it exists
-        html = '<div class="' + errorClass + '"><p class="text-gray-800 dark:text-white/90 font-normal">' + formattedMessage + '</p></div>';
+        let formattedMessage = message;
+        
+        // Check if the message contains bullet points
+        if (message.includes('•')) {
+          // Split the message into parts
+          const parts = message.split('•');
+          const intro = parts[0].trim();
+          const bulletPoints = parts.slice(1).map(point => point.trim()).filter(point => point);
+          
+          // Build HTML with proper structure
+          let htmlContent = '';
+          if (intro) {
+            htmlContent += `<div class="mb-3">${intro}</div>`;
+          }
+          
+          if (bulletPoints.length > 0) {
+            htmlContent += '<ul class="list-none space-y-2 mt-3">';
+            bulletPoints.forEach(point => {
+              htmlContent += `<li class="flex items-start">
+                <span class="text-gray-600 dark:text-gray-400 mr-2 mt-1">•</span>
+                <span>${point}</span>
+              </li>`;
+            });
+            htmlContent += '</ul>';
+          }
+          
+          html = '<div class="' + errorClass + '">' + htmlContent + '</div>';
+        } else {
+          // Regular message without bullet points
+          formattedMessage = message
+            .replace(/\n\n/g, '<br><br>')
+            .replace(/\n/g, '<br>');
+          html = '<div class="' + errorClass + '"><p class="text-gray-800 dark:text-white/90 font-normal">' + formattedMessage + '</p></div>';
+        }
         msgDiv.innerHTML = html;
         chatArea.appendChild(msgDiv);
         // Smooth scroll to bottom
@@ -672,7 +763,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function showLoading() {
+  function showLoading(message = 'L\'IA rédige...') {
     // Create typing indicator
     const loadingDiv = document.createElement('div');
     loadingDiv.className = 'flex justify-start mb-6';
@@ -680,7 +771,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadingDiv.innerHTML = `
       <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl">
         <p class="text-gray-800 dark:text-white/90 font-normal">
-          L'IA rédige... <span class="loader"></span>
+          ${message} <span class="loader"></span>
         </p>
       </div>
     `;
@@ -1426,7 +1517,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Show loading indicator
       hideLoading(); // Clear any existing
-    showLoading();
+    showLoading('L\'IA prépare vos offres personnalisées...');
     
       console.log('📡 Attempting streaming request...');
       
@@ -1485,53 +1576,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateStreamingMessage(assistantMessageElement, assistantMessage);
                     } else if (data.type === 'offers' && data.offers) {
                     console.log('🎯 Received offers via streaming:', data.offers);
-                    // Display the offers using the offer display system
-                    if (typeof OfferDisplay !== 'undefined') {
-                      // Create the main offers container with the beautiful layout
-                      let offersContainer = document.getElementById('ai-offers-container');
-                      if (!offersContainer) {
-                        offersContainer = document.createElement('div');
-                        offersContainer.id = 'ai-offers-container';
-                        offersContainer.className = 'flex justify-start mb-6';
-                        chatArea.appendChild(offersContainer);
-                      }
-                      
-                      // Create the beautiful offers display
-                      offersContainer.innerHTML = 
-                        '<div class="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl rounded-bl-lg p-8 max-w-6xl border border-gray-100 dark:border-gray-700 backdrop-blur-sm relative overflow-hidden">' +
-                          '<!-- Compact Header -->' +
-                          '<div class="text-center mb-6">' +
-                            '<div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full mb-4 animate-pulse">' +
-                              '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="gift" class="lucide lucide-gift w-6 h-6">' +
-                                '<rect x="3" y="8" width="18" height="4" rx="1"></rect>' +
-                                '<path d="M12 8v13"></path>' +
-                                '<path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"></path>' +
-                                '<path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"></path>' +
-                              '</svg>' +
-                            '</div>' +
-                            '<h2 class="text-2xl font-bold text-mode-primary mb-2">Vos Offres Parfaites</h2>' +
-                            '<p class="text-base text-mode-secondary max-w-2xl mx-auto">' +
-                              'Voici les 3 meilleures offres sélectionnées spécialement pour vous selon vos préférences' +
-                            '</p>' +
-                          '</div>' +
-
-                          '<!-- Compact Offers Grid -->' +
-                          '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6" id="offers-grid">' +
-                            '<!-- Offers will be inserted here by OfferDisplay -->' +
-                          '</div>' +
-
-                          '<!-- Compact Footer -->' +
-                          '<div class="text-center">' +
-                            '<div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 border border-gray-300 dark:border-gray-600">' +
-                              '<p class="text-sm font-medium text-gray-800 dark:text-gray-200">' +
-                                '<strong>Réservez en toute confiance :</strong> Toutes nos offres sont garanties et incluent une assistance 24/7' +
-                              '</p>' +
-                            '</div>' +
-                          '</div>' +
-                        '</div>';
-                      
-                      // Use OfferDisplay to render the actual offer cards
-                      OfferDisplay.renderOfferCards(data.offers, 'offers-grid');
+                    // Display offers directly
+                    if (window.confirmationFlow && typeof window.confirmationFlow.displayOffers === 'function') {
+                      window.confirmationFlow.displayOffers(data.offers);
                     }
                   } else if (data.type === 'detailed_program' && data.detailed_program) {
                     console.log('📋 Received detailed program via streaming:', data.detailed_program);
@@ -1605,20 +1652,15 @@ document.addEventListener('DOMContentLoaded', function() {
           // Check if we have offers to display
           if (data.offers && data.offers.length > 0) {
             appendMessage(assistantMessage, false, false, [], false);
-            // Display offers using the offer display system
-            if (typeof OfferDisplay !== 'undefined') {
-              // Create a container for the offers if it doesn't exist
-              let offersContainer = document.getElementById('ai-offers-container');
-              if (!offersContainer) {
-                offersContainer = document.createElement('div');
-                offersContainer.id = 'ai-offers-container';
-                offersContainer.className = 'flex justify-start mb-6';
-                chatArea.appendChild(offersContainer);
-              }
-              OfferDisplay.renderOfferCards(data.offers, 'ai-offers-container');
+            // Extract preferences and display preference confirmation
+            const preferences = extractPreferencesFromMessage(message);
+            if (window.confirmationFlow && typeof window.confirmationFlow.displayPreferenceConfirmation === 'function') {
+              window.confirmationFlow.displayPreferenceConfirmation(preferences, data.offers);
+            } else if (window.confirmationFlow && typeof window.confirmationFlow.displayOffers === 'function') {
+              window.confirmationFlow.displayOffers(data.offers);
             } else {
               // Fallback to the existing displayOfferCards function
-            displayOfferCards(data.offers);
+              displayOfferCards(data.offers);
             }
           } else {
             appendMessage(assistantMessage, false, false, [], false);
@@ -2005,5 +2047,102 @@ document.addEventListener('DOMContentLoaded', function() {
         console.debug('Audio context not supported');
       }
     }
+  }
+
+  // Streaming placeholder effect for chat input
+  function initializeStreamingPlaceholder() {
+    const chatInput = document.getElementById('chat-input');
+    if (!chatInput) return;
+
+    // Array of trip suggestions with Asia.fr theme
+    const placeholders = [
+      "Dites-moi où vous voulez partir ou ce que vous cherchez...",
+      "Je veux partir au Japon pour 2 semaines en avril...",
+      "Cherche des voyages culturels en Thaïlande...",
+      "Propose-moi des destinations exotiques en Asie...",
+      "Je recherche un voyage romantique au Vietnam...",
+      "Aide-moi à planifier un séjour au Cambodge...",
+      "Je veux découvrir la Corée du Sud en famille...",
+      "Propose des circuits aventure en Indonésie...",
+      "Cherche des offres pour la Malaisie en été...",
+      "Je veux un voyage gastronomique au Japon..."
+    ];
+
+    let currentIndex = 0;
+    let typingSpeed = 100; // ms per character
+    let deletingSpeed = 50; // ms per character
+    let pauseTime = 2000; // ms to pause between placeholders
+    let currentInterval = null;
+    let isAnimating = false;
+
+    function clearCurrentAnimation() {
+      if (currentInterval) {
+        clearInterval(currentInterval);
+        currentInterval = null;
+      }
+      isAnimating = false;
+    }
+
+    function animatePlaceholder() {
+      if (isAnimating) return;
+      isAnimating = true;
+      
+      const targetText = placeholders[currentIndex];
+      
+      // Type the text
+      let charIndex = 0;
+      currentInterval = setInterval(() => {
+        if (charIndex <= targetText.length) {
+          chatInput.placeholder = targetText.substring(0, charIndex) + '|';
+          charIndex++;
+        } else {
+          clearCurrentAnimation();
+          
+          // Pause at the end
+          setTimeout(() => {
+            // Delete the text
+            let deleteIndex = targetText.length;
+            currentInterval = setInterval(() => {
+              if (deleteIndex >= 0) {
+                chatInput.placeholder = targetText.substring(0, deleteIndex) + '|';
+                deleteIndex--;
+              } else {
+                clearCurrentAnimation();
+                
+                // Move to next placeholder
+                currentIndex = (currentIndex + 1) % placeholders.length;
+                
+                // Start the next animation
+                setTimeout(animatePlaceholder, 500);
+              }
+            }, deletingSpeed);
+          }, pauseTime);
+        }
+      }, typingSpeed);
+    }
+
+    // Start the animation
+    setTimeout(animatePlaceholder, 1000);
+
+    // Pause the effect when user focuses on input
+    chatInput.addEventListener('focus', () => {
+      clearCurrentAnimation();
+      chatInput.placeholder = placeholders[0];
+    });
+
+    // Resume the effect when user blurs (if input is empty)
+    chatInput.addEventListener('blur', () => {
+      if (!chatInput.value.trim()) {
+        setTimeout(animatePlaceholder, 500);
+      }
+    });
+
+    // Pause when user starts typing
+    chatInput.addEventListener('input', () => {
+      if (chatInput.value.trim()) {
+        clearCurrentAnimation();
+        chatInput.placeholder = placeholders[0];
+      }
+    });
   }
 }); 

@@ -2,59 +2,9 @@
  * Core configuration for ASIA.fr Agent Frontend
  */
 
-// Environment detection and configuration
-const detectEnvironment = () => {
-    const hostname = window.location.hostname;
-    const protocol = window.location.protocol;
-    
-    // Production detection - any cftravel.net domain
-    if (hostname.includes('cftravel.net')) {
-        return {
-            isProduction: true,
-            isDevelopment: false,
-            baseUrl: `https://${hostname}`, // Use the current hostname
-            apiPort: 8000,
-            domain: hostname
-        };
-    }
-    
-    // Development detection
-    if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.includes('localhost')) {
-        return {
-            isProduction: false,
-            isDevelopment: true,
-            baseUrl: 'http://localhost:8002',
-            apiPort: 8002,
-            domain: hostname
-        };
-    }
-    
-    // Default to development
-    return {
-        isProduction: false,
-        isDevelopment: true,
-        baseUrl: 'http://localhost:8002',
-        apiPort: 8002,
-        domain: hostname
-    };
-};
-
-const env = detectEnvironment();
-
-// Log environment detection
-console.log('🔧 Environment Configuration:', {
-    hostname: window.location.hostname,
-    protocol: window.location.protocol,
-    isProduction: env.isProduction,
-    isDevelopment: env.isDevelopment,
-    baseUrl: env.baseUrl,
-    apiPort: env.apiPort,
-    domain: env.domain
-});
-
-// API Configuration - Dynamic based on environment
+// API Configuration
 export const API_CONFIG = {
-    BASE_URL: env.baseUrl,
+    BASE_URL: 'http://localhost:8002',
     ENDPOINTS: {
         CHAT: '/chat',
         CHAT_STREAM: '/chat/stream',
@@ -121,17 +71,6 @@ export const EVENTS = {
     OFFER_SELECTED: 'offer:selected',
     ERROR_OCCURRED: 'error:occurred',
     STATE_CHANGED: 'state:changed'
-};
-
-// Environment information
-export const ENVIRONMENT = {
-    isProduction: env.isProduction,
-    isDevelopment: env.isDevelopment,
-    hostname: window.location.hostname,
-    protocol: window.location.protocol,
-    baseUrl: env.baseUrl,
-    apiPort: env.apiPort,
-    domain: env.domain
 };
 
 // Debug Configuration
