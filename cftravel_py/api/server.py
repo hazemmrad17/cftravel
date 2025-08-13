@@ -124,9 +124,9 @@ async def clear_memory(request: Request):
             logger.info("🧹 Memory service cleared all conversations")
         
         # Also clear pipeline memory if it exists
-        if _pipeline:
-            _pipeline.clear_memory(conversation_id)
-            logger.info("🧹 Pipeline memory cleared successfully")
+        pipeline = get_pipeline()
+        pipeline.clear_memory(conversation_id)
+        logger.info("🧹 Pipeline memory cleared successfully")
         
         return {"message": "Memory cleared successfully"}
     except Exception as e:
