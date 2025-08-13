@@ -44,11 +44,12 @@ __pycache__/
 *.swo
 *~
 ###< IDE ###
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Environment files (exclude from git)
+
+# Environment templates (include in git)
+!.env
+!env.production
+!env.local
 
 ###> OS ###
 .DS_Store
