@@ -377,6 +377,78 @@ class ChatController extends AbstractController
         }
     }
 
+    #[Route('/api/{path}', name: 'api_proxy', requirements: ['path' => '.+'], methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])]
+    public function apiProxy(Request $request, string $path = ''): Response
+    {
+        // Handle preflight OPTIONS request
+        if ($request->getMethod() === 'OPTIONS') {
+            return new Response('', 200, $this->addCorsHeaders());
+        }
+        
+        try {
+            // Build the Python API URL
+            $pythonApiUrl = $this->agentApiUrl . '/' . $path;
+            
+            $this->logger->info('Proxying API request', [
+                'method' => $request->getMethod(),
+                'path' => $path,
+                'target_url' => $pythonApiUrl
+            ]);
+            
+            // Get request headers
+            $headers = [];
+            foreach ($request->headers->all() as $name => $values) {
+                if (!in_array(strtolower($name), ['host', 'content-length'])) {
+                    $headers[$name] = $values[0] ?? '';
+                }
+            }
+            
+            // Get request body
+            $requestBody = $request->getContent();
+            
+            // Make the request to Python API
+            $client = new \GuzzleHttp\Client(['timeout' => 30]);
+            $response = $client->request($request->getMethod(), $pythonApiUrl, [
+                'headers' => $headers,
+                'body' => $requestBody,
+                'stream' => true
+            ]);
+            
+            // Get response headers
+            $responseHeaders = [];
+            foreach ($response->getHeaders() as $name => $values) {
+                if (!in_array(strtolower($name), ['transfer-encoding', 'connection'])) {
+                    $responseHeaders[$name] = $values[0] ?? '';
+                }
+            }
+            
+            // Add CORS headers
+            $responseHeaders = array_merge($responseHeaders, $this->addCorsHeaders());
+            
+            // Return streaming response
+            return new Response(
+                $response->getBody(),
+                $response->getStatusCode(),
+                $responseHeaders
+            );
+            
+        } catch (\Exception $e) {
+            $this->logger->error('API proxy error', [
+                'error' => $e->getMessage(),
+                'path' => $path,
+                'method' => $request->getMethod()
+            ]);
+            
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Unable to connect to Python API server',
+                'details' => $e->getMessage(),
+                'path' => $path,
+                'url' => $this->agentApiUrl . '/' . $path
+            ], 500, $this->addCorsHeaders());
+        }
+    }
+
     #[Route('/api/config', name: 'api_config', methods: ['GET'])]
     public function getConfiguration(): JsonResponse
     {
