@@ -1570,7 +1570,6 @@ document.addEventListener('DOMContentLoaded', function() {
                   const data = JSON.parse(line.slice(6));
                   
                   if (data.type === 'content' && data.chunk) {
-                    console.log('📝 Received chunk:', data.chunk);
                     assistantMessage += data.chunk;
                     // Update immediately for responsive streaming
                     updateStreamingMessage(assistantMessageElement, assistantMessage);

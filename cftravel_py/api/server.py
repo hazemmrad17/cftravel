@@ -261,4 +261,16 @@ if static_dir.exists():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8002) 
+    import os
+    
+    # Environment-based configuration
+    host = os.getenv("API_HOST", "0.0.0.0")
+    
+    # Use different ports for local vs production
+    if os.getenv("ENVIRONMENT", "local") == "production":
+        port = int(os.getenv("API_PORT", "8000"))
+    else:
+        port = int(os.getenv("API_PORT", "8002"))
+    
+    logger.info(f"🚀 Starting ASIA.fr Agent API on {host}:{port}")
+    uvicorn.run(app, host=host, port=port, log_level="info") 

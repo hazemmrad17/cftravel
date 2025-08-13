@@ -20,7 +20,14 @@ class ChatController extends AbstractController
     {
         $this->httpClient = $httpClient;
         $this->logger = $logger;
-        $this->agentApiUrl = $_ENV['AGENT_API_URL'] ?? 'http://localhost:8000';
+        
+        // Environment-based API URL configuration
+        $environment = $_ENV['ENVIRONMENT'] ?? 'local';
+        if ($environment === 'production') {
+            $this->agentApiUrl = $_ENV['AGENT_API_URL'] ?? 'https://asia-iagent.cftravel.net';
+        } else {
+            $this->agentApiUrl = $_ENV['AGENT_API_URL'] ?? 'http://localhost:8002';
+        }
     }
 
     private function addCorsHeaders(array $headers = []): array
