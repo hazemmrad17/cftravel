@@ -1,0 +1,75 @@
+{# Chat Message Component #}
+{% macro userMessage(message) %}
+    <div class="flex justify-end mb-6">
+        <div class="bg-chat-user shadow-theme-xs rounded-3xl rounded-tr-lg py-4 px-5 max-w-md" style="background-color: #8B0000 !important;">
+            <p class="text-white dark:text-white/90 font-normal">
+                {{ message|nl2br }}
+            </p>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro aiMessage(message, isError = false, shouldStream = false) %}
+    <div class="flex justify-start mb-6">
+        {% if shouldStream %}
+            <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl {% if isError %}bg-red-100 dark:bg-red-500 text-red-700 dark:text-white{% endif %}">
+                <p class="text-gray-800 dark:text-white/90 font-normal message-text streaming" style="opacity: 0.8;">
+                    <span class="loader" style="margin-right: 8px;"></span>L'IA prépare votre réponse...
+                </p>
+            </div>
+        {% else %}
+            <div class="bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl {% if isError %}bg-red-100 dark:bg-red-500 text-red-700 dark:text-white{% endif %}">
+                {% if message contains '•' %}
+                    {% set parts = message|split('•') %}
+                    {% set intro = parts[0]|trim %}
+                    {% set bulletPoints = parts|slice(1)|map(point => point|trim)|filter(point => point != '') %}
+                    
+                    {% if intro %}
+                        <div class="mb-3">{{ intro }}</div>
+                    {% endif %}
+                    
+                    {% if bulletPoints|length > 0 %}
+                        <ul class="list-none space-y-2 mt-3">
+                            {% for point in bulletPoints %}
+                                <li class="flex items-start">
+                                    <span class="text-gray-600 dark:text-gray-400 mr-2 mt-1">•</span>
+                                    <span>{{ point }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% else %}
+                    <p class="text-gray-800 dark:text-white/90 font-normal">
+                        {{ message|replace({'\n\n': '<br><br>', '\n': '<br>'})|raw }}
+                    </p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro offerCard(offer) %}
+    <div style="margin: 1em 0; padding: 1em; border: 1px solid #eee; border-radius: 8px; background: #fafbff; transition: all 0.2s ease;">
+        <strong style="font-size: 1.1em;">{{ offer.product_name|default('') }}</strong><br>
+        {% if offer.highlights and offer.highlights|length > 0 %}
+            <ul style="margin: 0.5em 0 0.5em 1em;">
+                {% for highlight in offer.highlights %}
+                    <li><strong>{{ highlight.title|default('') }}:</strong> {{ highlight.text|default('') }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <span>{{ offer.description|default('') }}</span><br>
+        <a href="{{ offer.price_url|default('#') }}" target="_blank" style="color: #dc2626; text-decoration: none; font-weight: 500;">Voir l'offre</a>
+    </div>
+{% endmacro %}
+
+{% macro loadingIndicator() %}
+    <div class="flex justify-start mb-6">
+        <div class="bg-white dark:bg-gray-800 shadow-2xl rounded-3xl rounded-bl-lg p-6 max-w-md border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center space-x-3">
+                <div class="loader"></div>
+                <span class="text-gray-600 dark:text-gray-300">L'IA prépare votre réponse...</span>
+            </div>
+        </div>
+    </div>
+{% endmacro %} 

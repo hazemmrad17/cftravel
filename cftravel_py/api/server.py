@@ -11,6 +11,7 @@ from fastapi.templating import Jinja2Templates
 import json
 import asyncio
 import logging
+import time
 from typing import Dict, Any, List
 import os
 from pathlib import Path
@@ -19,6 +20,8 @@ from pathlib import Path
 from pipelines.modular_pipeline import ASIAModularPipeline
 from services.memory_service import MemoryService
 
+from services.backup_model_service import backup_model_service
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -26,25 +29,42 @@ logger = logging.getLogger(__name__)
 # Initialize FastAPI app
 app = FastAPI(title="ASIA.fr Agent API", version="1.0.0")
 
-# Add CORS middleware for production
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://ovg-iagent.cftravel.net",
-        "https://iagent.cftravel.net",
-        "http://ovg-iagent.cftravel.net",
-        "http://iagent.cftravel.net", 
-        "http://localhost:8000",
-        "http://localhost:8002",
-        "http://localhost:3000",
-        "http://127.0.0.1:8000",
-        "http://127.0.0.1:8002",
-        "http://127.0.0.1:3000"
-    ],
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
-)
+# Import unified configuration
+from core.unified_config import unified_config
+
+# Add CORS middleware using unified configuration
+try:
+    cors_config = unified_config.get_cors()
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=cors_config['allowed_origins'],
+        allow_credentials=cors_config['allow_credentials'],
+        allow_methods=cors_config['allowed_methods'],
+        allow_headers=cors_config['allowed_headers'],
+    )
+except Exception as e:
+    logger.warning(f"⚠️ Using fallback CORS configuration: {e}")
+    # Fallback CORS configuration
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            'https://ovg-iagent.cftravel.net',
+            'https://iagent.cftravel.net',
+            'http://ovg-iagent.cftravel.net',
+            'http://iagent.cftravel.net',
+            'http://localhost:8000',
+            'http://localhost:8001',
+            'http://localhost:8002',
+            'http://localhost:3000',
+            'http://127.0.0.1:8000',
+            'http://127.0.0.1:8001',
+            'http://127.0.0.1:8002',
+            'http://127.0.0.1:3000'
+        ],
+        allow_credentials=True,
+        allow_methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allow_headers=['*'],
+    )
 
 # Global variables for lazy loading
 _pipeline = None
@@ -133,6 +153,11 @@ async def clear_memory(request: Request):
         logger.error(f"❌ Error clearing memory: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/chat/memory/clear")
+async def clear_memory_chat(request: Request):
+    """Clear conversation memory - chat endpoint"""
+    return await clear_memory(request)
+
 @app.post("/chat/stream")
 async def chat_stream(request: Request):
     """Streaming chat endpoint with optimized performance"""
@@ -159,20 +184,19 @@ async def chat_stream(request: Request):
                 # Extract response text
                 response_text = result.get("response", "") if isinstance(result, dict) else str(result)
                 
-                # Check if we need to show preference confirmation
-                if isinstance(result, dict) and result.get("offers"):
-                    # Extract user preferences from the result
-                    user_preferences = result.get("user_preferences", {})
-                    offers = result["offers"]
+                # Check if we need confirmation FIRST (before offers)
+                if isinstance(result, dict) and result.get("needs_confirmation"):
+                    # Send confirmation data
+                    confirmation_data = {
+                        'type': 'confirmation',
+                        'needs_confirmation': True,
+                        'user_preferences': result.get("preferences", {}),
+                        'confirmation_summary': result.get("response", "")
+                    }
+                    yield f"data: {json.dumps(confirmation_data)}\n\n"
                     
-                    # Generate preference summary using LLM
-                    preference_summary = await _generate_preference_summary(user_preferences)
-                    
-                    # Send confirmation data with preferences and offers
-                    yield f"data: {json.dumps({'type': 'confirmation', 'needs_confirmation': True, 'user_preferences': user_preferences, 'offers': [offer.model_dump() if hasattr(offer, 'model_dump') else offer for offer in offers]})}\n\n"
-                    
-                    # Send the preference summary as content
-                    words = preference_summary.split()
+                    # Send the response text as content
+                    words = response_text.split()
                     for i, word in enumerate(words):
                         if i > 0:
                             yield f"data: {json.dumps({'type': 'content', 'chunk': ' ' + word})}\n\n"
@@ -185,6 +209,20 @@ async def chat_stream(request: Request):
                                 delay += 0.1
                             await asyncio.sleep(delay)
                     
+                    yield f"data: {json.dumps({'type': 'end'})}\n\n"
+                    return
+                
+                # Check if we need to show offers (only after confirmation)
+                if isinstance(result, dict) and result.get("offers"):
+                    # Send offers data first
+                    offers = result["offers"]
+                    yield f"data: {json.dumps({'type': 'offers', 'offers': [offer.model_dump() if hasattr(offer, 'model_dump') else offer for offer in offers]})}\n\n"
+                    
+                    # For offers, send a short intro message only
+                    intro_message = "Voici les offres qui correspondent parfaitement à vos critères :"
+                    yield f"data: {json.dumps({'type': 'content', 'chunk': intro_message})}\n\n"
+                    
+                    # Send end marker immediately after offers
                     yield f"data: {json.dumps({'type': 'end'})}\n\n"
                     return
                 
@@ -231,63 +269,6 @@ async def chat_stream(request: Request):
         logger.error(f"❌ Error in chat stream: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-async def _generate_preference_summary(preferences: Dict) -> str:
-    """Generate a natural preference summary using LLM"""
-    try:
-        prompt = f"""
-You are ASIA.fr Agent, a friendly French travel specialist. Generate a natural summary of the user's travel preferences.
-
-USER PREFERENCES: {json.dumps(preferences, indent=2, ensure_ascii=False)}
-
-Generate a warm, natural summary in French that:
-1. Acknowledges their preferences with enthusiasm
-2. Summarizes their choices in a friendly way
-3. Asks for confirmation before showing offers
-4. Sounds conversational and excited
-
-Example: "Parfait ! J'ai bien noté que vous souhaitez partir au Japon pendant deux semaines avec un budget moyen pour un voyage culturel. Tout semble complet de mon côté ! Je suis prêt à vous proposer des offres personnalisées qui correspondent exactement à vos critères. Je vous propose donc 3 formules culturelles exceptionnelles pour votre séjour de 14 jours au Japon. Ça vous convient si je vous les présente maintenant ?"
-
-Keep it warm, natural and conversational. Don't use any hardcoded phrases like "Voici les offres qui correspondent parfaitement à vos critères".
-
-RESPOND ONLY WITH THE SUMMARY:
-"""
-        
-        # Use the pipeline's LLM service to generate the summary
-        pipeline = get_pipeline()
-        if hasattr(pipeline, 'services') and 'llm' in pipeline.services:
-            response = await pipeline.services['llm'].generate_text(prompt, model="generator")
-            return response.strip()
-        else:
-            # Fallback if LLM service not available
-            return _generate_fallback_preference_summary(preferences)
-            
-    except Exception as e:
-        logger.error(f"❌ Failed to generate preference summary: {e}")
-        return _generate_fallback_preference_summary(preferences)
-
-def _generate_fallback_preference_summary(preferences: Dict) -> str:
-    """Generate a simple fallback preference summary"""
-    parts = []
-    
-    if preferences.get('destination'):
-        parts.append(f"partir à {preferences['destination']}")
-    
-    if preferences.get('duration'):
-        parts.append(f"pendant {preferences['duration']}")
-    
-    if preferences.get('budget'):
-        parts.append(f"avec un budget {preferences['budget']}")
-    
-    if preferences.get('style'):
-        parts.append(f"pour un voyage {preferences['style']}")
-    
-    if parts:
-        summary = f"Parfait ! J'ai bien noté que vous souhaitez {' '.join(parts)}. Tout semble complet de mon côté ! Je suis prêt à vous proposer des offres personnalisées qui correspondent exactement à vos critères. Ça vous convient si je vous les présente maintenant ?"
-    else:
-        summary = "Parfait ! J'ai toutes les informations nécessaires pour vous proposer des offres personnalisées. Ça vous convient si je vous les présente maintenant ?"
-    
-    return summary
-
 @app.post("/chat")
 async def chat(request: Request):
     """Regular chat endpoint (fallback for non-streaming)"""
@@ -328,6 +309,144 @@ async def chat(request: Request):
         logger.error(f"❌ Error in regular chat: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/status")
+async def get_status():
+    """Get agent status"""
+    return {
+        "status": "online",
+        "agent": "Layla",
+        "version": "1.0.0",
+        "timestamp": time.time()
+    }
+
+@app.get("/models")
+async def get_models():
+    """Get model configuration and status"""
+    try:
+        ai_config = unified_config.get_ai()
+        models = ai_config.get('models', {})
+        switches = ai_config.get('model_switches', {})
+        available_models = ai_config.get('available_models', {})
+        
+        return {
+            "status": "success",
+            "models": models,
+            "switches": switches,
+            "available_models": available_models,
+            "provider": ai_config.get('provider', 'groq')
+        }
+    except Exception as e:
+        logger.error(f"Error getting models: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/models/switches")
+async def get_model_switches():
+    """Get current state of all model switches"""
+    try:
+        ai_config = unified_config.get_ai()
+        switches = ai_config.get('model_switches', {})
+        
+        return {
+            "status": "success",
+            "switches": switches
+        }
+    except Exception as e:
+        logger.error(f"Error getting model switches: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/models/validation")
+async def validate_models():
+    """Validate current model configuration"""
+    try:
+        ai_config = unified_config.get_ai()
+        api_key = ai_config.get('api_key')
+        
+        validation = {
+            "api_key_configured": bool(api_key),
+            "provider": ai_config.get('provider', 'groq'),
+            "models_configured": len(ai_config.get('models', {})) > 0,
+            "switches_configured": len(ai_config.get('model_switches', {})) > 0
+        }
+        
+        return {
+            "status": "success",
+            "validation": validation
+        }
+    except Exception as e:
+        logger.error(f"Error validating models: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# =============================================================================
+# BACKUP MODEL ENDPOINTS
+# =============================================================================
+
+@app.get("/models/backup/status")
+async def get_backup_model_status():
+    """Get status of all backup models"""
+    try:
+        status = backup_model_service.get_all_model_status()
+        return {
+            "status": "success",
+            "backup_models": status
+        }
+    except Exception as e:
+        logger.error(f"Error getting backup model status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/models/backup/test")
+async def test_backup_models():
+    """Test all backup models and return their status"""
+    try:
+        results = await backup_model_service.test_all_models()
+        return {
+            "status": "success",
+            "test_results": results
+        }
+    except Exception as e:
+        logger.error(f"Error testing backup models: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/models/backup/{model_type}")
+async def get_backup_models_for_type(model_type: str):
+    """Get backup models for a specific type"""
+    try:
+        primary_config = backup_model_service.get_model_config(model_type)
+        backup_models = backup_model_service.get_backup_models(model_type)
+        
+        return {
+            "status": "success",
+            "model_type": model_type,
+            "primary": primary_config,
+            "backups": backup_models
+        }
+    except Exception as e:
+        logger.error(f"Error getting backup models for {model_type}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/models/backup/test/{model_type}")
+async def test_specific_model_type(model_type: str):
+    """Test a specific model type with all its backup models"""
+    try:
+        primary_config = backup_model_service.get_model_config(model_type)
+        backup_models = backup_model_service.get_backup_models(model_type)
+        
+        results = {
+            "model_type": model_type,
+            "primary": await backup_model_service.test_model(primary_config),
+            "backups": {}
+        }
+        
+        for backup in backup_models:
+            results["backups"][f"backup_{backup.get('priority', 'unknown')}"] = await backup_model_service.test_model(backup)
+        
+        return {
+            "status": "success",
+            "test_results": results
+        }
+    except Exception as e:
+        logger.error(f"Error testing model type {model_type}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Mount static files
 static_dir = Path(__file__).parent.parent.parent / "public"
 if static_dir.exists():
@@ -337,14 +456,16 @@ if __name__ == "__main__":
     import uvicorn
     import os
     
-    # Environment-based configuration
-    host = os.getenv("API_HOST", "0.0.0.0")
+    # Get server configuration from unified config
+    server_config = unified_config.get_server('backend')
+    host = server_config.get('host', '0.0.0.0')
+    port = server_config.get('port', 8000)
     
-    # Use different ports for local vs production
-    if os.getenv("ENVIRONMENT", "local") == "production":
-        port = int(os.getenv("API_PORT", "8000"))
-    else:
-        port = int(os.getenv("API_PORT", "8002"))
+    # Log configuration on startup
+    unified_config.log_config()
     
     logger.info(f"🚀 Starting ASIA.fr Agent API on {host}:{port}")
+    logger.info(f"🔧 Environment: {unified_config.get_environment()}")
+    logger.info(f"🔧 Debug Mode: {unified_config.is_debug()}")
+    
     uvicorn.run(app, host=host, port=port, log_level="info") 

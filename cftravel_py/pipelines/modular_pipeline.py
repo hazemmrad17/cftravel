@@ -199,6 +199,7 @@ class ASIAModularPipeline:
                 'offers': offers,
                 'intent': orchestration_result.get('intent', 'general'),
                 'should_show_offers': context.get_metadata('should_show_offers', False),
+                'needs_confirmation': context.get_metadata('needs_confirmation', False),
                 'preferences': context.user_preferences,
                 'metadata': {
                     'turn_count': context.turn_count,

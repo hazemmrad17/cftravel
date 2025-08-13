@@ -94,7 +94,10 @@ class PreferenceExtractorComponent(PipelineComponent):
                 
                 # Update memory service
                 self.memory_service.update_user_preferences(context.conversation_id, merged_preferences)
-                self.logger.info(f"📊 Extracted preferences: {merged_preferences}")
+                self.logger.info(f"📊 EXTRACTED PREFERENCES: {merged_preferences}")
+                self.logger.info(f"📊 UPDATED CONTEXT PREFERENCES: {context.user_preferences}")
+            else:
+                self.logger.info(f"📊 NO PREFERENCES EXTRACTED from: {context.user_input}")
             
             # Store extraction metadata
             context.add_metadata('extracted_preferences', merged_preferences)
@@ -185,7 +188,8 @@ class PreferenceExtractorComponent(PipelineComponent):
         prompt = self._build_extraction_prompt(context)
         
         try:
-            response = await self.llm_service.generate_text(prompt, model="extractor")
+            messages = [{"role": "user", "content": prompt}]
+            response = await self.llm_service.create_extractor_completion(messages, stream=False)
             return self._parse_extraction_response(response)
         except Exception as e:
             self.logger.error(f"❌ LLM preference extraction failed: {e}")

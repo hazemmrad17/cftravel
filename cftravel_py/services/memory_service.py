@@ -3,12 +3,29 @@ Memory service for ASIA.fr Agent
 """
 
 import logging
+from dataclasses import dataclass
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 from core.exceptions import MemoryError
-from models.llm_models import Conversation, ConversationMessage
 
 logger = logging.getLogger(__name__)
+
+@dataclass
+class ConversationMessage:
+    """Model for conversation messages"""
+    role: str  # "user", "assistant", "system"
+    content: str
+    timestamp: str
+    metadata: Optional[Dict[str, Any]] = None
+
+@dataclass
+class Conversation:
+    """Model for conversation context"""
+    id: str
+    messages: List[ConversationMessage]
+    created_at: str
+    updated_at: str
+    user_preferences: Optional[Dict[str, Any]] = None
 
 class MemoryService:
     """Service for managing conversation memory"""

@@ -101,6 +101,40 @@ return [
         ],
         
         // =============================================================================
+        // MODEL CONFIGURATIONS
+        // =============================================================================
+        'models' => [
+            'reasoning' => [
+                'name' => 'moonshotai/kimi-k2-instruct',
+                'temperature' => 0.7,
+                'max_tokens' => 4000,
+                'top_p' => 0.9,
+                'enabled' => true
+            ],
+            'generation' => [
+                'name' => 'moonshotai/kimi-k2-instruct',
+                'temperature' => 0.8,
+                'max_tokens' => 4000,
+                'top_p' => 0.9,
+                'enabled' => true
+            ],
+            'matcher' => [
+                'name' => 'moonshotai/kimi-k2-instruct',
+                'temperature' => 0.3,
+                'max_tokens' => 2000,
+                'top_p' => 0.8,
+                'enabled' => true
+            ],
+            'extractor' => [
+                'name' => 'moonshotai/kimi-k2-instruct',
+                'temperature' => 0.1,
+                'max_tokens' => 2000,
+                'top_p' => 0.7,
+                'enabled' => true
+            ]
+        ],
+        
+        // =============================================================================
         // AVAILABLE MODELS (Model Library)
         // =============================================================================
         'available_models' => [
@@ -128,98 +162,6 @@ return [
                 'llama-3.1-8b-instant' => 'Fast French responses',
                 'mixtral-8x7b-32768' => 'Good French support'
             ]
-        ],
-        
-        // =============================================================================
-        // ACTIVE MODEL CONFIGURATION (Currently Selected Models)
-        // =============================================================================
-        'models' => [
-            'reasoning' => [
-                'name' => 'llama-3.1-70b-versatile',  // Primary model - available on Groq
-                'temperature' => 0.6,
-                'max_tokens' => 4096,
-                'top_p' => 0.95,
-                'enabled' => true,
-                'backup_models' => [
-                    [
-                        'name' => 'llama-3.1-8b-instant',
-                        'temperature' => 0.8,
-                        'max_tokens' => 4096,
-                        'top_p' => 0.95,
-                        'priority' => 1
-                    ],
-                    [
-                        'name' => 'mixtral-8x7b-32768',
-                        'temperature' => 0.6,
-                        'max_tokens' => 4096,
-                        'top_p' => 0.95,
-                        'priority' => 2
-                    ]
-                ]
-            ],
-            'generation' => [
-                'name' => 'llama-3.1-70b-versatile',  // Primary model - available on Groq
-                'temperature' => 0.7,
-                'max_tokens' => 2048,
-                'enabled' => true,
-                'backup_models' => [
-                    [
-                        'name' => 'llama-3.1-8b-instant',
-                        'temperature' => 0.8,
-                        'max_tokens' => 2048,
-                        'top_p' => 0.95,
-                        'priority' => 1
-                    ],
-                    [
-                        'name' => 'mixtral-8x7b-32768',
-                        'temperature' => 0.7,
-                        'max_tokens' => 2048,
-                        'top_p' => 0.95,
-                        'priority' => 2
-                    ]
-                ]
-            ],
-            'matcher' => [
-                'name' => 'llama-3.1-70b-versatile',  // Primary model - available on Groq
-                'temperature' => 0.5,
-                'max_tokens' => 2048,
-                'enabled' => true,
-                'backup_models' => [
-                    [
-                        'name' => 'llama-3.1-8b-instant',
-                        'temperature' => 0.6,
-                        'max_tokens' => 2048,
-                        'top_p' => 0.95,
-                        'priority' => 1
-                    ]
-                ]
-            ],
-            'extractor' => [
-                'name' => 'llama-3.1-70b-versatile',  // Primary model - available on Groq
-                'temperature' => 0.1,
-                'max_tokens' => 1024,
-                'enabled' => true,
-                'backup_models' => [
-                    [
-                        'name' => 'llama-3.1-8b-instant',
-                        'temperature' => 0.2,
-                        'max_tokens' => 1024,
-                        'top_p' => 0.95,
-                        'priority' => 1
-                    ]
-                ]
-            ]
-        ],
-        
-        // =============================================================================
-        // MODEL SWITCHES (Enable/Disable specific model types)
-        // =============================================================================
-        'model_switches' => [
-            'use_reasoning_model' => true,
-            'use_generation_model' => true,
-            'use_matcher_model' => true,
-            'use_extractor_model' => true,
-            'use_embedding_model' => true
         ],
         
         // =============================================================================

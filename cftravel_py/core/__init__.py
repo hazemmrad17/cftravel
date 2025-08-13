@@ -2,7 +2,7 @@
 Core module for ASIA.fr Agent
 """             
 
-from .config import Config, LLMConfig
+
 from .exceptions import (
     ASIAException,
     ConfigurationError,
@@ -29,8 +29,6 @@ from .constants import (
 )
 
 __all__ = [
-    'Config',
-    'LLMConfig',
     'ASIAException',
     'ConfigurationError',
     'LLMError',

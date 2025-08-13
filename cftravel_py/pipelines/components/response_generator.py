@@ -28,7 +28,16 @@ class ResponseGeneratorComponent(PipelineComponent):
             response_type = context.get_metadata('response_type', 'question')
             intent = context.get_metadata('intent', 'general')
             
-            if context.get_metadata('should_show_offers', False):
+            if intent == 'preference_complete':
+                # Generate preference summary for confirmation (NO offers yet)
+                response = await self._generate_preference_summary_response(context)
+                context.add_metadata('needs_confirmation', True)
+            elif intent == 'confirmation':
+                # Generate confirmation response and show offers
+                response = await self._generate_confirmation_response(context)
+                # Set flag to show offers directly next time
+                context.add_metadata('show_preference_summary', False)
+            elif context.get_metadata('should_show_offers', False):
                 # Check if we should show preference summary first
                 if context.get_metadata('show_preference_summary', True):
                     # Generate preference summary response
@@ -36,11 +45,6 @@ class ResponseGeneratorComponent(PipelineComponent):
                 else:
                     # Generate offer presentation response
                     response = await self._generate_offer_response(context)
-            elif intent == 'confirmation':
-                # Generate confirmation response and show offers
-                response = await self._generate_confirmation_response(context)
-                # Set flag to show offers directly next time
-                context.add_metadata('show_preference_summary', False)
             elif intent == 'modification':
                 # Generate modification response
                 response = await self._generate_modification_response(context)
@@ -101,12 +105,13 @@ Keep it concise (2-3 sentences maximum).
 RESPOND ONLY WITH THE INTRODUCTION TEXT:
 """
             
-            response = await self.llm_service.generate_text(prompt, model="generator")
+            messages = [{"role": "user", "content": prompt}]
+            response = await self.llm_service.create_generation_completion(messages, stream=False)
             return response.strip()
             
         except Exception as e:
             self.logger.error(f"❌ Failed to generate offer intro: {e}")
-            return f"J'ai trouvé {len(offers)} offres parfaites pour vous !"
+            return f"Voici {len(offers)} offres qui correspondent parfaitement à vos critères :"
     
     async def _generate_confirmation_response(self, context: PipelineContext) -> Dict[str, Any]:
         """Generate response for user confirmations"""
@@ -127,7 +132,8 @@ Keep it warm and encouraging (1-2 sentences).
 RESPOND ONLY WITH THE CONFIRMATION TEXT:
 """
             
-            response = await self.llm_service.generate_text(prompt, model="generator")
+            messages = [{"role": "user", "content": prompt}]
+            response = await self.llm_service.create_generation_completion(messages, stream=False)
             return {
                 'text': response.strip(),
                 'type': 'confirmation'
@@ -161,7 +167,8 @@ Keep it conversational, warm and encouraging.
 RESPOND ONLY WITH THE MODIFICATION RESPONSE:
 """
             
-            response = await self.llm_service.generate_text(prompt, model="generator")
+            messages = [{"role": "user", "content": prompt}]
+            response = await self.llm_service.create_generation_completion(messages, stream=False)
             return {
                 'text': response.strip(),
                 'type': 'modification'
@@ -232,7 +239,8 @@ Keep it friendly, warm and encouraging - like talking to a friend!
 RESPOND ONLY WITH THE RESPONSE TEXT:
 """
             
-            response = await self.llm_service.generate_text(prompt, model="generator")
+            messages = [{"role": "user", "content": prompt}]
+            response = await self.llm_service.create_generation_completion(messages, stream=False)
             formatted_response = self._format_with_bullet_points(response.strip())
             return {
                 'text': formatted_response,

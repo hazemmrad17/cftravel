@@ -56,9 +56,9 @@ if (typeof UnifiedConfig === 'undefined') {
             // Force Symfony proxy if we're on a different port than the main server
             // or if explicitly requested via URL parameter
             const forceProxy = window.location.search.includes('proxy=true') || 
-                              (isLocal && port !== '8000' && port !== '80' && port !== '443');
+                              (isLocal && port === '8001'); // Force proxy for port 8001
             
-            const isLocalDevelopment = isLocal && !forceProxy && (port === '8001' || port === '8000');
+            const isLocalDevelopment = isLocal && !forceProxy && port === '8000';
             
             return {
                 environment: isLocalDevelopment ? 'local' : 'production',
@@ -106,25 +106,25 @@ if (typeof UnifiedConfig === 'undefined') {
                     api_key: null,
                     models: {
                         reasoning: {
-                            name: 'llama-3.1-70b-versatile',
+                            name: 'moonshotai/kimi-k2-instruct',
                             temperature: 0.7,
                             max_tokens: 4000,
                             top_p: 0.9
                         },
                         generation: {
-                            name: 'llama-3.1-70b-versatile',
+                            name: 'moonshotai/kimi-k2-instruct',
                             temperature: 0.8,
                             max_tokens: 4000,
                             top_p: 0.9
                         },
                         matcher: {
-                            name: 'llama-3.1-70b-versatile',
+                            name: 'moonshotai/kimi-k2-instruct',
                             temperature: 0.3,
                             max_tokens: 2000,
                             top_p: 0.8
                         },
                         extractor: {
-                            name: 'llama-3.1-70b-versatile',
+                            name: 'moonshotai/kimi-k2-instruct',
                             temperature: 0.1,
                             max_tokens: 2000,
                             top_p: 0.7
@@ -140,12 +140,11 @@ if (typeof UnifiedConfig === 'undefined') {
                     backup_models: {
                         reasoning: [
                             {
-                                name: 'llama-3.1-70b-versatile',
+                                name: 'moonshotai/kimi-k2-instruct',
                                 temperature: 0.7,
                                 max_tokens: 4000,
                                 top_p: 0.9,
-                                priority: 1,
-                                reasoning_effort: 'high'
+                                priority: 1
                             },
                             {
                                 name: 'llama-3.1-8b-instant',
@@ -158,12 +157,11 @@ if (typeof UnifiedConfig === 'undefined') {
                         ],
                         generation: [
                             {
-                                name: 'llama-3.1-70b-versatile',
+                                name: 'moonshotai/kimi-k2-instruct',
                                 temperature: 0.8,
                                 max_tokens: 4000,
                                 top_p: 0.9,
-                                priority: 1,
-                                reasoning_effort: 'high'
+                                priority: 1
                             },
                             {
                                 name: 'llama-3.1-8b-instant',
@@ -176,12 +174,11 @@ if (typeof UnifiedConfig === 'undefined') {
                         ],
                         matcher: [
                             {
-                                name: 'llama-3.1-70b-versatile',
+                                name: 'moonshotai/kimi-k2-instruct',
                                 temperature: 0.3,
                                 max_tokens: 2000,
                                 top_p: 0.8,
-                                priority: 1,
-                                reasoning_effort: 'high'
+                                priority: 1
                             },
                             {
                                 name: 'llama-3.1-8b-instant',
@@ -194,12 +191,11 @@ if (typeof UnifiedConfig === 'undefined') {
                         ],
                         extractor: [
                             {
-                                name: 'llama-3.1-70b-versatile',
+                                name: 'moonshotai/kimi-k2-instruct',
                                 temperature: 0.1,
                                 max_tokens: 2000,
                                 top_p: 0.7,
-                                priority: 1,
-                                reasoning_effort: 'high'
+                                priority: 1
                             },
                             {
                                 name: 'llama-3.1-8b-instant',

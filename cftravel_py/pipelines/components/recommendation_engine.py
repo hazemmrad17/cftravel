@@ -215,7 +215,20 @@ class RecommendationEngineComponent(PipelineComponent):
         """Use sentence transformer to find similar offers"""
         try:
             offers = self.semantic_service.search(query, top_k=top_k)
-            return offers
+            
+            # Deduplicate offers by product name
+            seen_product_names = set()
+            unique_offers = []
+            
+            for offer in offers:
+                product_name = offer.get('product_name', '')
+                if product_name and product_name not in seen_product_names:
+                    unique_offers.append(offer)
+                    seen_product_names.add(product_name)
+            
+            self.logger.info(f"🔍 Found {len(offers)} offers, {len(unique_offers)} unique after deduplication")
+            return unique_offers
+            
         except Exception as e:
             self.logger.error(f"❌ Vector search failed: {e}")
             return []
@@ -244,7 +257,8 @@ class RecommendationEngineComponent(PipelineComponent):
             prompt = self._build_ranking_prompt(simplified_offers, preferences)
             
             # Get LLM ranking
-            response = await self.llm_service.generate_text(prompt, model="matcher")
+            messages = [{"role": "user", "content": prompt}]
+            response = await self.llm_service.create_matcher_completion(messages, stream=False)
             ranked_offers = self._parse_ranking_response(response, vector_results)
             
             return ranked_offers[:max_offers]
@@ -283,15 +297,18 @@ RESPOND ONLY WITH VALID JSON ARRAY:
                 # Create mapping of product names to original offers
                 offer_map = {offer['product_name']: offer for offer in original_offers}
                 
-                # Build ranked list
+                # Build ranked list with deduplication
                 ranked_offers = []
+                seen_product_names = set()
+                
                 for ranked_item in ranking:
                     product_name = ranked_item.get('product_name')
-                    if product_name in offer_map:
+                    if product_name in offer_map and product_name not in seen_product_names:
                         offer = offer_map[product_name].copy()
                         offer['match_score'] = ranked_item.get('match_score', 0.5)
                         offer['match_reasoning'] = ranked_item.get('reasoning', '')
                         ranked_offers.append(offer)
+                        seen_product_names.add(product_name)
                 
                 # Sort by match score
                 ranked_offers.sort(key=lambda x: x.get('match_score', 0), reverse=True)

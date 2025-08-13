@@ -1,203 +1,184 @@
 """
-LLM Factory for Layla Travel Agent
-Only supports Groq models
+LLM Service with Backup Model Support
+====================================
+Enhanced LLM service that uses priority-based backup models with automatic fallback.
 """
 
-from typing import Optional
-from langchain_openai import ChatOpenAI
-from core.config import LLMConfig
+import logging
+from typing import Dict, List, Optional, Any, Generator
+from groq import Groq, GroqError
+from core.unified_config import unified_config
+from services.backup_model_service import backup_model_service
 
-class LLMFactory:
-    """Factory for creating Groq LLM instances"""
-    
-    @staticmethod
-    def create_llm(config: LLMConfig) -> any:
-        """Create LLM instance based on configuration"""
-        if config.provider != "groq":
-            raise ValueError("Only Groq provider is supported")
-        return LLMFactory._create_groq_llm(config)
-    
-    @staticmethod
-    def _create_groq_llm(config: LLMConfig) -> ChatOpenAI:
-        """Create Groq LLM using OpenAI-compatible interface"""
-        print("\n=== DEBUG: Groq Configuration ===")
-        print(f"Provider: {config.provider}")
-        print(f"API Key present: {'Yes' if config.api_key else 'No'}")
-        if config.api_key:
-            print(f"API Key starts with: {config.api_key[:5]}...{config.api_key[-3:]}")
-        print(f"Model: {config.model_name}")
-        print(f"Base URL: {config.base_url}")
-        print(f"Temperature: {config.temperature}")
-        print(f"Max Tokens: {config.max_tokens}")
-        print("============================\n")
-        
-        if not config.api_key:
-            raise ValueError("Groq API key is required")
-        
-        try:
-            print("\n=== DEBUG: Creating ChatOpenAI instance ===")
-            llm = ChatOpenAI(
-                model=config.model_name,
-                temperature=config.temperature,
-                openai_api_key=config.api_key,
-                max_tokens=config.max_tokens,
-                base_url=config.base_url,
-                request_timeout=10  # Add timeout to prevent hanging
-            )
-            print("ChatOpenAI instance created successfully")
-            print("Testing API call...")
-            # Test the API with a simple call
-            test_prompt = "Hello, this is a test. Please respond with 'OK'"
-            response = llm.invoke(test_prompt)
-            print(f"API Test Response: {response}")
-            print("API Test Successful!")
-            print("============================\n")
-            return llm
-        except Exception as e:
-            print("\n=== DEBUG: Error during API call ===")
-            print(f"Error Type: {type(e).__name__}")
-            print(f"Error Message: {str(e)}")
-            if hasattr(e, 'response') and hasattr(e.response, 'text'):
-                print(f"Response: {e.response.text}")
-            print("============================\n")
-            raise
-    
-
-
-class ReasoningLLM:
-    """Enhanced LLM with reasoning capabilities"""
-    
-    def __init__(self, llm: any):
-        self.llm = llm
-        self.thought_process = []
-    
-    def reason(self, prompt: str, context: str = "") -> str:
-        """Generate response with reasoning process"""
-        reasoning_prompt = f"""
-You are Layla, an intelligent travel agent. Think through your response step by step.
-
-Context: {context}
-
-User Request: {prompt}
-
-Think through this step by step:
-1. What does the user want?
-2. What preferences can I infer?
-3. What travel offers would match these preferences?
-4. How should I explain my reasoning?
-
-Now provide your response with clear reasoning:
-"""
-        
-        response = self.llm.invoke(reasoning_prompt)
-        return response.content if hasattr(response, 'content') else str(response)
-    
-    def chain_of_thought(self, prompt: str) -> dict:
-        """Generate response with explicit chain of thought"""
-        cot_prompt = f"""
-You are Layla, an intelligent travel agent. Use chain of thought reasoning.
-
-User Request: {prompt}
-
-Let me think through this step by step:
-
-1. Understanding the request:
-2. Inferring preferences:
-3. Matching to travel offers:
-4. Formulating response:
-
-Response:
-"""
-        
-        response = self.llm.invoke(cot_prompt)
-        return {
-            "reasoning": cot_prompt,
-            "response": response.content if hasattr(response, 'content') else str(response)
-        }
-
+logger = logging.getLogger(__name__)
 
 class LLMService:
-    """Service wrapper for LLM operations"""
+    """
+    Enhanced LLM service with backup model support
+    """
     
     def __init__(self):
-        self._llm_instances = {}
-        self._configs = {}
-        self._setup_configs()
+        self.config = unified_config.get_ai()
+        api_key = self.config.get('api_key')
+        if not api_key:
+            logger.warning("⚠️ No API key found in LLMService. Some features may not work properly.")
+            self.client = None
+        else:
+            self.client = Groq(api_key=api_key)
+        self.models = self.config.get('models', {})
+        
+        # Log model configuration on startup
+        self._log_model_configuration()
     
-    def _setup_configs(self):
-        """Setup different LLM configurations for different use cases"""
-        from core.config import config
+    def _log_model_configuration(self):
+        """Log the current model configuration"""
+        logger.info("🤖 LLM Service Configuration:")
         
-        base_config = config
+        for model_type in ['reasoning', 'generation', 'matcher', 'extractor']:
+            model_config = self.models.get(model_type, {})
+            primary_name = model_config.get('name', 'N/A')
+            backup_count = len(model_config.get('backup_models', []))
+            
+            logger.info(f"  {model_type.upper()}:")
+            logger.info(f"    Primary: {primary_name}")
+            logger.info(f"    Backups: {backup_count} models")
+            
+            # Log backup models
+            for backup in model_config.get('backup_models', []):
+                logger.info(f"      Backup {backup.get('priority')}: {backup.get('name')}")
+    
+    async def create_completion(
+        self,
+        model_type: str,
+        messages: List[Dict[str, str]],
+        stream: bool = True,
+        **kwargs
+    ) -> Any:
+        """
+        Create completion with automatic backup model fallback
         
-        # Different configurations for different models
-        self._configs = {
-            "orchestrator": LLMConfig(
-                provider="groq",
-                api_key=base_config.groq_api_key,
-                base_url=base_config.groq_base_url,
-                model_name="moonshotai/kimi-k2-instruct",
-                temperature=0.1,
-                max_tokens=2048
-            ),
-            "extractor": LLMConfig(
-                provider="groq",
-                api_key=base_config.groq_api_key,
-                base_url=base_config.groq_base_url,
-                model_name="moonshotai/kimi-k2-instruct",
-                temperature=0.1,
-                max_tokens=1024
-            ),
-            "matcher": LLMConfig(
-                provider="groq",
-                api_key=base_config.groq_api_key,
-                base_url=base_config.groq_base_url,
-                model_name="moonshotai/kimi-k2-instruct",
-                temperature=0.3,
-                max_tokens=2048
-            ),
-            "generator": LLMConfig(
-                provider="groq",
-                api_key=base_config.groq_api_key,
-                base_url=base_config.groq_base_url,
-                model_name="moonshotai/kimi-k2-instruct",
-                temperature=0.7,
-                max_tokens=2048
-            ),
-            "default": LLMConfig(
-                provider="groq",
-                api_key=base_config.groq_api_key,
-                base_url=base_config.groq_base_url,
-                model_name="moonshotai/kimi-k2-instruct",
-                temperature=0.5,
-                max_tokens=2048
+        Args:
+            model_type: Type of model (reasoning, generation, matcher, extractor)
+            messages: List of message dictionaries
+            stream: Whether to stream the response
+            **kwargs: Additional parameters
+        
+        Returns:
+            Completion response or generator
+        """
+        try:
+            return await backup_model_service.create_completion_with_fallback(
+                model_type=model_type,
+                messages=messages,
+                stream=stream,
+                **kwargs
             )
-        }
-    
-    def _get_llm(self, model: str = "default"):
-        """Get or create LLM instance for the specified model"""
-        if model not in self._llm_instances:
-            config = self._configs.get(model, self._configs["default"])
-            self._llm_instances[model] = LLMFactory.create_llm(config)
-        return self._llm_instances[model]
-    
-    async def generate_text(self, prompt: str, model: str = "default") -> str:
-        """Generate text using the specified model"""
-        try:
-            llm = self._get_llm(model)
-            response = llm.invoke(prompt)
-            return response.content if hasattr(response, 'content') else str(response)
         except Exception as e:
-            print(f"❌ LLM generation failed: {e}")
-            # Return a fallback response
-            return "Je suis désolé, j'ai rencontré une difficulté technique. Pouvez-vous reformuler votre demande ?"
+            logger.error(f"❌ All models failed for {model_type}: {e}")
+            raise
     
-    def generate_text_sync(self, prompt: str, model: str = "default") -> str:
-        """Synchronous version of generate_text"""
+    async def create_reasoning_completion(
+        self,
+        messages: List[Dict[str, str]],
+        stream: bool = True,
+        **kwargs
+    ) -> Any:
+        """Create completion using reasoning model with backup fallback"""
+        return await self.create_completion('reasoning', messages, stream, **kwargs)
+    
+    async def create_generation_completion(
+        self,
+        messages: List[Dict[str, str]],
+        stream: bool = True,
+        **kwargs
+    ) -> Any:
+        """Create completion using generation model with backup fallback"""
+        return await self.create_completion('generation', messages, stream, **kwargs)
+    
+    async def create_matcher_completion(
+        self,
+        messages: List[Dict[str, str]],
+        stream: bool = True,
+        **kwargs
+    ) -> Any:
+        """Create completion using matcher model with backup fallback"""
+        return await self.create_completion('matcher', messages, stream, **kwargs)
+    
+    async def create_extractor_completion(
+        self,
+        messages: List[Dict[str, str]],
+        stream: bool = True,
+        **kwargs
+    ) -> Any:
+        """Create completion using extractor model with backup fallback"""
+        return await self.create_completion('extractor', messages, stream, **kwargs)
+    
+    def get_model_status(self) -> Dict[str, Any]:
+        """Get status of all models"""
+        return backup_model_service.get_all_model_status()
+    
+    async def test_all_models(self) -> Dict[str, Dict[str, bool]]:
+        """Test all models and return their status"""
+        return await backup_model_service.test_all_models()
+    
+    def get_model_config(self, model_type: str) -> Dict[str, Any]:
+        """Get model configuration for a given type"""
+        return backup_model_service.get_model_config(model_type)
+    
+    def get_backup_models(self, model_type: str) -> List[Dict[str, Any]]:
+        """Get backup models for a given type"""
+        return backup_model_service.get_backup_models(model_type)
+    
+    async def stream_response(
+        self,
+        model_type: str,
+        messages: List[Dict[str, str]],
+        **kwargs
+    ) -> Generator[str, None, None]:
+        """
+        Stream response from model with backup fallback
+        
+        Args:
+            model_type: Type of model to use
+            messages: List of message dictionaries
+            **kwargs: Additional parameters
+        
+        Yields:
+            Response chunks as strings
+        """
         try:
-            llm = self._get_llm(model)
-            response = llm.invoke(prompt)
-            return response.content if hasattr(response, 'content') else str(response)
+            completion = await self.create_completion(model_type, messages, stream=True, **kwargs)
+            
+            for chunk in completion:
+                if chunk.choices[0].delta.content:
+                    yield chunk.choices[0].delta.content
+                    
         except Exception as e:
-            print(f"❌ LLM generation failed: {e}")
-            return "Je suis désolé, j'ai rencontré une difficulté technique. Pouvez-vous reformuler votre demande ?" 
+            logger.error(f"❌ Streaming failed for {model_type}: {e}")
+            raise
+    
+    async def get_single_response(
+        self,
+        model_type: str,
+        messages: List[Dict[str, str]],
+        **kwargs
+    ) -> str:
+        """
+        Get single response from model with backup fallback
+        
+        Args:
+            model_type: Type of model to use
+            messages: List of message dictionaries
+            **kwargs: Additional parameters
+        
+        Returns:
+            Complete response as string
+        """
+        try:
+            return await self.create_completion(model_type, messages, stream=False, **kwargs)
+        except Exception as e:
+            logger.error(f"❌ Single response failed for {model_type}: {e}")
+            raise
+
+# Global instance
+llm_service = LLMService() 

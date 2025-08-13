@@ -45,7 +45,23 @@ class OrchestratorComponent(PipelineComponent):
                 orchestration_result = self._fast_greeting_response(context)
             elif self._is_modification_request(context.user_input):
                 orchestration_result = self._fast_modification_response(context)
+            elif self._has_complete_preferences(context):
+                # User has provided complete preferences - show confirmation
+                self.logger.info(f"🎯 COMPLETE PREFERENCES DETECTED: {context.user_preferences}")
+                orchestration_result = {
+                    "intent": "preference_complete",
+                    "confidence": 0.9,
+                    "response_type": "confirmation",
+                    "needs_confirmation": True,
+                    "has_sufficient_details": True,
+                    "should_show_offers": False,  # Show after confirmation
+                    "offer_count": 3,
+                    "reasoning": "Utilisateur a fourni des préférences complètes, générer un résumé de confirmation"
+                }
+                self.logger.info(f"🎯 Setting intent to preference_complete, should_show_offers: False")
             else:
+                self.logger.info(f"🔍 Incomplete preferences: {context.user_preferences}")
+                self.logger.info(f"🔍 Has complete preferences: {self._has_complete_preferences(context)}")
                 # Use LLM for complex orchestration
                 orchestration_result = await self._llm_orchestrate(context)
             
@@ -78,6 +94,27 @@ class OrchestratorComponent(PipelineComponent):
         """Fast check for modification requests"""
         return any(word in user_input.lower() for word in self.modification_words)
     
+    def _has_complete_preferences(self, context: PipelineContext) -> bool:
+        """Check if we have all required preferences for offers"""
+        required_fields = ['destination', 'duration', 'budget', 'style']
+        preferences = context.user_preferences
+        
+        # Check if we have at least 3 out of 4 required fields
+        present_fields = sum(1 for field in required_fields if preferences.get(field))
+        
+        self.logger.info(f"🔍 Checking complete preferences:")
+        self.logger.info(f"🔍 Required fields: {required_fields}")
+        self.logger.info(f"🔍 Current preferences: {preferences}")
+        self.logger.info(f"🔍 Present fields: {present_fields}/4")
+        
+        for field in required_fields:
+            value = preferences.get(field)
+            self.logger.info(f"🔍 {field}: {value}")
+        
+        result = present_fields >= 3
+        self.logger.info(f"🔍 Has complete preferences: {result}")
+        return result
+    
     def _fast_confirmation_response(self, context: PipelineContext) -> Dict[str, Any]:
         """Fast response for confirmations without LLM call"""
         return {
@@ -86,7 +123,7 @@ class OrchestratorComponent(PipelineComponent):
             "response_type": "confirmation",
             "needs_confirmation": False,
             "has_sufficient_details": len(context.user_preferences) >= 3,
-            "should_show_offers": len(context.user_preferences) >= 3,
+            "should_show_offers": True,  # User confirmed, so show offers
             "offer_count": 3,
             "reasoning": "Utilisateur a confirmé ses préférences"
         }
@@ -122,8 +159,16 @@ class OrchestratorComponent(PipelineComponent):
         prompt = self._build_orchestration_prompt(context)
         
         try:
-            response = await self.llm_service.generate_text(prompt, model="orchestrator")
-            return self._parse_orchestration_response(response)
+            messages = [{"role": "user", "content": prompt}]
+            response = await self.llm_service.create_reasoning_completion(messages, stream=False)
+            result = self._parse_orchestration_response(response)
+            
+            # Debug logging
+            self.logger.info(f"🎯 Orchestration input: {context.user_input}")
+            self.logger.info(f"🎯 Current preferences: {context.user_preferences}")
+            self.logger.info(f"🎯 Orchestration result: {result}")
+            
+            return result
         except Exception as e:
             self.logger.error(f"❌ LLM orchestration failed: {e}")
             return self._default_orchestration()
@@ -157,7 +202,7 @@ ANALYZE THE USER INPUT AND PROVIDE A JSON RESPONSE WITH THE FOLLOWING STRUCTURE:
 DETECTION RULES:
 1. If user says "oui", "parfait", "c'est bon", "ok", "d'accord", "confirmer", "montrer les offres", "voir les offres" AND we have sufficient details → intent: "confirmation", should_show_offers: true
 2. If user wants to modify preferences → intent: "modification", response_type: "modification"
-3. If we have all required preferences (destination, duration, budget, travel_style) → has_sufficient_details: true
+3. If we have all required preferences (destination, duration, budget, travel_style) → has_sufficient_details: true, intent: "preference_complete", needs_confirmation: true, should_show_offers: false
 4. If user confirms and we have sufficient details → should_show_offers: true, offer_count: 3
 
 REQUIRED PREFERENCES FOR OFFERS:

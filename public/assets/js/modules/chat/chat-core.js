@@ -38,12 +38,21 @@ if (typeof ChatCore === 'undefined') {
         },
 
         updateApiConfig: async function() {
+            console.log('🔧 Updating API config...');
+            console.log('UnifiedConfig loaded:', window.UnifiedConfig?.loaded);
+            console.log('UnifiedConfig config:', window.UnifiedConfig?.config);
+            
             if (window.UnifiedConfig && window.UnifiedConfig.loaded) {
                 const config = window.UnifiedConfig.config;
+                console.log('Config received:', config);
                 if (config && config.api && config.api.base_url) {
                     this.API_BASE_URL = config.api.base_url;
                     console.log('🔧 Updated API config from unified config:', this.API_BASE_URL);
+                } else {
+                    console.warn('⚠️ No API base_url found in config');
                 }
+            } else {
+                console.warn('⚠️ UnifiedConfig not loaded yet');
             }
         },
 
@@ -165,13 +174,17 @@ if (typeof ChatCore === 'undefined') {
 
         sendToAPI: async function(message) {
             console.log('🚀 Starting to send message:', message);
+            console.log('🔧 Using API URL:', this.API_BASE_URL);
             
             // Set AI typing state
             this.isAITyping = true;
             this.updateSendButtonState();
             
             try {
-                const response = await fetch(`${this.API_BASE_URL}/chat/stream`, {
+                const fullUrl = `${this.API_BASE_URL}/chat/stream`;
+                console.log('🌐 Making request to:', fullUrl);
+                
+                const response = await fetch(fullUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -305,7 +318,8 @@ if (typeof ChatCore === 'undefined') {
                         <div class="flex justify-start mb-6">
                             <div class="${errorClass} shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl">
                                 <p class="text-gray-800 dark:text-white/90 font-normal message-text streaming" style="opacity: 0.8;">
-                                    <span class="loader" style="margin-right: 8px;"></span>L'IA prépare votre réponse...
+                                    <span class="spinner" style="display: inline-block; width: 16px; height: 16px; border: 2px solid #f3f3f3; border-top: 2px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 8px;"></span>
+                                    L'IA prépare votre réponse...
                                 </p>
                             </div>
                         </div>
@@ -393,7 +407,7 @@ if (typeof ChatCore === 'undefined') {
         },
 
         initializeStreamingPlaceholder: function() {
-            // Add CSS for streaming placeholder effect
+            // Add CSS for streaming placeholder effect and spinner
             const style = document.createElement('style');
             style.innerHTML = `
                 .streaming-placeholder {
@@ -403,6 +417,19 @@ if (typeof ChatCore === 'undefined') {
                 @keyframes pulse {
                     0%, 100% { opacity: 0.6; }
                     50% { opacity: 0.8; }
+                }
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                .spinner {
+                    display: inline-block;
+                    width: 16px;
+                    height: 16px;
+                    border: 2px solid #f3f3f3;
+                    border-top: 2px solid #3498db;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
                 }
             `;
             document.head.appendChild(style);

@@ -7,35 +7,34 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use App\Service\ApiService;
+use App\Service\ConfigurationService;
 use Psr\Log\LoggerInterface;
 
 class ChatController extends AbstractController
 {
-    private HttpClientInterface $httpClient;
+    private ApiService $apiService;
+    private ConfigurationService $config;
     private LoggerInterface $logger;
-    private string $agentApiUrl;
 
-    public function __construct(HttpClientInterface $httpClient, LoggerInterface $logger)
-    {
-        $this->httpClient = $httpClient;
+    public function __construct(
+        ApiService $apiService,
+        ConfigurationService $config,
+        LoggerInterface $logger
+    ) {
+        $this->apiService = $apiService;
+        $this->config = $config;
         $this->logger = $logger;
-        
-        // Environment-based API URL configuration
-        $environment = $_ENV['ENVIRONMENT'] ?? 'local';
-        if ($environment === 'production') {
-            $this->agentApiUrl = 'http://localhost:8000'; // Use local Python API in production
-        } else {
-            $this->agentApiUrl = $_ENV['AGENT_API_URL'] ?? 'http://localhost:8002';
-        }
     }
 
     private function addCorsHeaders(array $headers = []): array
     {
+        $corsConfig = $this->config->getCors();
+        
         return array_merge($headers, [
             'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS',
-            'Access-Control-Allow-Headers' => 'Content-Type',
+            'Access-Control-Allow-Methods' => implode(', ', $corsConfig['allowed_methods']),
+            'Access-Control-Allow-Headers' => implode(', ', $corsConfig['allowed_headers']),
         ]);
     }
 
@@ -144,23 +143,14 @@ class ChatController extends AbstractController
             $data = json_decode($request->getContent(), true);
             $userInput = $data['message'] ?? '';
             $conversationId = $data['conversation_id'] ?? null;
-            $userId = $data['user_id'] ?? 1;
+            $userId = $data['user_id'] ?? '1';
 
             $this->logger->info('Sending message to travel agent', [
                 'conversation_id' => $conversationId,
                 'user_input' => $userInput
             ]);
 
-            $response = $this->httpClient->request('POST', $this->agentApiUrl . '/chat', [
-                'json' => [
-                    'message' => $userInput,
-                    'conversation_id' => $conversationId,
-                    'user_id' => $userId
-                ],
-                'timeout' => 30
-            ]);
-
-            $responseData = $response->toArray();
+            $responseData = $this->apiService->sendChatMessage($userInput, $conversationId, $userId);
             
             $this->logger->info('Received response from travel agent', [
                 'status' => $responseData['status'] ?? 'unknown'
@@ -193,35 +183,14 @@ class ChatController extends AbstractController
             $data = json_decode($request->getContent(), true);
             $userInput = $data['message'] ?? '';
             $conversationId = $data['conversation_id'] ?? null;
-            $userId = $data['user_id'] ?? 1;
+            $userId = $data['user_id'] ?? '1';
 
             $this->logger->info('Sending streaming message to travel agent', [
                 'conversation_id' => $conversationId,
                 'user_input' => $userInput
             ]);
 
-            // Forward the streaming request to the Python API
-            $response = $this->httpClient->request('POST', $this->agentApiUrl . '/chat/stream', [
-                'json' => [
-                    'message' => $userInput,
-                    'conversation_id' => $conversationId,
-                    'user_id' => $userId
-                ],
-                'timeout' => 60
-            ]);
-
-            // Stream the response in real-time
-            $stream = $response->toStream();
-            
-            return new Response(
-                $stream,
-                $response->getStatusCode(),
-                $this->addCorsHeaders([
-                    'Content-Type' => 'text/event-stream',
-                    'Cache-Control' => 'no-cache',
-                    'Connection' => 'keep-alive',
-                ])
-            );
+            return $this->apiService->getChatStream($userInput, $conversationId, $userId);
 
         } catch (\Exception $e) {
             $this->logger->error('Error in streaming chat', [
@@ -242,11 +211,7 @@ class ChatController extends AbstractController
     public function getAgentStatus(): JsonResponse
     {
         try {
-            $response = $this->httpClient->request('GET', $this->agentApiUrl . '/status', [
-                'timeout' => 30
-            ]);
-
-            $statusData = $response->toArray();
+            $statusData = $this->apiService->getStatus();
             
             return new JsonResponse([
                 'status' => 'success',
@@ -270,11 +235,7 @@ class ChatController extends AbstractController
     public function getPreferences(): JsonResponse
     {
         try {
-            $response = $this->httpClient->request('GET', $this->agentApiUrl . '/preferences', [
-                'timeout' => 10
-            ]);
-
-            $preferencesData = $response->toArray();
+            $preferencesData = $this->apiService->getPreferences();
             
             return new JsonResponse([
                 'status' => 'success',
@@ -309,15 +270,7 @@ class ChatController extends AbstractController
                 ], 400);
             }
 
-            $response = $this->httpClient->request('POST', $this->agentApiUrl . '/preferences', [
-                'json' => [
-                    'key' => $key,
-                    'value' => $value
-                ],
-                'timeout' => 10
-            ]);
-
-            $responseData = $response->toArray();
+            $responseData = $this->apiService->updatePreference($key, $value);
             
             return new JsonResponse([
                 'status' => 'success',
@@ -341,11 +294,7 @@ class ChatController extends AbstractController
     public function clearPreferences(): JsonResponse
     {
         try {
-            $response = $this->httpClient->request('DELETE', $this->agentApiUrl . '/preferences', [
-                'timeout' => 10
-            ]);
-
-            $responseData = $response->toArray();
+            $responseData = $this->apiService->clearPreferences();
             
             return new JsonResponse([
                 'status' => 'success',
@@ -382,14 +331,8 @@ class ChatController extends AbstractController
                 'request_data' => $requestData
             ]);
 
-            // Forward the request to Python API with the same body
-            // Note: Python API expects /memory/clear, not /chat/memory/clear
-            $response = $this->httpClient->request('POST', $this->agentApiUrl . '/memory/clear', [
-                'json' => $requestData,
-                'timeout' => 30
-            ]);
-
-            $responseData = $response->toArray();
+            $conversationId = $requestData['conversation_id'] ?? null;
+            $responseData = $this->apiService->clearMemory($conversationId);
             
             return new JsonResponse([
                 'status' => 'success',
@@ -414,11 +357,7 @@ class ChatController extends AbstractController
     public function getWelcomeMessage(): JsonResponse
     {
         try {
-            $response = $this->httpClient->request('GET', $this->agentApiUrl . '/welcome', [
-                'timeout' => 30
-            ]);
-
-            $responseData = $response->toArray();
+            $responseData = $this->apiService->getWelcomeMessage();
             
             return new JsonResponse([
                 'status' => 'success',
@@ -438,67 +377,23 @@ class ChatController extends AbstractController
         }
     }
 
-    #[Route('/api/{path}', name: 'api_proxy', requirements: ['path' => '.+'], methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])]
-    public function apiProxy(Request $request, string $path = ''): Response
+    #[Route('/api/config', name: 'api_config', methods: ['GET'])]
+    public function getConfiguration(): JsonResponse
     {
-        // Handle preflight OPTIONS request
-        if ($request->getMethod() === 'OPTIONS') {
-            return new Response('', 200, $this->addCorsHeaders());
-        }
-
         try {
-            // Build the Python API URL
-            $pythonApiUrl = 'http://localhost:8000/' . $path;
+            $config = $this->config->getAll();
             
-            // Get request body
-            $requestBody = $request->getContent();
-            
-            // Prepare headers
-            $headers = [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json'
-            ];
-
-            $this->logger->info('Proxying request to Python API', [
-                'url' => $pythonApiUrl,
-                'method' => $request->getMethod(),
-                'path' => $path
-            ]);
-
-            // Make request to Python API
-            $response = $this->httpClient->request($request->getMethod(), $pythonApiUrl, [
-                'headers' => $headers,
-                'body' => $requestBody,
-                'timeout' => 30
-            ]);
-
-            // Get response content and status
-            $responseContent = $response->getContent();
-            $responseStatusCode = $response->getStatusCode();
-
-            // Return the response with CORS headers
-            return new Response(
-                $responseContent,
-                $responseStatusCode,
-                $this->addCorsHeaders([
-                    'Content-Type' => 'application/json'
-                ])
-            );
+            return new JsonResponse($config, 200, $this->addCorsHeaders());
 
         } catch (\Exception $e) {
-            $this->logger->error('Error in API proxy', [
-                'error' => $e->getMessage(),
-                'path' => $path,
-                'trace' => $e->getTraceAsString()
+            $this->logger->error('Error getting configuration', [
+                'error' => $e->getMessage()
             ]);
 
-            // Return a more detailed error for debugging
             return new JsonResponse([
-                'error' => 'API Server Error',
-                'message' => 'Unable to connect to Python API server',
-                'details' => $e->getMessage(),
-                'path' => $path,
-                'url' => $pythonApiUrl ?? 'unknown'
+                'status' => 'error',
+                'message' => 'Impossible de récupérer la configuration',
+                'error' => $e->getMessage()
             ], 500, $this->addCorsHeaders());
         }
     }

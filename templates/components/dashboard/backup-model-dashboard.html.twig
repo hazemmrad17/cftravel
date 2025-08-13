@@ -1,0 +1,128 @@
+{# Backup Model Dashboard Component #}
+{% macro dashboard() %}
+    <div id="backup-model-dashboard" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+                <!-- Header -->
+                <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Backup Model Dashboard</h2>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Gestion des modèles de sauvegarde</p>
+                        </div>
+                    </div>
+                    <button onclick="BackupModelDashboard.hide()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Content -->
+                <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                    <!-- Status Overview -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Vue d'ensemble</h3>
+                        <div id="status-overview" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <!-- Status cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Model Types -->
+                    <div class="space-y-6">
+                        <div id="model-types">
+                            <!-- Model type sections will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-center space-x-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <button onclick="BackupModelDashboard.testAllModels()" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Tester tous les modèles
+                        </button>
+                        <button onclick="BackupModelDashboard.hide()" 
+                                class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                            Fermer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro statusCard(title, value, status, icon) %}
+    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 {{ status == 'success' ? 'bg-green-100 dark:bg-green-900' : status == 'warning' ? 'bg-yellow-100 dark:bg-yellow-900' : 'bg-red-100 dark:bg-red-900' }} rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 {{ status == 'success' ? 'text-green-600 dark:text-green-400' : status == 'warning' ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {{ icon|raw }}
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ title }}</p>
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">{{ value }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro modelTypeSection(type, data) %}
+    <div class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden">
+        <div class="bg-gray-50 dark:bg-gray-600 px-6 py-4 border-b border-gray-200 dark:border-gray-500">
+            <h4 class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ type }}</h4>
+        </div>
+        <div class="p-6">
+            <!-- Primary Model -->
+            <div class="mb-6">
+                <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Modèle Principal</h5>
+                <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="font-medium text-blue-900 dark:text-blue-100">{{ data.primary.name }}</p>
+                            <p class="text-sm text-blue-700 dark:text-blue-300">
+                                Temp: {{ data.primary.temperature }} | Tokens: {{ data.primary.max_tokens }}
+                            </p>
+                        </div>
+                        <span class="px-2 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs rounded-full">
+                            Principal
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backup Models -->
+            <div>
+                <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Modèles de Sauvegarde</h5>
+                <div class="space-y-3">
+                    {% for backup in data.backups %}
+                        <div class="bg-gray-50 dark:bg-gray-600 rounded-lg p-4 border border-gray-200 dark:border-gray-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="font-medium text-gray-900 dark:text-white">{{ backup.name }}</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                                        Temp: {{ backup.temperature }} | Tokens: {{ backup.max_tokens }} | Priorité: {{ backup.priority }}
+                                    </p>
+                                </div>
+                                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-500 text-gray-700 dark:text-gray-300 text-xs rounded-full">
+                                    Sauvegarde {{ backup.priority }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %} 

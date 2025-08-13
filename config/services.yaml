@@ -22,3 +22,16 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # UNIFIED CONFIGURATION SERVICE
+    App\Service\ConfigurationService:
+        arguments:
+            $configFile: '%kernel.project_dir%/config/app.php'
+            $logger: '@logger'
+    
+    # API SERVICE
+    App\Service\ApiService:
+        arguments:
+            $httpClient: '@http_client'
+            $logger: '@logger'
+            $config: '@App\Service\ConfigurationService'
