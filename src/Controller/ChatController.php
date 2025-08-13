@@ -210,9 +210,11 @@ class ChatController extends AbstractController
                 'timeout' => 60
             ]);
 
-            // Return the streaming response
+            // Stream the response in real-time
+            $stream = $response->toStream();
+            
             return new Response(
-                $response->getContent(),
+                $stream,
                 $response->getStatusCode(),
                 $this->addCorsHeaders([
                     'Content-Type' => 'text/event-stream',

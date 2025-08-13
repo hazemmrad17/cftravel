@@ -724,12 +724,10 @@ document.addEventListener('DOMContentLoaded', function() {
       // For AI messages
       if (shouldStream) {
         // Create empty message element for server streaming with proper initial state
-        console.log('📝 Creating streaming message element');
         const streamErrorClass = isError ? 'bg-red-100 dark:bg-red-500 text-red-700 dark:text-white rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl' : 'bg-chat-ai bg-white dark:bg-white/5 shadow-theme-xs rounded-3xl rounded-bl-lg py-4 px-5 max-w-3xl';
         html = '<div class="' + streamErrorClass + '"><p class="text-gray-800 dark:text-white/90 font-normal message-text streaming" style="opacity: 0.8;"></p></div>';
         msgDiv.innerHTML = html;
         chatArea.appendChild(msgDiv);
-        console.log('📝 Streaming message element created and added to chat area');
         
         // Add a subtle typing indicator
         const textElement = msgDiv.querySelector('.message-text');
@@ -740,7 +738,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Return the message element for streaming updates
-        console.log('📝 Returning streaming message element:', msgDiv);
         return msgDiv;
       } else {
         // Show immediately for loaded messages (no streaming)
@@ -1374,7 +1371,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updateStreamingMessage(messageElement, content) {
     // Update the message content with streaming text
-    console.log('🔄 Updating streaming message:', content.substring(0, 50) + '...');
     const textElement = messageElement.querySelector('.message-text');
     if (textElement) {
       // Simple and responsive streaming effect
@@ -1428,7 +1424,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function finalizeStreamingMessage(messageElement, content) {
     // Finalize the streaming message
-    console.log('✅ Finalizing streaming message:', content.substring(0, 50) + '...');
     const textElement = messageElement.querySelector('.message-text');
     if (textElement) {
       // Format content with proper line breaks and bullet points
@@ -1580,7 +1575,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Remove loading indicator and create assistant message element for streaming
         hideLoading();
         const assistantMessageElement = appendMessage('', false, false, [], true);
-        console.log('🎯 Created assistant message element for streaming:', assistantMessageElement);
         
         const reader = streamResponse.body.getReader();
         const decoder = new TextDecoder();
