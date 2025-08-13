@@ -200,21 +200,31 @@ class ChatController extends AbstractController
                 'user_input' => $userInput
             ]);
 
-            // Forward the streaming request to the Python API
+            // Forward the streaming request to the Python API with streaming enabled
             $response = $this->httpClient->request('POST', $this->agentApiUrl . '/chat/stream', [
                 'json' => [
                     'message' => $userInput,
                     'conversation_id' => $conversationId,
                     'user_id' => $userId
                 ],
-                'timeout' => 60
+                'timeout' => 60,
+                'stream' => true // Enable streaming
             ]);
 
-            // Stream the response in real-time
-            $stream = $response->toStream();
+            // Create a custom streaming response
+            $callback = function() use ($response) {
+                $stream = $response->toStream();
+                while (!$stream->eof()) {
+                    $chunk = $stream->read(1024);
+                    if ($chunk !== '') {
+                        echo $chunk;
+                        flush();
+                    }
+                }
+            };
             
             return new Response(
-                $stream,
+                $callback,
                 $response->getStatusCode(),
                 $this->addCorsHeaders([
                     'Content-Type' => 'text/event-stream',
