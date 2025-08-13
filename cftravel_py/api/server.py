@@ -125,7 +125,7 @@ async def clear_memory(request: Request):
         
         # Also clear pipeline memory if it exists
         pipeline = get_pipeline()
-        pipeline.clear_memory(conversation_id)
+        await pipeline.clear_memory(conversation_id)
         logger.info("🧹 Pipeline memory cleared successfully")
         
         return {"message": "Memory cleared successfully"}

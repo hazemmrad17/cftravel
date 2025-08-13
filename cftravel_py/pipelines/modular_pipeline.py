@@ -245,9 +245,13 @@ class ASIAModularPipeline:
         if self.pipeline:
             self.pipeline.reset_stats()
     
-    def clear_memory(self, conversation_id: str = None):
+    async def clear_memory(self, conversation_id: str = None):
         """Clear conversation memory"""
         try:
+            # Ensure pipeline is initialized
+            if not self._initialized:
+                await self.initialize()
+            
             if conversation_id:
                 self.services['memory'].clear_conversation(conversation_id)
                 self.logger.info(f"🧹 Cleared memory for conversation {conversation_id}")
