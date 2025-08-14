@@ -25,8 +25,8 @@ class BackupModelService:
             logger.warning("⚠️ No API key found. Some features may not work properly.")
             self.client = None
         else:
-            # Initialize Groq client - Groq client automatically uses the correct base URL
-            # The base_url in config is for reference only, Groq client handles it internally
+            # Initialize Groq client - Groq client handles the base URL internally
+            # Don't pass base_url as it causes URL duplication
             self.client = Groq(api_key=api_key)
             logger.info("🔧 Initialized Groq client")
         
@@ -56,7 +56,7 @@ class BackupModelService:
         self,
         model_type: str,
         messages: List[Dict[str, str]],
-        stream: bool = True,
+        stream: bool = False,  # Changed default to False for simple API calls
         **kwargs
     ):
         """
@@ -105,7 +105,7 @@ class BackupModelService:
         self,
         model_config: Dict[str, Any],
         messages: List[Dict[str, str]],
-        stream: bool = True,
+        stream: bool = False,  # Changed default to False for simple API calls
         **kwargs
     ):
         """Create completion with specific model configuration"""

@@ -209,7 +209,6 @@ class UnifiedConfig:
                 }
             },
             'api': {
-                'base_url': os.getenv('AGENT_API_URL', 'http://localhost:8000'),
                 'timeout': int(os.getenv('API_TIMEOUT', '30')),
                 'retry_attempts': int(os.getenv('API_RETRY_ATTEMPTS', '3'))
             },
@@ -233,44 +232,32 @@ class UnifiedConfig:
                 'allow_credentials': True
             },
                     'ai': {
-            'provider': 'groq',
-            'api_key': os.getenv('GROQ_API_KEY'),  # Load from environment variable
-            'base_url': os.getenv('GROQ_BASE_URL', 'https://api.groq.com/openai/v1'),
-                'model_switches': {
-                    'use_reasoning_model': os.getenv('USE_REASONING_MODEL', 'true').lower() == 'true',
-                    'use_generation_model': os.getenv('USE_GENERATION_MODEL', 'true').lower() == 'true',
-                    'use_matcher_model': os.getenv('USE_MATCHER_MODEL', 'true').lower() == 'true',
-                    'use_extractor_model': os.getenv('USE_EXTRACTOR_MODEL', 'true').lower() == 'true',
-                    'use_embedding_model': os.getenv('USE_EMBEDDING_MODEL', 'true').lower() == 'true'
-                },
+                'provider': 'groq',
+                'api_key': os.getenv('GROQ_API_KEY'),
                 'models': {
                     'reasoning': {
-                        'name': os.getenv('REASONING_MODEL', 'moonshotai/kimi-k2-instruct'),
-                        'temperature': float(os.getenv('REASONING_TEMPERATURE', '0.1')),
-                        'max_tokens': int(os.getenv('REASONING_MAX_TOKENS', '2048')),
-                        'enabled': os.getenv('USE_REASONING_MODEL', 'true').lower() == 'true'
+                        'name': 'moonshotai/kimi-k2-instruct',
+                        'temperature': 0.1,
+                        'max_tokens': 1024,
+                        'enabled': True
                     },
                     'generation': {
-                        'name': os.getenv('GENERATION_MODEL', 'moonshotai/kimi-k2-instruct'),
-                        'temperature': float(os.getenv('GENERATION_TEMPERATURE', '0.7')),
-                        'max_tokens': int(os.getenv('GENERATION_MAX_TOKENS', '2048')),
-                        'enabled': os.getenv('USE_GENERATION_MODEL', 'true').lower() == 'true'
+                        'name': 'moonshotai/kimi-k2-instruct',
+                        'temperature': 0.7,
+                        'max_tokens': 2048,
+                        'enabled': True
                     },
                     'matcher': {
-                        'name': os.getenv('MATCHER_MODEL', 'moonshotai/kimi-k2-instruct'),
-                        'temperature': float(os.getenv('MATCHER_TEMPERATURE', '0.3')),
-                        'max_tokens': int(os.getenv('MATCHER_MAX_TOKENS', '2048')),
-                        'enabled': os.getenv('USE_MATCHER_MODEL', 'true').lower() == 'true'
+                        'name': 'moonshotai/kimi-k2-instruct',
+                        'temperature': 0.1,
+                        'max_tokens': 512,
+                        'enabled': True
                     },
                     'extractor': {
-                        'name': os.getenv('EXTRACTOR_MODEL', 'moonshotai/kimi-k2-instruct'),
-                        'temperature': float(os.getenv('EXTRACTOR_TEMPERATURE', '0.1')),
-                        'max_tokens': int(os.getenv('EXTRACTOR_MAX_TOKENS', '1024')),
-                        'enabled': os.getenv('USE_EXTRACTOR_MODEL', 'true').lower() == 'true'
-                    },
-                    'embedding': {
-                        'name': os.getenv('EMBEDDING_MODEL', 'all-MiniLM-L6-v2'),
-                        'enabled': os.getenv('USE_EMBEDDING_MODEL', 'true').lower() == 'true'
+                        'name': 'moonshotai/kimi-k2-instruct',
+                        'temperature': 0.1,
+                        'max_tokens': 1024,
+                        'enabled': True
                     }
                 }
             }
@@ -310,7 +297,6 @@ class UnifiedConfig:
         else:
             # Fallback to environment-based API config
             return {
-                'base_url': 'http://localhost:8000',
                 'timeout': 30,
                 'retry_attempts': 3
             }
@@ -352,34 +338,29 @@ class UnifiedConfig:
             return {
                 'provider': 'groq',
                 'api_key': os.getenv('GROQ_API_KEY'),
-                'base_url': os.getenv('GROQ_BASE_URL', 'https://api.groq.com/openai/v1'),
                 'models': {
                     'reasoning': {
-                        'name': os.getenv('REASONING_MODEL', 'moonshotai/kimi-k2-instruct'),
-                        'temperature': float(os.getenv('REASONING_TEMPERATURE', '0.1')),
-                        'max_tokens': int(os.getenv('REASONING_MAX_TOKENS', '2048')),
+                        'name': 'moonshotai/kimi-k2-instruct',
+                        'temperature': 0.1,
+                        'max_tokens': 1024,
                         'enabled': True
                     },
                     'generation': {
-                        'name': os.getenv('GENERATION_MODEL', 'moonshotai/kimi-k2-instruct'),
-                        'temperature': float(os.getenv('GENERATION_TEMPERATURE', '0.7')),
-                        'max_tokens': int(os.getenv('GENERATION_MAX_TOKENS', '2048')),
+                        'name': 'moonshotai/kimi-k2-instruct',
+                        'temperature': 0.7,
+                        'max_tokens': 2048,
                         'enabled': True
                     },
                     'matcher': {
-                        'name': os.getenv('MATCHER_MODEL', 'moonshotai/kimi-k2-instruct'),
-                        'temperature': float(os.getenv('MATCHER_TEMPERATURE', '0.3')),
-                        'max_tokens': int(os.getenv('MATCHER_MAX_TOKENS', '2048')),
+                        'name': 'moonshotai/kimi-k2-instruct',
+                        'temperature': 0.1,
+                        'max_tokens': 512,
                         'enabled': True
                     },
                     'extractor': {
-                        'name': os.getenv('EXTRACTOR_MODEL', 'moonshotai/kimi-k2-instruct'),
-                        'temperature': float(os.getenv('EXTRACTOR_TEMPERATURE', '0.1')),
-                        'max_tokens': int(os.getenv('EXTRACTOR_MAX_TOKENS', '1024')),
-                        'enabled': True
-                    },
-                    'embedding': {
-                        'name': os.getenv('EMBEDDING_MODEL', 'all-MiniLM-L6-v2'),
+                        'name': 'moonshotai/kimi-k2-instruct',
+                        'temperature': 0.1,
+                        'max_tokens': 1024,
                         'enabled': True
                     }
                 }

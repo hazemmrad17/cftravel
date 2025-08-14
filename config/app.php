@@ -89,7 +89,6 @@ return [
         // API Provider Configuration
         'provider' => 'groq',
         'api_key' => $_ENV['GROQ_API_KEY'] ?? null, // Load from environment variable
-        'base_url' => 'https://api.groq.com/openai/v1',
         
         // =============================================================================
         // MODEL SWITCHES (Like Electricity Switches - ON/OFF)

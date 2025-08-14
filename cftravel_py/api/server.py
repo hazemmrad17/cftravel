@@ -158,6 +158,62 @@ async def clear_memory_chat(request: Request):
     """Clear conversation memory - chat endpoint"""
     return await clear_memory(request)
 
+@app.post("/confirmation")
+async def handle_confirmation(request: Request):
+    """Handle preference confirmation and show offers"""
+    try:
+        body = await request.json()
+        preferences = body.get("preferences", {})
+        conversation_id = body.get("conversation_id")
+        action = body.get("action", "confirm")  # "confirm" or "modify"
+        
+        logger.info(f"🎯 Handling confirmation: {action}")
+        logger.info(f"🎯 Preferences: {preferences}")
+        
+        # Get pipeline
+        pipeline = get_pipeline()
+        
+        if action == "confirm":
+            # User confirmed preferences - generate offers
+            user_message = "Je confirme mes préférences, montrez-moi les offres"
+            logger.info(f"🎯 Processing confirmation with message: {user_message}")
+            result = await pipeline.process_user_input(user_message, conversation_id)
+            
+            logger.info(f"🎯 Pipeline result: {result}")
+            
+            # Extract offers and response
+            offers = result.get("offers", [])
+            response_text = result.get("response", "Voici vos offres personnalisées !")
+            
+            logger.info(f"🎯 Extracted offers: {offers}")
+            logger.info(f"🎯 Response text: {response_text}")
+            
+            response_data = {
+                "status": "success",
+                "message": response_text,
+                "offers": offers
+            }
+            
+            logger.info(f"🎯 Returning response: {response_data}")
+            return response_data
+            
+        elif action == "modify":
+            # User wants to modify preferences - generate new summary and search query
+            user_message = "Je veux modifier mes préférences"
+            result = await pipeline.process_user_input(user_message, conversation_id)
+            
+            response_text = result.get("response", "Dites-moi ce que vous souhaitez modifier")
+            
+            return {
+                "status": "success",
+                "message": response_text,
+                "offers": []  # No offers on modify - wait for new preferences
+            }
+        
+    except Exception as e:
+        logger.error(f"❌ Error handling confirmation: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/chat/stream")
 async def chat_stream(request: Request):
     """Streaming chat endpoint with optimized performance"""
@@ -184,33 +240,7 @@ async def chat_stream(request: Request):
                 # Extract response text
                 response_text = result.get("response", "") if isinstance(result, dict) else str(result)
                 
-                # Check if we need confirmation FIRST (before offers)
-                if isinstance(result, dict) and result.get("needs_confirmation"):
-                    # Send confirmation data
-                    confirmation_data = {
-                        'type': 'confirmation',
-                        'needs_confirmation': True,
-                        'user_preferences': result.get("preferences", {}),
-                        'confirmation_summary': result.get("response", "")
-                    }
-                    yield f"data: {json.dumps(confirmation_data)}\n\n"
-                    
-                    # Send the response text as content
-                    words = response_text.split()
-                    for i, word in enumerate(words):
-                        if i > 0:
-                            yield f"data: {json.dumps({'type': 'content', 'chunk': ' ' + word})}\n\n"
-                        else:
-                            yield f"data: {json.dumps({'type': 'content', 'chunk': word})}\n\n"
-                        
-                        if i < len(words) - 1:
-                            delay = min(0.05 + (len(word) * 0.01), 0.15)
-                            if word.endswith(('.', '!', '?', ':', ';')):
-                                delay += 0.1
-                            await asyncio.sleep(delay)
-                    
-                    yield f"data: {json.dumps({'type': 'end'})}\n\n"
-                    return
+                # No confirmation dialog - just stream the response text
                 
                 # Check if we need to show offers (only after confirmation)
                 if isinstance(result, dict) and result.get("offers"):

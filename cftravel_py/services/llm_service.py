@@ -51,7 +51,7 @@ class LLMService:
         self,
         model_type: str,
         messages: List[Dict[str, str]],
-        stream: bool = True,
+        stream: bool = False,  # Changed default to False for simple API calls
         **kwargs
     ) -> Any:
         """
@@ -80,7 +80,7 @@ class LLMService:
     async def create_reasoning_completion(
         self,
         messages: List[Dict[str, str]],
-        stream: bool = True,
+        stream: bool = False,  # Changed default to False for simple API calls
         **kwargs
     ) -> Any:
         """Create completion using reasoning model with backup fallback"""
@@ -89,7 +89,7 @@ class LLMService:
     async def create_generation_completion(
         self,
         messages: List[Dict[str, str]],
-        stream: bool = True,
+        stream: bool = False,  # Changed default to False for simple API calls
         **kwargs
     ) -> Any:
         """Create completion using generation model with backup fallback"""
@@ -98,7 +98,7 @@ class LLMService:
     async def create_matcher_completion(
         self,
         messages: List[Dict[str, str]],
-        stream: bool = True,
+        stream: bool = False,  # Changed default to False for simple API calls
         **kwargs
     ) -> Any:
         """Create completion using matcher model with backup fallback"""
@@ -107,7 +107,7 @@ class LLMService:
     async def create_extractor_completion(
         self,
         messages: List[Dict[str, str]],
-        stream: bool = True,
+        stream: bool = False,  # Changed default to False for simple API calls
         **kwargs
     ) -> Any:
         """Create completion using extractor model with backup fallback"""

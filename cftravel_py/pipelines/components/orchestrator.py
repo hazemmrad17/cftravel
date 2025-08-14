@@ -18,52 +18,23 @@ class OrchestratorComponent(PipelineComponent):
         self.llm_service = llm_service
         self.memory_service = memory_service
         
-        # Fast path patterns
-        self.confirmation_words = [
-            "oui", "parfait", "c'est bon", "ok", "d'accord", "confirmer", 
-            "exactement", "précisément", "montrer les offres", "voir les offres",
-            "c'est parfait", "ça me convient", "parfait", "montrez-moi", "je veux voir"
-        ]
-        self.greeting_words = ["bonjour", "hello", "salut", "hi", "hey"]
-        self.modification_words = [
-            "changer", "modifier", "différent", "autre", "plutôt", "préfère", 
-            "préférerais", "voudrais", "aimerais", "au lieu de", "pas", "non",
-            "corriger", "ajuster", "revoir", "reconsidérer"
-        ]
+        # AI will handle all intent detection intelligently
     
     def is_required(self, context: PipelineContext) -> bool:
         """Always required - orchestrator makes the initial decision"""
         return True
     
     async def process(self, context: PipelineContext) -> PipelineContext:
-        """Process user input and determine conversation flow"""
+        """Process user input and determine conversation flow using AI intelligence"""
         try:
-            # Check for simple cases first (fast path)
-            if self._is_simple_confirmation(context.user_input):
-                orchestration_result = self._fast_confirmation_response(context)
-            elif self._is_simple_greeting(context.user_input):
-                orchestration_result = self._fast_greeting_response(context)
-            elif self._is_modification_request(context.user_input):
-                orchestration_result = self._fast_modification_response(context)
-            elif self._has_complete_preferences(context):
-                # User has provided complete preferences - show confirmation
-                self.logger.info(f"🎯 COMPLETE PREFERENCES DETECTED: {context.user_preferences}")
-                orchestration_result = {
-                    "intent": "preference_complete",
-                    "confidence": 0.9,
-                    "response_type": "confirmation",
-                    "needs_confirmation": True,
-                    "has_sufficient_details": True,
-                    "should_show_offers": False,  # Show after confirmation
-                    "offer_count": 3,
-                    "reasoning": "Utilisateur a fourni des préférences complètes, générer un résumé de confirmation"
-                }
-                self.logger.info(f"🎯 Setting intent to preference_complete, should_show_offers: False")
-            else:
-                self.logger.info(f"🔍 Incomplete preferences: {context.user_preferences}")
-                self.logger.info(f"🔍 Has complete preferences: {self._has_complete_preferences(context)}")
-                # Use LLM for complex orchestration
-                orchestration_result = await self._llm_orchestrate(context)
+            # Always use AI for intelligent orchestration - no hardcoded conditions
+            self.logger.info(f"🎯 Using AI orchestration for: {context.user_input}")
+            self.logger.info(f"🎯 Current preferences: {context.user_preferences}")
+            
+            # Use LLM for intelligent orchestration
+            orchestration_result = await self._llm_orchestrate(context)
+            
+            self.logger.info(f"🎯 AI orchestration result: {orchestration_result}")
             
             # Store orchestration result in context
             context.add_metadata('orchestration_result', orchestration_result)
@@ -73,6 +44,7 @@ class OrchestratorComponent(PipelineComponent):
             context.add_metadata('response_type', orchestration_result.get('response_type', 'question'))
             
             self.logger.info(f"🎯 Orchestration result: {orchestration_result.get('intent')} - Show offers: {orchestration_result.get('should_show_offers')}")
+            self.logger.info(f"🎯 Full orchestration result: {orchestration_result}")
             
             return context
             
@@ -82,77 +54,7 @@ class OrchestratorComponent(PipelineComponent):
             context.add_metadata('orchestration_result', self._default_orchestration())
             return context
     
-    def _is_simple_confirmation(self, user_input: str) -> bool:
-        """Fast check for simple confirmation responses"""
-        return any(word in user_input.lower() for word in self.confirmation_words)
-    
-    def _is_simple_greeting(self, user_input: str) -> bool:
-        """Fast check for simple greetings"""
-        return any(word in user_input.lower() for word in self.greeting_words)
-    
-    def _is_modification_request(self, user_input: str) -> bool:
-        """Fast check for modification requests"""
-        return any(word in user_input.lower() for word in self.modification_words)
-    
-    def _has_complete_preferences(self, context: PipelineContext) -> bool:
-        """Check if we have all required preferences for offers"""
-        required_fields = ['destination', 'duration', 'budget', 'style']
-        preferences = context.user_preferences
-        
-        # Check if we have at least 3 out of 4 required fields
-        present_fields = sum(1 for field in required_fields if preferences.get(field))
-        
-        self.logger.info(f"🔍 Checking complete preferences:")
-        self.logger.info(f"🔍 Required fields: {required_fields}")
-        self.logger.info(f"🔍 Current preferences: {preferences}")
-        self.logger.info(f"🔍 Present fields: {present_fields}/4")
-        
-        for field in required_fields:
-            value = preferences.get(field)
-            self.logger.info(f"🔍 {field}: {value}")
-        
-        result = present_fields >= 3
-        self.logger.info(f"🔍 Has complete preferences: {result}")
-        return result
-    
-    def _fast_confirmation_response(self, context: PipelineContext) -> Dict[str, Any]:
-        """Fast response for confirmations without LLM call"""
-        return {
-            "intent": "confirmation",
-            "confidence": 0.9,
-            "response_type": "confirmation",
-            "needs_confirmation": False,
-            "has_sufficient_details": len(context.user_preferences) >= 3,
-            "should_show_offers": True,  # User confirmed, so show offers
-            "offer_count": 3,
-            "reasoning": "Utilisateur a confirmé ses préférences"
-        }
-    
-    def _fast_greeting_response(self, context: PipelineContext) -> Dict[str, Any]:
-        """Fast response for greetings without LLM call"""
-        return {
-            "intent": "general",
-            "confidence": 0.8,
-            "response_type": "question",
-            "needs_confirmation": False,
-            "has_sufficient_details": False,
-            "should_show_offers": False,
-            "offer_count": 0,
-            "reasoning": "Utilisateur a salué, nécessite de recueillir les préférences"
-        }
-    
-    def _fast_modification_response(self, context: PipelineContext) -> Dict[str, Any]:
-        """Fast response for modification requests"""
-        return {
-            "intent": "modification",
-            "confidence": 0.85,
-            "response_type": "modification",
-            "needs_confirmation": False,
-            "has_sufficient_details": False,
-            "should_show_offers": False,
-            "offer_count": 0,
-            "reasoning": "Utilisateur souhaite modifier ses préférences"
-        }
+    # AI handles all intent detection intelligently - no hardcoded methods needed
     
     async def _llm_orchestrate(self, context: PipelineContext) -> Dict[str, Any]:
         """Use LLM for intelligent orchestration"""
@@ -189,9 +91,9 @@ USER INPUT: "{context.user_input}"
 
 ANALYZE THE USER INPUT AND PROVIDE A JSON RESPONSE WITH THE FOLLOWING STRUCTURE:
 {{
-    "intent": "question|confirmation|modification|booking|general",
+    "intent": "question|confirmation|modification|booking|general|preference_complete",
     "confidence": 0.0-1.0,
-    "response_type": "question|confirmation|offers|modification",
+    "response_type": "question|preference_summary|show_offers|modification",
     "needs_confirmation": true/false,
     "has_sufficient_details": true/false,
     "should_show_offers": true/false,
@@ -199,17 +101,33 @@ ANALYZE THE USER INPUT AND PROVIDE A JSON RESPONSE WITH THE FOLLOWING STRUCTURE:
     "reasoning": "Your reasoning in French"
 }}
 
-DETECTION RULES:
-1. If user says "oui", "parfait", "c'est bon", "ok", "d'accord", "confirmer", "montrer les offres", "voir les offres" AND we have sufficient details → intent: "confirmation", should_show_offers: true
-2. If user wants to modify preferences → intent: "modification", response_type: "modification"
-3. If we have all required preferences (destination, duration, budget, travel_style) → has_sufficient_details: true, intent: "preference_complete", needs_confirmation: true, should_show_offers: false
-4. If user confirms and we have sufficient details → should_show_offers: true, offer_count: 3
+INTELLIGENT DETECTION RULES:
+1. **Confirmation Intent**: User explicitly confirms preferences or wants to see offers
+   - Keywords: "oui", "parfait", "c'est bon", "ok", "d'accord", "confirmer", "montrer les offres", "voir les offres", "je veux voir", "c'est parfait"
+   - When we have sufficient details → intent: "confirmation", should_show_offers: true, response_type: "show_offers"
+
+2. **Modification Intent**: User wants to change or modify their preferences
+   - Keywords: "changer", "modifier", "différent", "autre", "plutôt", "préfère", "préférerais", "voudrais", "aimerais", "au lieu de", "pas", "non", "corriger", "ajuster", "revoir"
+   - → intent: "modification", response_type: "modification", should_show_offers: false
+
+3. **Preference Complete**: We have collected sufficient preferences and should show summary
+   - Required: destination, duration, budget (at least 3 out of 4)
+   - → intent: "preference_complete", response_type: "preference_summary", needs_confirmation: true, should_show_offers: false
+
+4. **General Question**: User is providing new information or asking questions
+   - → intent: "general", response_type: "question", should_show_offers: false
 
 REQUIRED PREFERENCES FOR OFFERS:
 - destination (country/city)
-- duration (number of days)
-- budget (price range)
-- travel_style (luxury, adventure, cultural, etc.)
+- duration (number of days/weeks)
+- budget (low/medium/high)
+- style (cultural, adventure, luxury, relaxation, etc.)
+
+UNDERSTAND THE USER'S INTENT NATURALLY:
+- Don't rely only on keywords, understand the context and meaning
+- Consider the conversation flow and what the user is trying to achieve
+- If user seems satisfied with their preferences, they likely want to see offers
+- If user expresses dissatisfaction or wants changes, they want to modify
 
 RESPOND ONLY WITH VALID JSON:
 """

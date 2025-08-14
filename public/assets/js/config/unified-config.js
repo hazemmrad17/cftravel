@@ -9,22 +9,44 @@ if (typeof UnifiedConfig === 'undefined') {
         config: null,
         loading: false,
         loaded: false,
+        loadPromise: null, // Add promise to track loading
 
         /**
          * Load configuration from PHP backend
          */
         async loadConfig() {
-            if (this.loading || this.loaded) {
+            // If already loaded, return immediately
+            if (this.loaded && this.config) {
                 return this.config;
             }
-
+            
+            // If already loading, wait for the existing promise
+            if (this.loading && this.loadPromise) {
+                return await this.loadPromise;
+            }
+    
             this.loading = true;
-
+            this.loadPromise = this._loadConfigInternal();
+            
+            try {
+                const result = await this.loadPromise;
+                return result;
+            } finally {
+                this.loading = false;
+                this.loadPromise = null;
+            }
+        },
+    
+        /**
+         * Internal loading method
+         */
+        async _loadConfigInternal() {
             try {
                 const response = await fetch('/api/config');
                 if (response.ok) {
                     this.config = await response.json();
                     console.log('✅ Configuration loaded from PHP backend');
+                    console.log('🔧 PHP config API base_url:', this.config?.api?.base_url);
                 } else {
                     throw new Error(`HTTP ${response.status}`);
                 }
@@ -32,33 +54,46 @@ if (typeof UnifiedConfig === 'undefined') {
                 console.warn('⚠️ Failed to load config from PHP, using fallback:', error.message);
                 this.config = this.loadFallbackConfig();
             }
-
+    
             this.loaded = true;
-            this.loading = false;
             return this.config;
         },
 
         /**
-         * Load configuration (alias for loadConfig)
-         */
-        async load() {
-            return this.loadConfig();
-        },
-
-        /**
-         * Load fallback configuration
+         * Load fallback configuration based on current environment
          */
         loadFallbackConfig() {
+            console.log('🔧 Loading fallback configuration...');
+            
             const hostname = window.location.hostname;
             const port = window.location.port;
-            const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+            const search = window.location.search;
             
-            // Force Symfony proxy if we're on a different port than the main server
-            // or if explicitly requested via URL parameter
-            const forceProxy = window.location.search.includes('proxy=true') || 
-                              (isLocal && port === '8001'); // Force proxy for port 8001
+            // Debug info
+            const debug = {
+                hostname,
+                port,
+                isLocal: hostname === 'localhost' || hostname === '127.0.0.1',
+                forceProxy: search.includes('proxy=true') || port === '8001',
+                isLocalDevelopment: hostname === 'localhost' || hostname === '127.0.0.1',
+                search
+            };
             
-            const isLocalDevelopment = isLocal && !forceProxy && port === '8000';
+            console.log('🔧 Fallback config debug:', debug);
+            
+            // Determine if we should force proxy usage
+            const forceProxy = debug.forceProxy;
+            const isLocalDevelopment = debug.isLocalDevelopment;
+            
+            // Set API base URL based on environment
+            let apiBaseUrl;
+            if (forceProxy || !isLocalDevelopment) {
+                apiBaseUrl = '/api';
+            } else {
+                apiBaseUrl = 'http://localhost:8000';
+            }
+            
+            console.log('🔧 Fallback config API base_url:', apiBaseUrl);
             
             return {
                 environment: isLocalDevelopment ? 'local' : 'production',
@@ -66,146 +101,57 @@ if (typeof UnifiedConfig === 'undefined') {
                 servers: {
                     frontend: {
                         host: hostname,
-                        port: port || (window.location.protocol === 'https:' ? '443' : '80'),
-                        url: window.location.origin
+                        port: port || (isLocalDevelopment ? '8001' : '443'),
+                        url: `${window.location.protocol}//${hostname}${port ? ':' + port : ''}`
                     },
                     backend: {
-                        host: isLocalDevelopment ? 'localhost' : 'localhost',
-                        port: isLocalDevelopment ? 8000 : 8000,
-                        url: isLocalDevelopment ? 'http://localhost:8000' : 'http://localhost:8000'
+                        host: isLocalDevelopment ? 'localhost' : hostname,
+                        port: isLocalDevelopment ? '8000' : '8000',
+                        url: isLocalDevelopment ? 'http://localhost:8000' : `https://${hostname}:8000`
                     }
                 },
                 api: {
-                    base_url: isLocalDevelopment ? 'http://localhost:8000' : '/api',
-                    timeout: 30000,
-                    retry_attempts: 3,
+                    base_url: apiBaseUrl,
                     endpoints: {
-                        chat: '/chat',
                         chat_stream: '/chat/stream',
-                        welcome: '/welcome',
                         memory_clear: '/memory/clear',
-                        status: '/status',
-                        health: '/health',
-                        models: '/models',
-                        models_switches: '/models/switches',
-                        models_validation: '/models/validation',
-                        models_backup_status: '/models/backup/status',
-                        models_backup_test: '/models/backup/test',
-                        models_backup: '/models/backup/{model_type}',
-                        models_backup_test_type: '/models/backup/test/{model_type}'
+                        offers: '/offers',
+                        backup_models: '/backup-models'
                     }
                 },
                 cors: {
-                    allowed_origins: ['http://127.0.0.1:8001', 'http://localhost:8001', 'http://127.0.0.1:8000', 'http://localhost:8000'],
+                    allowed_origins: ['*'],
                     allowed_methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-                    allowed_headers: ['Content-Type', 'Authorization'],
-                    allow_credentials: true
+                    allowed_headers: ['*']
                 },
                 ai: {
                     provider: 'groq',
-                    api_key: null,
+                    api_key: '', // Remove process.env reference
                     models: {
                         reasoning: {
                             name: 'moonshotai/kimi-k2-instruct',
-                            temperature: 0.7,
-                            max_tokens: 4000,
-                            top_p: 0.9
+                            temperature: 0.1,
+                            max_tokens: 1024,
+                            enabled: true
                         },
                         generation: {
                             name: 'moonshotai/kimi-k2-instruct',
-                            temperature: 0.8,
-                            max_tokens: 4000,
-                            top_p: 0.9
+                            temperature: 0.7,
+                            max_tokens: 2048,
+                            enabled: true
                         },
                         matcher: {
                             name: 'moonshotai/kimi-k2-instruct',
-                            temperature: 0.3,
-                            max_tokens: 2000,
-                            top_p: 0.8
+                            temperature: 0.1,
+                            max_tokens: 512,
+                            enabled: true
                         },
                         extractor: {
                             name: 'moonshotai/kimi-k2-instruct',
                             temperature: 0.1,
-                            max_tokens: 2000,
-                            top_p: 0.7
+                            max_tokens: 1024,
+                            enabled: true
                         }
-                    },
-                    switches: {
-                        use_reasoning_model: true,
-                        use_generation_model: true,
-                        use_matcher_model: true,
-                        use_extractor_model: true,
-                        use_embedding_model: true
-                    },
-                    backup_models: {
-                        reasoning: [
-                            {
-                                name: 'moonshotai/kimi-k2-instruct',
-                                temperature: 0.7,
-                                max_tokens: 4000,
-                                top_p: 0.9,
-                                priority: 1
-                            },
-                            {
-                                name: 'llama-3.1-8b-instant',
-                                temperature: 0.7,
-                                max_tokens: 2000,
-                                top_p: 0.9,
-                                priority: 2,
-                                reasoning_effort: 'medium'
-                            }
-                        ],
-                        generation: [
-                            {
-                                name: 'moonshotai/kimi-k2-instruct',
-                                temperature: 0.8,
-                                max_tokens: 4000,
-                                top_p: 0.9,
-                                priority: 1
-                            },
-                            {
-                                name: 'llama-3.1-8b-instant',
-                                temperature: 0.8,
-                                max_tokens: 2000,
-                                top_p: 0.9,
-                                priority: 2,
-                                reasoning_effort: 'medium'
-                            }
-                        ],
-                        matcher: [
-                            {
-                                name: 'moonshotai/kimi-k2-instruct',
-                                temperature: 0.3,
-                                max_tokens: 2000,
-                                top_p: 0.8,
-                                priority: 1
-                            },
-                            {
-                                name: 'llama-3.1-8b-instant',
-                                temperature: 0.3,
-                                max_tokens: 1000,
-                                top_p: 0.8,
-                                priority: 2,
-                                reasoning_effort: 'medium'
-                            }
-                        ],
-                        extractor: [
-                            {
-                                name: 'moonshotai/kimi-k2-instruct',
-                                temperature: 0.1,
-                                max_tokens: 2000,
-                                top_p: 0.7,
-                                priority: 1
-                            },
-                            {
-                                name: 'llama-3.1-8b-instant',
-                                temperature: 0.1,
-                                max_tokens: 1000,
-                                top_p: 0.7,
-                                priority: 2,
-                                reasoning_effort: 'medium'
-                            }
-                        ]
                     }
                 }
             };

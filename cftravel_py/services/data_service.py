@@ -46,9 +46,12 @@ class DataService:
         data = self.get_data()
         # Data is a list of offers, not a dictionary with 'offers' key
         if isinstance(data, list):
+            logger.info(f"✅ Loaded {len(data)} offers from data")
             return data
         else:
-            return data.get('offers', [])
+            offers = data.get('offers', [])
+            logger.info(f"✅ Loaded {len(offers)} offers from data")
+            return offers
     
     def get_offer_by_id(self, offer_id: str) -> Optional[Dict[str, Any]]:
         """Get specific offer by ID"""

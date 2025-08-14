@@ -16,6 +16,7 @@ class ChatController extends AbstractController
     private ApiService $apiService;
     private ConfigurationService $config;
     private LoggerInterface $logger;
+    private string $agentApiUrl;
 
     public function __construct(
         ApiService $apiService,
@@ -25,6 +26,7 @@ class ChatController extends AbstractController
         $this->apiService = $apiService;
         $this->config = $config;
         $this->logger = $logger;
+        $this->agentApiUrl = $_ENV['ENVIRONMENT'] === 'production' ? 'http://localhost:8000' : 'http://localhost:8000';
     }
 
     private function addCorsHeaders(array $headers = []): array
@@ -377,7 +379,7 @@ class ChatController extends AbstractController
         }
     }
 
-    #[Route('/api/{path}', name: 'api_proxy', requirements: ['path' => '.+'], methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])]
+    #[Route('/api/{path}', name: 'api_proxy', requirements: ['path' => '^(?!config$).+'], methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])]
     public function apiProxy(Request $request, string $path = ''): Response
     {
         // Handle preflight OPTIONS request

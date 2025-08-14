@@ -29,7 +29,6 @@ if (typeof ModuleLoader === 'undefined') {
                 
                 // Chat modules
                 '/assets/js/modules/chat/chat-core.js',
-                '/assets/js/modules/chat/offer-display.js',
                 
                 // Confirmation modules
                 '/assets/js/modules/confirmation/confirmation-flow.js',
@@ -69,7 +68,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.App = {
             modules: {
                 chat: window.chatCore,
-                offers: window.OfferDisplay,
                 confirmation: window.confirmationFlow,
                 backupDashboard: window.BackupModelDashboard,
                 modelManager: window.modelManager
@@ -106,16 +104,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('🔍 Checking for chatCore availability...');
         console.log('window.chatCore:', window.chatCore);
         
-        if (window.chatCore) {
+        if (window.chatCore && !window.chatCore.initialized) {
             try {
                 console.log('🚀 Initializing chat core...');
-                // Add a small delay to ensure DOM elements are ready
-                await new Promise(resolve => setTimeout(resolve, 100));
                 await window.chatCore.init();
                 console.log('✅ Chat core initialized successfully');
             } catch (error) {
                 console.error('❌ Failed to initialize chat core:', error);
             }
+        } else if (window.chatCore && window.chatCore.initialized) {
+            console.log('✅ Chat core already initialized');
         } else {
             console.warn('⚠️ Chat core not available for initialization');
         }

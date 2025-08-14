@@ -214,7 +214,14 @@ class RecommendationEngineComponent(PipelineComponent):
     async def _vector_search_offers(self, query: str, top_k: int = 10) -> List[Dict]:
         """Use sentence transformer to find similar offers"""
         try:
+            self.logger.info(f"🔍 Searching for query: '{query}' with top_k={top_k}")
             offers = self.semantic_service.search(query, top_k=top_k)
+            
+            self.logger.info(f"🔍 Semantic service returned {len(offers)} offers")
+            
+            # Log first few offers for debugging
+            for i, offer in enumerate(offers[:3]):
+                self.logger.info(f"🔍 Offer {i+1}: {offer.get('product_name', 'Unknown')}")
             
             # Deduplicate offers by product name
             seen_product_names = set()
@@ -231,7 +238,9 @@ class RecommendationEngineComponent(PipelineComponent):
             
         except Exception as e:
             self.logger.error(f"❌ Vector search failed: {e}")
-            return []
+            # Fallback to basic search
+            self.logger.info("🔄 Falling back to basic search...")
+            return await self._fallback_offers({}, top_k)
     
     async def _ai_refine_offers(self, vector_results: List[Dict], preferences: Dict[str, Any], max_offers: int = 3) -> List[Dict]:
         """Use LLM to rank and select the best offers"""
