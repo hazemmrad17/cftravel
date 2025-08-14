@@ -1,3 +1,0 @@
-[33m8cf77ba[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m Fix: Add missing API proxy route and GuzzleHttp dependency for Symfony proxy
-[33me4602eb[m Fix: Update PHP config to use Symfony proxy when frontend is on port 8001
-[33mf97596c[m Fix: Add spinner, update API config, restore Kimi K2 models, and add debugging
