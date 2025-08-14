@@ -11,7 +11,7 @@ if (typeof ChatCore === 'undefined') {
         typingSoundEnabled: false,
         typingAudioContext: null,
         conversationId: null,
-        API_BASE_URL: 'http://localhost:8000',
+        API_BASE_URL: '/api',
         initialized: false, // Add initialized flag
 
         init: async function() {

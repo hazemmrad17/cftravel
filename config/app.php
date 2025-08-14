@@ -44,7 +44,11 @@ return [
     // =============================================================================
     'api' => [
         'base_url' => ($_ENV['ENVIRONMENT'] === 'production' || 
-                      (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], ':8001') !== false)) 
+                      (isset($_SERVER['HTTP_HOST']) && (
+                          strpos($_SERVER['HTTP_HOST'], 'cftravel.net') !== false ||
+                          strpos($_SERVER['HTTP_HOST'], 'ovg-iagent') !== false ||
+                          strpos($_SERVER['HTTP_HOST'], ':8001') !== false
+                      ))) 
                       ? '/api' : 'http://localhost:8000',
         'timeout' => 30,
         'retry_attempts' => 3,
