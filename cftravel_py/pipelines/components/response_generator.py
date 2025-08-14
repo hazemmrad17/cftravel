@@ -45,6 +45,18 @@ class ResponseGeneratorComponent(PipelineComponent):
             elif intent == 'suggestion_request':
                 # User wants AI suggestions - provide helpful recommendations
                 response = await self._generate_natural_response(context, "suggestion")
+            elif intent == 'recommendation_request':
+                # User wants specific recommendations - provide intelligent suggestions
+                response = await self._generate_natural_response(context, "recommendation")
+            elif intent == 'vague_question':
+                # User asks vague questions - ask for clarification
+                response = await self._generate_natural_response(context, "clarification")
+            elif intent == 'information_request':
+                # User wants general travel information
+                response = await self._generate_natural_response(context, "information")
+            elif intent == 'new_search':
+                # User wants to start a new search
+                response = await self._generate_natural_response(context, "new_search")
             elif intent == 'general':
                 # General conversation - respond naturally
                 response = await self._generate_natural_response(context, "conversation")
@@ -78,10 +90,26 @@ class ResponseGeneratorComponent(PipelineComponent):
         offers = context.get_metadata('offers', [])
         
         if not offers:
-                    return {
-            'text': "Je n'ai pas trouvé d'offres correspondant exactement à vos critères. Pouvez-vous préciser vos préférences ?",
-            'type': 'no_offers',
-            'offers': []
+            return {
+                'text': "Je n'ai pas trouvé d'offres correspondant exactement à vos critères. Pouvez-vous préciser vos préférences ?",
+                'type': 'no_offers',
+                'offers': []
+            }
+        
+        # Generate preference summary
+        preference_summary = self._create_preference_summary_text(context.user_preferences)
+        
+        # Generate personalized introduction
+        intro = await self._generate_offer_intro(context, offers)
+        
+        # Combine preference summary with introduction
+        full_response = f"{intro}\n\n📋 **Récapitulatif de vos préférences :**\n{preference_summary}\n\n✨ Voici les offres qui correspondent parfaitement à vos critères :"
+        
+        return {
+            'text': full_response,
+            'type': 'offers',
+            'offers': offers,
+            'show_preference_summary': True
         }
     
     async def _generate_natural_response(self, context: PipelineContext, response_type: str) -> Dict[str, Any]:
@@ -125,7 +153,7 @@ class ResponseGeneratorComponent(PipelineComponent):
             history_str = f"\nHistorique récent: {conversation_history}"
         
         base_prompt = f"""
-Tu es ASIA.fr Agent, un spécialiste du voyage en Asie. Tu dois répondre en français de manière naturelle et chaleureuse.
+Tu es ASIA.fr Agent, un spécialiste du voyage en Asie avec une personnalité décontractée et amicale. Tu parles comme un ami qui connaît bien l'Asie et qui est excité de partager ses connaissances.
 
 CONTEXTE:{context_str}{history_str}
 
@@ -134,14 +162,13 @@ MESSAGE UTILISATEUR: "{user_input}"
 TYPE DE RÉPONSE REQUISE: {response_type}
 
 INSTRUCTIONS:
-- Réponds de manière naturelle et conversationnelle
-- Sois chaleureux et enthousiaste
-- Utilise des emojis appropriés
-- Adapte ta réponse au contexte et à l'historique
-- Si c'est une modification, aide l'utilisateur à ajuster ses préférences
-- Si c'est une suggestion, propose des idées créatives
-- Si c'est une confirmation, confirme et prépare pour les offres
-- Si c'est une conversation générale, sois utile et engageant
+- Parle de manière décontractée et naturelle, comme à un ami
+- Sois enthousiaste et passionné par l'Asie
+- Utilise un ton conversationnel, pas formel
+- Pose des questions de manière naturelle, pas comme une interrogation
+- Sois flexible et ouvert aux suggestions
+- Utilise des expressions familières et chaleureuses
+- Évite le langage trop formel ou commercial
 
 RÉPONSE:
 """
@@ -150,13 +177,21 @@ RÉPONSE:
         if response_type == "greeting":
             base_prompt += "\n- Si c'est un remerciement, réponds poliment\n- Si c'est un au revoir, sois chaleureux\n- Si c'est une salutation, propose ton aide"
         elif response_type == "modification":
-            base_prompt += "\n- Aide l'utilisateur à modifier ses préférences\n- Propose des alternatives\n- Sois flexible et compréhensif"
+            base_prompt += "\n- Aide l'utilisateur à modifier ses préférences\n- Propose des alternatives\n- Sois flexible et compréhensif\n- Rappelle les préférences actuelles\n- Permets de modifier destination, durée, budget, style, etc."
         elif response_type == "suggestion":
-            base_prompt += "\n- Propose des destinations intéressantes\n- Suggère des expériences uniques\n- Sois créatif et inspirant"
+            base_prompt += "\n- Propose des destinations intéressantes\n- Suggère des expériences uniques\n- Sois créatif et inspirant\n- Considère les préférences actuelles"
+        elif response_type == "recommendation":
+            base_prompt += "\n- Analyse les préférences de l'utilisateur en profondeur\n- Recommande des destinations spécifiques basées sur leurs intérêts\n- Considère les caractéristiques des destinations (plages, montagnes, culture, etc.)\n- Sois intelligent dans les correspondances - ne fais pas juste du matching de mots-clés\n- Propose des expériences complémentaires\n- Considère les facteurs saisonniers\n- Sois précis et pertinent dans tes recommandations"
         elif response_type == "confirmation":
             base_prompt += "\n- Confirme les préférences\n- Prépare pour l'affichage des offres\n- Sois enthousiaste"
+        elif response_type == "clarification":
+            base_prompt += "\n- Liste TOUTES les préférences nécessaires en une seule fois\n- Utilise des puces (•) pour chaque préférence\n- Sois enthousiaste et encourageant\n- Propose des exemples pour chaque préférence\n- Mentionne que le budget est optionnel\n- Évite de poser les questions une par une"
+        elif response_type == "information":
+            base_prompt += "\n- Fournis des informations utiles sur le voyage\n- Sois informatif et engageant\n- Propose des conseils pratiques\n- Guide vers la planification"
+        elif response_type == "new_search":
+            base_prompt += "\n- Aide l'utilisateur à commencer une nouvelle recherche\n- Efface les préférences précédentes si nécessaire\n- Sois enthousiaste pour une nouvelle aventure\n- Guide vers la collecte de nouvelles préférences"
         elif response_type == "conversation":
-            base_prompt += "\n- Réponds naturellement à la conversation\n- Sois utile et engageant\n- Guide vers la planification de voyage si approprié"
+            base_prompt += "\n- Réponds naturellement à la conversation\n- Sois utile et engageant\n- Guide vers la planification de voyage si approprié\n- Maintiens le contexte de la conversation"
         
         return base_prompt
     
@@ -170,12 +205,12 @@ USER PREFERENCES: {json.dumps(context.user_preferences, indent=2, ensure_ascii=F
 OFFER COUNT: {len(offers)}
 
 Generate a warm, personalized introduction in French that:
-1. Acknowledges their preferences
+1. Shows excitement about finding perfect offers for them
 2. Mentions the number of offers found
-3. Invites them to explore the offers
-4. Is friendly and professional
+3. Is friendly and enthusiastic
+4. Uses emojis naturally
 
-Keep it concise (2-3 sentences maximum).
+Keep it concise (1-2 sentences maximum).
 
 RESPOND ONLY WITH THE INTRODUCTION TEXT:
 """
@@ -273,24 +308,36 @@ USER INPUT: {context.user_input}
 Generate a warm, friendly response in French that:
 • Uses emojis naturally to express enthusiasm and warmth 🌟✨
 • Acknowledges their input with genuine interest
-• Asks for missing preferences using bullet points (•) with line breaks
+• Lists ALL missing preferences upfront using bullet points
 • Shows excitement about helping them plan their dream trip
 • Uses a conversational, friendly tone like talking to a friend
-• Provides helpful examples with enthusiasm
+• Provides helpful examples for each preference
+• Makes it easy for them to provide all info at once
 
 IMPORTANT FORMATTING RULES:
-• Use bullet points (•) instead of numbers
+• Use bullet points (•) to list all needed preferences upfront
 • Add line breaks after each bullet point
 • Make each bullet point on its own line
 • Include relevant emojis to make it more engaging
 • Keep it conversational, warm and encouraging
+• List ALL necessary preferences at once to minimize questions
 
 Example format:
-• 🌍 Première question avec ligne de retour
+"Japan, huh? Nice choice! Land of sushi, samurai, and some seriously cool tech vibes. 
 
-• ⏱️ Deuxième question avec ligne de retour
+To help you find the perfect trip, I need a few details:
 
-• 💰 Troisième question avec ligne de retour
+• 🌍 Destination (you've got this covered!)
+
+• ⏱️ How long are you planning to stay?
+
+• 👥 How many people are traveling?
+
+• 🎯 What kind of experience are you looking for? (culture, adventure, relaxation, etc.)
+
+• 💰 Any budget in mind? (optional)
+
+Just let me know these details and I'll find you some amazing options!"
 
 RESPOND ONLY WITH THE RESPONSE TEXT:
 """
@@ -303,11 +350,11 @@ CURRENT PREFERENCES: {json.dumps(context.user_preferences, indent=2, ensure_asci
 USER INPUT: {context.user_input}
 
 Generate a warm, enthusiastic response in French that:
-1. 🌟 Summarizes their preferences with excitement
-2. ✨ Shows genuine enthusiasm about finding them the perfect offers
-3. 🎯 Asks for confirmation to show offers with warmth
-4. Uses emojis naturally to express your excitement
-5. Sounds like you're genuinely happy to help them
+1. 🌟 Shows genuine enthusiasm about their travel plans
+2. ✨ Asks for confirmation in a natural, conversational way
+3. Uses emojis naturally to express your excitement
+4. Sounds like you're genuinely happy to help them
+5. Avoids formal language - keep it casual and friendly
 
 Keep it friendly, warm and encouraging - like talking to a friend!
 
@@ -316,11 +363,23 @@ RESPOND ONLY WITH THE RESPONSE TEXT:
             
             messages = [{"role": "user", "content": prompt}]
             response = await self.llm_service.create_generation_completion(messages, stream=False)
-            formatted_response = self._format_with_bullet_points(response.strip())
-            return {
-                'text': formatted_response,
-                'type': 'general'
-            }
+            response_text = response.strip()
+            
+            # Add preference summary when asking for confirmation
+            if preference_count >= 2:
+                preference_summary = self._create_preference_summary_text(context.user_preferences)
+                full_response = f"{response_text}\n\n📋 **Récapitulatif de vos préférences :**\n{preference_summary}\n\nDites-moi si ces préférences vous conviennent pour que je puisse vous montrer les meilleures offres !"
+                return {
+                    'text': full_response,
+                    'type': 'general',
+                    'show_preference_summary': True
+                }
+            else:
+                formatted_response = self._format_with_bullet_points(response_text)
+                return {
+                    'text': formatted_response,
+                    'type': 'general'
+                }
             
         except Exception as e:
             self.logger.error(f"❌ Failed to generate general response: {e}")
@@ -362,6 +421,9 @@ RESPOND ONLY WITH THE RESPONSE TEXT:
         # Remove multiple consecutive empty lines
         result = re.sub(r'\n{3,}', '\n\n', result)
         
+        # Ensure bullet points are properly spaced
+        result = re.sub(r'•\s*', '• ', result)
+        
         return result.strip()
     
     async def _generate_preference_summary_response(self, context: PipelineContext) -> Dict[str, Any]:
@@ -383,16 +445,33 @@ RESPOND ONLY WITH THE RESPONSE TEXT:
         parts = []
         
         if preferences.get('destination'):
-            parts.append(f"🌍 Destination : {preferences['destination']}")
+            parts.append(f"🌍 **Destination :** {preferences['destination']}")
         if preferences.get('duration'):
-            parts.append(f"⏱️ Durée : {preferences['duration']}")
+            parts.append(f"⏱️ **Durée :** {preferences['duration']}")
         if preferences.get('budget'):
-            parts.append(f"💰 Budget : {preferences['budget']}")
+            parts.append(f"💰 **Budget :** {preferences['budget']}")
         if preferences.get('style'):
-            parts.append(f"🎯 Style : {preferences['style']}")
+            parts.append(f"🎯 **Style de voyage :** {preferences['style']}")
         if preferences.get('group_size'):
-            parts.append(f"👥 Groupe : {preferences['group_size']}")
+            parts.append(f"👥 **Taille du groupe :** {preferences['group_size']}")
         if preferences.get('timing'):
-            parts.append(f"📅 Période : {preferences['timing']}")
+            parts.append(f"📅 **Période :** {preferences['timing']}")
         
-        return "\n".join(parts) if parts else "Aucune préférence spécifique détectée" 
+        # Add missing preferences as placeholders
+        missing_prefs = []
+        if not preferences.get('destination'):
+            missing_prefs.append("🌍 Destination")
+        if not preferences.get('duration'):
+            missing_prefs.append("⏱️ Durée")
+        if not preferences.get('style'):
+            missing_prefs.append("🎯 Style de voyage")
+        if not preferences.get('group_size'):
+            missing_prefs.append("👥 Taille du groupe")
+        
+        summary = "\n".join(parts) if parts else "Aucune préférence spécifique détectée"
+        
+        # Add missing preferences section if any
+        if missing_prefs:
+            summary += f"\n\n❓ **Préférences manquantes :**\n" + "\n".join([f"• {pref}" for pref in missing_prefs])
+        
+        return summary 

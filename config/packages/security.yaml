@@ -23,26 +23,7 @@ security:
             pattern: ^/chat
             security: false
         main:
-            lazy: true
-            provider: app_user_provider
-            logout:
-                path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
-
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800
-                path: /
-                # by default, the feature is enabled by checking a checkbox in the
-                # login form, uncomment the following line to always enable it.
-                #always_remember_me: true
-
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+            security: false
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
@@ -55,8 +36,8 @@ security:
         - { path: ^/chat, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/conversations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/conversation/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/settings, roles: ROLE_USER }
+        - { path: ^/profile, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/settings, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 when@test:
     security:

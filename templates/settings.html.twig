@@ -44,7 +44,7 @@
                   Prénom
                 </label>
                 <div class="mt-1">
-                  <input type="text" name="first_name" id="first-name" autocomplete="given-name" value="{{ app.user.firstName|default('') }}" class="border w-full text-sm dark:text-white/90 dark:placeholder:text-white/90 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:border-primary-300 dark:focus:border-primary-500 focus:outline-0 focus:ring-3 focus:ring-primary-300/20 text-left h-12 shadow-theme-xs border-gray-300 rounded-full px-5 py-2.5">
+                  <input type="text" name="first_name" id="first-name" autocomplete="given-name" value="" class="border w-full text-sm dark:text-white/90 dark:placeholder:text-white/90 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:border-primary-300 dark:focus:border-primary-500 focus:outline-0 focus:ring-3 focus:ring-primary-300/20 text-left h-12 shadow-theme-xs border-gray-300 rounded-full px-5 py-2.5">
                 </div>
               </div>
               <div>
@@ -52,7 +52,7 @@
                   Nom de famille
                 </label>
                 <div class="mt-1">
-                  <input type="text" name="last_name" id="last-name" autocomplete="family-name" value="{{ app.user.lastName|default('') }}" class="border w-full text-sm dark:text-white/90 dark:placeholder:text-white/90 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:border-primary-300 dark:focus:border-primary-500 focus:outline-0 focus:ring-3 focus:ring-primary-300/20 text-left h-12 shadow-theme-xs border-gray-300 rounded-full px-5 py-2.5">
+                  <input type="text" name="last_name" id="last-name" autocomplete="family-name" value="" class="border w-full text-sm dark:text-white/90 dark:placeholder:text-white/90 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:border-primary-300 dark:focus:border-primary-500 focus:outline-0 focus:ring-3 focus:ring-primary-300/20 text-left h-12 shadow-theme-xs border-gray-300 rounded-full px-5 py-2.5">
                 </div>
               </div>
               <div>
@@ -60,7 +60,7 @@
                   Adresse email
                 </label>
                 <div class="mt-1">
-                  <input id="email" name="email" type="email" autocomplete="email" value="{{ app.user.email|default('') }}" class="border w-full text-sm dark:text-white/90 dark:placeholder:text-white/90 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:border-primary-300 dark:focus:border-primary-500 focus:outline-0 focus:ring-3 focus:ring-primary-300/20 text-left h-12 shadow-theme-xs border-gray-300 rounded-full px-5 py-2.5">
+                  <input id="email" name="email" type="email" autocomplete="email" value="" class="border w-full text-sm dark:text-white/90 dark:placeholder:text-white/90 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:border-primary-300 dark:focus:border-primary-500 focus:outline-0 focus:ring-3 focus:ring-primary-300/20 text-left h-12 shadow-theme-xs border-gray-300 rounded-full px-5 py-2.5">
                 </div>
               </div>
             </div>
@@ -244,7 +244,7 @@
                     >
                     <span
                       class="mt-1 block text-base text-gray-800 dark:text-white/90"
-                      >{{ app.user.firstName }}</span
+                      >Utilisateur</span
                     >
                   </div>
                   <div>
@@ -254,7 +254,7 @@
                     >
                     <span
                       class="mt-1 block text-base text-gray-800 dark:text-white/90"
-                      >{{ app.user.lastName }}</span
+                      >Invité</span
                     >
                   </div>
                   <div>
@@ -264,7 +264,7 @@
                     >
                     <span
                       class="mt-1 block text-base text-gray-800 dark:text-white/90"
-                      >{{ app.user.email }}</span
+                      >utilisateur@example.com</span
                     >
                   </div>
                 </div>

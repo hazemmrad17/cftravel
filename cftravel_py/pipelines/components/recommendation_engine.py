@@ -138,24 +138,43 @@ class RecommendationEngineComponent(PipelineComponent):
             'bhutan': ['Bhoutan', 'Thimphou', 'Bhoutanais', 'Bhoutan culturel'],
             'mongolia': ['Mongolie', 'Oulan-Bator', 'Mongol', 'Mongolie culturel'],
             'mongolie': ['Mongolie', 'Oulan-Bator', 'Mongol', 'Mongolie culturel'],
-            'maldives': ['Maldives', 'Maldive', 'Îles Maldives', 'Atoll Maldives', 'Plage paradisiaque', 'Eau turquoise', 'Bungalow sur pilotis'],
-            'maldive': ['Maldives', 'Maldive', 'Îles Maldives', 'Atoll Maldives', 'Plage paradisiaque', 'Eau turquoise', 'Bungalow sur pilotis'],
-            'australia': ['Australie', 'Sydney', 'Melbourne', 'Perth', 'Adélaïde', 'Australien', 'Australie culturel'],
-            'australie': ['Australie', 'Sydney', 'Melbourne', 'Perth', 'Adélaïde', 'Australien', 'Australie culturel']
+            'maldives': ['Maldives', 'Maldive', 'Îles Maldives', 'Atoll Maldives', 'Plage paradisiaque', 'Eau turquoise', 'Bungalow sur pilotis', 'Océan Indien', 'Atoll', 'Plage de sable blanc', 'Snorkeling', 'Plongée', 'Resort de luxe'],
+            'maldive': ['Maldives', 'Maldive', 'Îles Maldives', 'Atoll Maldives', 'Plage paradisiaque', 'Eau turquoise', 'Bungalow sur pilotis', 'Océan Indien', 'Atoll', 'Plage de sable blanc', 'Snorkeling', 'Plongée', 'Resort de luxe'],
+            'australia': ['Australie', 'Sydney', 'Melbourne', 'Perth', 'Adélaïde', 'Darwin', 'Cairns', 'Brisbane', 'Australien', 'Australie culturel', 'Outback', 'Great Barrier Reef', 'Uluru', 'Kangaroo Island', 'Gold Coast'],
+            'australie': ['Australie', 'Sydney', 'Melbourne', 'Perth', 'Adélaïde', 'Darwin', 'Cairns', 'Brisbane', 'Australien', 'Australie culturel', 'Outback', 'Great Barrier Reef', 'Uluru', 'Kangaroo Island', 'Gold Coast']
         }
         
-        # Add destination terms
+        # Add destination terms with enhanced matching
         if preferences.get('destination'):
             destination_lower = preferences['destination'].lower()
             if destination_lower in destination_mappings:
                 query_parts.extend(destination_mappings[destination_lower])
+                # Add additional context for better matching
+                query_parts.extend([
+                    f"circuit {destination_lower}",
+                    f"voyage {destination_lower}",
+                    f"séjour {destination_lower}",
+                    f"découverte {destination_lower}",
+                    f"aventure {destination_lower}",
+                    f"expérience {destination_lower}",
+                    f"destination {destination_lower}",
+                    f"pays {destination_lower}",
+                    f"région {destination_lower}"
+                ])
             else:
+                # For unknown destinations, create comprehensive search terms
                 query_parts.extend([
                     f"voyage {preferences['destination']}",
                     f"circuit {preferences['destination']}",
                     f"découverte {preferences['destination']}",
+                    f"séjour {preferences['destination']}",
+                    f"aventure {preferences['destination']}",
+                    f"destination {preferences['destination']}",
+                    f"pays {preferences['destination']}",
+                    f"région {preferences['destination']}",
                     f"{preferences['destination']} culturel",
-                    f"{preferences['destination']} traditionnel"
+                    f"{preferences['destination']} traditionnel",
+                    f"{preferences['destination']} authentique"
                 ])
         
         # Add other preferences with enhanced context
@@ -179,15 +198,15 @@ class RecommendationEngineComponent(PipelineComponent):
             elif 'gastronomie' in style.lower() or 'food' in style.lower():
                 query_parts.extend(["gastronomie", "cuisine locale", "dégustations"])
         
+        # Budget is optional - only add if clearly specified
         if preferences.get('budget'):
-            budget = preferences['budget']
-            query_parts.append(f"budget {budget}")
-            if 'moyen' in budget.lower() or 'medium' in budget.lower():
-                query_parts.append("prix moyen")
-            elif 'élevé' in budget.lower() or 'high' in budget.lower():
+            budget = str(preferences['budget']).lower()
+            # Only add budget terms if it's a clear budget preference
+            if any(word in budget for word in ['luxe', 'premium', 'haut', 'high']):
                 query_parts.append("luxe premium")
-            elif 'bas' in budget.lower() or 'low' in budget.lower():
+            elif any(word in budget for word in ['bas', 'petit', 'low', 'économique']):
                 query_parts.append("économique")
+            # For unclear budget terms, don't add budget constraints - focus on destination
         
         if preferences.get('group_size'):
             group_size = preferences['group_size']

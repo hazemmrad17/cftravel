@@ -39,5 +39,9 @@ safetensors
 huggingface-hub
 fsspec
 
+# Web scraping
+beautifulsoup4
+lxml
+
 # Development and debugging
 colorama 

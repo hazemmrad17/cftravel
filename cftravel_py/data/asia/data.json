@@ -10,10 +10,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "25/03/2026",
+      "28/10/2026"
     ],
-    "duration": 8,
+    "duration": "8 jours / 7 nuits",
     "min_group_size": 6,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -66,7 +66,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 1990.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:12",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=115&ttc=1"
+    },
+    "date_range": "25/03/2026 - 28/10/2026"
   },
   {
     "product_name": "Japon Intimiste",
@@ -91,9 +99,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "16/03/2026",
+      "19/10/2026"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 10,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -155,7 +164,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 7990.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:13",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=411&ttc=1"
+    },
+    "date_range": "16/03/2026 - 19/10/2026"
   },
   {
     "product_name": "Vietnam Intimiste",
@@ -180,11 +197,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "10/01/2026",
+      "19/12/2026"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -248,7 +264,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3790.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:21",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=532&ttc=1"
+    },
+    "date_range": "10/01/2026 - 19/12/2026"
   },
   {
     "product_name": "Vietnam Essentiel",
@@ -277,11 +301,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "05/01/2026",
+      "07/12/2026"
     ],
-    "duration": 12,
+    "duration": "12 jours / 9 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -339,7 +362,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2390.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:21",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=537&ttc=1"
+    },
+    "date_range": "05/01/2026 - 07/12/2026"
   },
   {
     "product_name": "Mosaïque Vietnamienne",
@@ -368,11 +399,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "08/01/2026",
+      "20/12/2026"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -438,7 +468,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2990.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:29",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=543&ttc=1"
+    },
+    "date_range": "08/01/2026 - 20/12/2026"
   },
   {
     "product_name": "Vietnam Essentiel + prologue Sapa",
@@ -467,11 +505,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "18/10/2025",
+      "01/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -531,7 +568,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3023.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:30",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=550&ttc=1"
+    },
+    "date_range": "18/10/2025 - 01/11/2025"
   },
   {
     "product_name": "Ceylan Intimiste - Sri Lanka",
@@ -544,10 +589,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "02/11/2025",
+      "21/12/2025"
     ],
-    "duration": 13,
+    "duration": "13 jours / 10 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -606,7 +651,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3105.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:34",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=556&ttc=1"
+    },
+    "date_range": "02/11/2025 - 21/12/2025"
   },
   {
     "product_name": "Thailande Essentielle",
@@ -643,12 +696,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "06/01/2026",
+      "01/12/2026"
     ],
-    "duration": 10,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -702,7 +753,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 1650.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:37",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=557&ttc=1"
+    },
+    "date_range": "06/01/2026 - 01/12/2026"
   },
   {
     "product_name": "Tonkin Hors Sentiers - Vietnam",
@@ -715,11 +774,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "03/10/2025",
+      "10/10/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 4,
     "max_group_size": 12,
     "offer_type": "Circuits organisés en groupe",
@@ -773,7 +831,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2923.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:41",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=574&ttc=1"
+    },
+    "date_range": "03/10/2025 - 10/10/2025"
   },
   {
     "product_name": "Ceylan Intimiste + séjour Maldives 4* - Sri Lanka",
@@ -790,10 +856,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "02/11/2025",
+      "21/12/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -866,7 +932,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4375.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:43",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=586&ttc=1"
+    },
+    "date_range": "02/11/2025 - 21/12/2025"
   },
   {
     "product_name": "Thailande Essentielle + séjour Phuket 4*",
@@ -907,12 +981,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "06/01/2026",
+      "01/12/2026"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -973,7 +1045,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2140.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:46",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=588&ttc=1"
+    },
+    "date_range": "06/01/2026 - 01/12/2026"
   },
   {
     "product_name": "Vietnam Essentiel + prologue Sapa",
@@ -1002,11 +1082,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "17/01/2026",
+      "28/11/2026"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -1066,7 +1145,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2990.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:52",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=606&ttc=1"
+    },
+    "date_range": "17/01/2026 - 28/11/2026"
   },
   {
     "product_name": "Mosaïque Vietnamienne + extension Angkor, Cambodge",
@@ -1099,10 +1186,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "15/01/2026",
+      "20/12/2026"
     ],
-    "duration": 18,
+    "duration": "18 jours / 15 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -1172,7 +1259,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3930.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:55",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=608&ttc=1"
+    },
+    "date_range": "15/01/2026 - 20/12/2026"
   },
   {
     "product_name": "Vietnam Intimiste + extension Angkor, Cambodge",
@@ -1201,10 +1296,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "10/01/2026",
+      "19/12/2026"
     ],
-    "duration": 20,
+    "duration": "20 jours / 17 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -1263,7 +1358,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4890.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:18:59",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=644&ttc=1"
+    },
+    "date_range": "10/01/2026 - 19/12/2026"
   },
   {
     "product_name": "Rajasthan Essentiel - Inde",
@@ -1292,10 +1395,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "27/07/2025"
+      "06/11/2025",
+      "22/12/2025"
     ],
-    "duration": 12,
+    "duration": "12 jours / 10 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -1353,7 +1456,15 @@
         "27/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 1908.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:02",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=966&ttc=1"
+    },
+    "date_range": "06/11/2025 - 22/12/2025"
   },
   {
     "product_name": "Horizons Ladakh - Inde",
@@ -1378,10 +1489,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "27/07/2025"
+      "09/09/2025",
+      "09/09/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 13 nuits",
     "min_group_size": 6,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -1442,7 +1553,15 @@
         "27/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3523.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:05",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=968&ttc=1"
+    },
+    "date_range": "09/09/2025 - 09/09/2025"
   },
   {
     "product_name": "Temples et épices - Inde du Sud",
@@ -1475,10 +1594,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "27/07/2025"
+      "30/10/2025",
+      "23/12/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -1545,7 +1664,15 @@
         "27/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2723.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:10",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=969&ttc=1"
+    },
+    "date_range": "30/10/2025 - 23/12/2025"
   },
   {
     "product_name": "Rajasthan Intimiste avec Air India - Inde",
@@ -1574,10 +1701,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "27/07/2025"
+      "05/11/2025",
+      "21/12/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": 6,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -1641,7 +1768,15 @@
         "27/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2923.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:13",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=975&ttc=1"
+    },
+    "date_range": "05/11/2025 - 21/12/2025"
   },
   {
     "product_name": "Bali Essentiel",
@@ -1658,10 +1793,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "27/10/2025",
+      "27/10/2025"
     ],
-    "duration": 10,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 2,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -1718,7 +1853,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2028.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:17",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=977&ttc=1"
+    },
+    "date_range": "27/10/2025 - 27/10/2025"
   },
   {
     "product_name": "Couleurs Philippines",
@@ -1743,9 +1886,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "12/11/2025",
+      "12/11/2025"
     ],
-    "duration": 12,
+    "duration": "12 jours / 9 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -1802,7 +1946,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3428.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:19",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=979&ttc=1"
+    },
+    "date_range": "12/11/2025 - 12/11/2025"
   },
   {
     "product_name": "Le Royaume du Matin calme - Corée du Sud",
@@ -1827,10 +1979,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "27/10/2025",
+      "10/11/2025"
     ],
-    "duration": 12,
+    "duration": "12 jours / 10 nuits",
     "min_group_size": 10,
     "max_group_size": 20,
     "offer_type": "Circuits organisés en groupe",
@@ -1894,7 +2046,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4103.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:23",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=986&ttc=1"
+    },
+    "date_range": "27/10/2025 - 10/11/2025"
   },
   {
     "product_name": "Bali Intimiste",
@@ -1911,10 +2071,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "18/09/2025",
+      "06/11/2025"
     ],
-    "duration": 12,
+    "duration": "12 jours / 10 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -1971,7 +2131,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2753.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:25",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=998&ttc=1"
+    },
+    "date_range": "18/09/2025 - 06/11/2025"
   },
   {
     "product_name": "Siam Intimiste - Thailande",
@@ -1992,12 +2160,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "13/01/2026",
+      "24/11/2026"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -2049,7 +2215,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3100.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:31",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1002&ttc=1"
+    },
+    "date_range": "13/01/2026 - 24/11/2026"
   },
   {
     "product_name": "Ceylan Bonheur - Sri Lanka",
@@ -2062,10 +2236,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "10/09/2025",
+      "03/12/2025"
     ],
-    "duration": 12,
+    "duration": "12 jours / 9 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -2123,7 +2297,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2595.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:34",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1005&ttc=1"
+    },
+    "date_range": "10/09/2025 - 03/12/2025"
   },
   {
     "product_name": "Balade Lao-khmère - Laos, Cambodge",
@@ -2148,10 +2330,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "21/10/2025",
+      "02/12/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 6,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -2209,7 +2391,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4123.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:38",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1009&ttc=1"
+    },
+    "date_range": "21/10/2025 - 02/12/2025"
   },
   {
     "product_name": "Vietnam Essentiel",
@@ -2238,11 +2428,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "08/09/2025",
+      "22/12/2025"
     ],
-    "duration": 12,
+    "duration": "12 jours / 9 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -2300,7 +2489,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2423.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:42",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1011&ttc=1"
+    },
+    "date_range": "08/09/2025 - 22/12/2025"
   },
   {
     "product_name": "Mosaïque Vietnamienne",
@@ -2329,11 +2526,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "11/09/2025",
+      "18/12/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -2399,7 +2595,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2983.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:47",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1012&ttc=1"
+    },
+    "date_range": "11/09/2025 - 18/12/2025"
   },
   {
     "product_name": "Vietnam Intimiste",
@@ -2424,11 +2628,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "27/09/2025",
+      "22/11/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -2490,7 +2693,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3823.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:48",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1013&ttc=1"
+    },
+    "date_range": "27/09/2025 - 22/11/2025"
   },
   {
     "product_name": "Japon Essentiel",
@@ -2515,9 +2726,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "13/10/2025",
+      "03/11/2025"
     ],
-    "duration": 10,
+    "duration": "10 jours / 8 nuits",
     "min_group_size": 10,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -2575,7 +2787,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4523.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:54",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1021&ttc=1"
+    },
+    "date_range": "13/10/2025 - 03/11/2025"
   },
   {
     "product_name": "Samourais et Jardins zen - Japon",
@@ -2604,9 +2824,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "14/03/2026",
+      "14/11/2026"
     ],
-    "duration": 13,
+    "duration": "13 jours / 10 nuits",
     "min_group_size": 10,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -2666,7 +2887,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5390.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:57",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1022&ttc=1"
+    },
+    "date_range": "14/03/2026 - 14/11/2026"
   },
   {
     "product_name": "Ceylan Bonheur + séjour Sri Lanka 4*sup - Sri Lanka",
@@ -2679,10 +2908,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "10/09/2025",
+      "19/12/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -2743,7 +2972,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2935.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:19:59",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1071&ttc=1"
+    },
+    "date_range": "10/09/2025 - 19/12/2025"
   },
   {
     "product_name": "Ceylan Bonheur + séjour Maldives 4* - Sri Lanka",
@@ -2760,10 +2997,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "10/09/2025",
+      "19/12/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -2826,7 +3063,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3835.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:05",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1073&ttc=1"
+    },
+    "date_range": "10/09/2025 - 19/12/2025"
   },
   {
     "product_name": "Rajasthan Intimiste + Vallée du Gange - Inde",
@@ -2867,10 +3112,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "27/07/2025"
+      "15/10/2025",
+      "29/10/2025"
     ],
-    "duration": 19,
+    "duration": "19 jours / 17 nuits",
     "min_group_size": 6,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -2941,7 +3186,15 @@
         "27/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3783.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:08",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1078&ttc=1"
+    },
+    "date_range": "15/10/2025 - 29/10/2025"
   },
   {
     "product_name": "Temples et épices + Karnataka / Goa - Inde du Sud",
@@ -2978,10 +3231,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "27/07/2025"
+      "13/11/2025",
+      "13/11/2025"
     ],
-    "duration": 19,
+    "duration": "19 jours / 17 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -3047,7 +3300,15 @@
         "27/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3650.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:13",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1079&ttc=1"
+    },
+    "date_range": "13/11/2025 - 13/11/2025"
   },
   {
     "product_name": "Vietnam Essentiel + extension Angkor, Cambodge",
@@ -3080,10 +3341,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "08/09/2025",
+      "22/12/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -3145,7 +3406,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3353.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:14",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1083&ttc=1"
+    },
+    "date_range": "08/09/2025 - 22/12/2025"
   },
   {
     "product_name": "Mosaïque Vietnamienne + extension Angkor, Cambodge",
@@ -3178,10 +3447,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "11/09/2025",
+      "18/12/2025"
     ],
-    "duration": 18,
+    "duration": "18 jours / 15 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -3250,7 +3519,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3913.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:21",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1084&ttc=1"
+    },
+    "date_range": "11/09/2025 - 18/12/2025"
   },
   {
     "product_name": "Vietnam Intimiste + extension Angkor, Cambodge",
@@ -3279,10 +3556,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "27/09/2025",
+      "22/11/2025"
     ],
-    "duration": 20,
+    "duration": "20 jours / 17 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -3347,7 +3624,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4943.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:20",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1085&ttc=1"
+    },
+    "date_range": "27/09/2025 - 22/11/2025"
   },
   {
     "product_name": "Bali Essentiel + extension Célèbes",
@@ -3364,10 +3649,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "27/10/2025",
+      "27/10/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 2,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -3428,7 +3713,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2988.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:27",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1087&ttc=1"
+    },
+    "date_range": "27/10/2025 - 27/10/2025"
   },
   {
     "product_name": "Bali Intimiste + extension Célèbes",
@@ -3445,10 +3738,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "18/09/2025",
+      "06/11/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -3508,7 +3801,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3783.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:29",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1088&ttc=1"
+    },
+    "date_range": "18/09/2025 - 06/11/2025"
   },
   {
     "product_name": "Java Bali, perles de l'archipel - Indonésie",
@@ -3537,10 +3838,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "07/09/2025",
+      "19/10/2025"
     ],
-    "duration": 13,
+    "duration": "13 jours / 10 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -3600,7 +3901,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2883.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:34",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1089&ttc=1"
+    },
+    "date_range": "07/09/2025 - 19/10/2025"
   },
   {
     "product_name": "Couleurs Philippines + séjour Panglao 3*sup",
@@ -3625,9 +3934,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "14/01/2026",
+      "02/12/2026"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -3683,7 +3993,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3820.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:34",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1096&ttc=1"
+    },
+    "date_range": "14/01/2026 - 02/12/2026"
   },
   {
     "product_name": "Siam Intimiste + séjour Phuket 4* - Thailande",
@@ -3708,12 +4026,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "13/01/2026",
+      "17/11/2026"
     ],
-    "duration": 18,
+    "duration": "18 jours / 15 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -3775,7 +4091,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3350.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:40",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1103&ttc=1"
+    },
+    "date_range": "13/01/2026 - 17/11/2026"
   },
   {
     "product_name": "Bali Essentiel + séjour Bali 3*",
@@ -3792,10 +4116,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "27/10/2025",
+      "27/10/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 2,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -3857,7 +4181,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2398.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:42",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1110&ttc=1"
+    },
+    "date_range": "27/10/2025 - 27/10/2025"
   },
   {
     "product_name": "Bali Intimiste + séjour Bali 4*",
@@ -3874,10 +4206,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "18/09/2025",
+      "06/11/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -3938,7 +4270,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3153.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:46",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1111&ttc=1"
+    },
+    "date_range": "18/09/2025 - 06/11/2025"
   },
   {
     "product_name": "Bali Intimiste + extension Komodo",
@@ -3955,10 +4295,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "18/09/2025",
+      "06/11/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -4020,7 +4360,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4303.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:49",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1128&ttc=1"
+    },
+    "date_range": "18/09/2025 - 06/11/2025"
   },
   {
     "product_name": "Vietnam Essentiel + extension Angkor, Cambodge",
@@ -4053,10 +4401,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "05/01/2026",
+      "07/12/2026"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -4118,7 +4466,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3330.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:56",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1241&ttc=1"
+    },
+    "date_range": "05/01/2026 - 07/12/2026"
   },
   {
     "product_name": "Le Royaume du Matin calme - Corée du Sud",
@@ -4143,10 +4499,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "30/03/2026",
+      "09/11/2026"
     ],
-    "duration": 12,
+    "duration": "12 jours / 10 nuits",
     "min_group_size": 10,
     "max_group_size": 20,
     "offer_type": "Circuits organisés en groupe",
@@ -4209,7 +4565,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3990.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:20:57",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1244&ttc=1"
+    },
+    "date_range": "30/03/2026 - 09/11/2026"
   },
   {
     "product_name": "La Péninsule Etincelante (mars/oct./nov. 2025) - Malaisie",
@@ -4234,10 +4598,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "19/10/2025",
+      "09/11/2025"
     ],
-    "duration": 12,
+    "duration": "12 jours / 9 nuits",
     "min_group_size": 8,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -4298,7 +4662,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3393.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:03",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1247&ttc=1"
+    },
+    "date_range": "19/10/2025 - 09/11/2025"
   },
   {
     "product_name": "Népal Intimiste",
@@ -4311,11 +4683,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "01/09/2025"
+      "25/02/2026",
+      "04/11/2026"
     ],
-    "duration": 13,
+    "duration": "13 jours / 10 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -4378,7 +4749,15 @@
         "01/09/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3690.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:04",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1251&ttc=1"
+    },
+    "date_range": "25/02/2026 - 04/11/2026"
   },
   {
     "product_name": "Cambodge Emotion",
@@ -4395,10 +4774,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "05/01/2026",
+      "23/11/2026"
     ],
-    "duration": 13,
+    "duration": "13 jours / 10 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -4443,7 +4822,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2990.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:09",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1252&ttc=1"
+    },
+    "date_range": "05/01/2026 - 23/11/2026"
   },
   {
     "product_name": "Couleurs Philippines",
@@ -4468,9 +4855,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "14/01/2026",
+      "02/12/2026"
     ],
-    "duration": 12,
+    "duration": "12 jours / 9 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -4526,7 +4914,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3390.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:10",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1253&ttc=1"
+    },
+    "date_range": "14/01/2026 - 02/12/2026"
   },
   {
     "product_name": "Rencontre à Formose - Taiwan",
@@ -4547,10 +4943,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "01/03/2025"
+      "19/01/2026",
+      "16/11/2026"
     ],
-    "duration": 11,
+    "duration": "11 jours / 8 nuits",
     "min_group_size": 6,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -4607,7 +5003,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2990.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:16",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1254&ttc=1"
+    },
+    "date_range": "19/01/2026 - 16/11/2026"
   },
   {
     "product_name": "Japon Essentiel (7 nuits)",
@@ -4628,9 +5032,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "23/03/2026",
+      "02/11/2026"
     ],
-    "duration": 9,
+    "duration": "9 jours / 7 nuits",
     "min_group_size": 10,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -4683,7 +5088,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3590.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:18",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1259&ttc=1"
+    },
+    "date_range": "23/03/2026 - 02/11/2026"
   },
   {
     "product_name": "Fjords et Maoris - Nouvelle-Zélande",
@@ -4712,9 +5125,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "06/01/2026",
+      "24/11/2026"
     ],
-    "duration": 18,
+    "duration": "18 jours / 14 nuits",
     "min_group_size": 8,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -4788,7 +5202,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 7790.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:21",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1261&ttc=1"
+    },
+    "date_range": "06/01/2026 - 24/11/2026"
   },
   {
     "product_name": "Chine Intimiste",
@@ -4813,11 +5235,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "31/05/2025"
+      "01/11/2025",
+      "11/07/2026"
     ],
-    "duration": 16,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 6,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -4886,7 +5307,15 @@
         "31/05/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 800.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:25",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1266&ttc=1"
+    },
+    "date_range": "01/11/2025 - 11/07/2026"
   },
   {
     "product_name": "La Palette Indonésienne base Sadara Resort 4*",
@@ -4911,10 +5340,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "15/08/2025",
+      "17/10/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -4975,7 +5404,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3828.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:30",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1271&ttc=1"
+    },
+    "date_range": "15/08/2025 - 17/10/2025"
   },
   {
     "product_name": "Odyssée Australienne",
@@ -5004,9 +5441,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "30/10/2025",
+      "30/10/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 10,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -5060,7 +5498,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 8130.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:33",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1278&ttc=1"
+    },
+    "date_range": "30/10/2025 - 30/10/2025"
   },
   {
     "product_name": "Le Royaume du Matin calme + Ile de Jeju - Corée du Sud",
@@ -5089,10 +5535,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "08/04/2026",
+      "04/11/2026"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": 10,
     "max_group_size": 20,
     "offer_type": "Circuits organisés en groupe",
@@ -5160,7 +5606,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4980.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:36",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1302&ttc=1"
+    },
+    "date_range": "08/04/2026 - 04/11/2026"
   },
   {
     "product_name": "Cambodge Emotion + city break Singapour",
@@ -5181,10 +5635,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "05/01/2026",
+      "23/11/2026"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -5230,7 +5684,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3480.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:38",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1303&ttc=1"
+    },
+    "date_range": "05/01/2026 - 23/11/2026"
   },
   {
     "product_name": "La Palette Indonésienne base Sadara Resort + séjour Bali 4*",
@@ -5255,10 +5717,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "15/08/2025",
+      "17/10/2025"
     ],
-    "duration": 20,
+    "duration": "20 jours / 17 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -5322,7 +5784,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4128.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:43",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1307&ttc=1"
+    },
+    "date_range": "15/08/2025 - 17/10/2025"
   },
   {
     "product_name": "La Palette Indonésienne base Sadara Resort 4* + extension Komodo",
@@ -5347,10 +5817,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "15/08/2025",
+      "17/10/2025"
     ],
-    "duration": 20,
+    "duration": "20 jours / 17 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -5414,7 +5884,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5278.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:44",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1308&ttc=1"
+    },
+    "date_range": "15/08/2025 - 17/10/2025"
   },
   {
     "product_name": "Couleurs Philippines + séjour Panglao 3*sup",
@@ -5439,9 +5917,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "12/11/2025",
+      "12/11/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -5500,7 +5979,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3833.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:51",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1309&ttc=1"
+    },
+    "date_range": "12/11/2025 - 12/11/2025"
   },
   {
     "product_name": "Horizons Ladakh + Vallée de la Nubra - Inde",
@@ -5525,10 +6012,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "27/07/2025"
+      "02/09/2025",
+      "02/09/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 16 nuits",
     "min_group_size": 6,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -5598,7 +6085,15 @@
         "27/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3923.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:51",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1318&ttc=1"
+    },
+    "date_range": "02/09/2025 - 02/09/2025"
   },
   {
     "product_name": "Séduction Thaïe + séjour Khao Lak - Moracea 4* - Thailande",
@@ -5631,12 +6126,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "08/09/2025",
+      "24/11/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -5703,7 +6196,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2855.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:00",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1323&ttc=1"
+    },
+    "date_range": "08/09/2025 - 24/11/2025"
   },
   {
     "product_name": "Japon Essentiel + Extension Tokyo",
@@ -5724,9 +6225,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "23/03/2026",
+      "02/11/2026"
     ],
-    "duration": 11,
+    "duration": "11 jours / 9 nuits",
     "min_group_size": 10,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -5779,7 +6281,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3880.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:21:57",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1348&ttc=1"
+    },
+    "date_range": "23/03/2026 - 02/11/2026"
   },
   {
     "product_name": "Odyssée Australienne + Melbourne",
@@ -5812,9 +6322,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "02/10/2025",
+      "02/10/2025"
     ],
-    "duration": 20,
+    "duration": "20 jours / 17 nuits",
     "min_group_size": 10,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -5873,7 +6384,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 8790.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:05",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1352&ttc=1"
+    },
+    "date_range": "02/10/2025 - 02/10/2025"
   },
   {
     "product_name": "Siam Intimiste - Thailande",
@@ -5894,12 +6413,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "04/11/2025",
+      "25/11/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -5958,7 +6475,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3093.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:06",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1502&ttc=1"
+    },
+    "date_range": "04/11/2025 - 25/11/2025"
   },
   {
     "product_name": "Siam Intimiste + séjour Khao Lak 4* - Thailande",
@@ -5979,12 +6504,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "04/11/2025",
+      "25/11/2025"
     ],
-    "duration": 18,
+    "duration": "18 jours / 15 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -6048,7 +6571,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3363.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:10",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1503&ttc=1"
+    },
+    "date_range": "04/11/2025 - 25/11/2025"
   },
   {
     "product_name": "Histoire de Jordanie",
@@ -6061,10 +6592,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "24/09/2025",
+      "05/11/2025"
     ],
-    "duration": 8,
+    "duration": "8 jours / 7 nuits",
     "min_group_size": 6,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -6116,7 +6647,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2241.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:13",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1528&ttc=1"
+    },
+    "date_range": "24/09/2025 - 05/11/2025"
   },
   {
     "product_name": "Cambodge Emotion",
@@ -6133,10 +6672,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "20/10/2025",
+      "01/12/2025"
     ],
-    "duration": 12,
+    "duration": "12 jours / 9 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -6188,7 +6727,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3113.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:17",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1533&ttc=1"
+    },
+    "date_range": "20/10/2025 - 01/12/2025"
   },
   {
     "product_name": "Rencontre à Formose - Taiwan",
@@ -6209,10 +6756,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "01/03/2025"
+      "17/11/2025",
+      "17/11/2025"
     ],
-    "duration": 11,
+    "duration": "11 jours / 8 nuits",
     "min_group_size": 6,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -6269,7 +6816,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3283.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:20",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1539&ttc=1"
+    },
+    "date_range": "17/11/2025 - 17/11/2025"
   },
   {
     "product_name": "Japon Intimiste",
@@ -6294,9 +6849,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "08/09/2025",
+      "27/10/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 10,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -6351,7 +6907,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 7523.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:23",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1577&ttc=1"
+    },
+    "date_range": "08/09/2025 - 27/10/2025"
   },
   {
     "product_name": "Rajasthan Essentiel + Vallée de Katmandou - Inde, Népal",
@@ -6384,11 +6948,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "01/09/2025"
+      "10/11/2025",
+      "24/11/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -6452,7 +7015,15 @@
         "01/09/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2770.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:25",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1584&ttc=1"
+    },
+    "date_range": "10/11/2025 - 24/11/2025"
   },
   {
     "product_name": "Japon Essentiel + Extension Tokyo",
@@ -6477,9 +7048,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "13/10/2025",
+      "03/11/2025"
     ],
-    "duration": 12,
+    "duration": "12 jours / 10 nuits",
     "min_group_size": 10,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -6538,7 +7110,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4853.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:29",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1587&ttc=1"
+    },
+    "date_range": "13/10/2025 - 03/11/2025"
   },
   {
     "product_name": "Japon Intimiste + Alpes Japonaises",
@@ -6563,9 +7143,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "05/10/2025",
+      "26/10/2025"
     ],
-    "duration": 19,
+    "duration": "19 jours / 17 nuits",
     "min_group_size": 10,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -6629,7 +7210,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 9523.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:32",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1590&ttc=1"
+    },
+    "date_range": "05/10/2025 - 26/10/2025"
   },
   {
     "product_name": "Tonkin Hors Sentiers + extension Baie d'Halong - Vietnam",
@@ -6642,11 +7231,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "03/10/2025",
+      "10/10/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 4,
     "max_group_size": 12,
     "offer_type": "Circuits organisés en groupe",
@@ -6704,7 +7292,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3528.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:35",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1596&ttc=1"
+    },
+    "date_range": "03/10/2025 - 10/10/2025"
   },
   {
     "product_name": "Vietnam Essentiel + prologue Sapa + extension Cambodge",
@@ -6737,10 +7333,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "18/10/2025",
+      "15/11/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -6804,7 +7400,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4013.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:38",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1640&ttc=1"
+    },
+    "date_range": "18/10/2025 - 15/11/2025"
   },
   {
     "product_name": "Le Royaume du Matin calme + Ile de Jeju - Corée du Sud",
@@ -6833,10 +7437,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "29/10/2025",
+      "05/11/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": 10,
     "max_group_size": 20,
     "offer_type": "Circuits organisés en groupe",
@@ -6905,7 +7509,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5123.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:41",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1664&ttc=1"
+    },
+    "date_range": "29/10/2025 - 05/11/2025"
   },
   {
     "product_name": "Cambodge Emotion + city break Singapour",
@@ -6926,10 +7538,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "20/10/2025",
+      "01/12/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -6986,7 +7598,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3578.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:45",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1665&ttc=1"
+    },
+    "date_range": "20/10/2025 - 01/12/2025"
   },
   {
     "product_name": "Vietnam Essentiel + prologue Sapa + extension Cambodge",
@@ -7019,10 +7639,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "17/01/2026",
+      "28/11/2026"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -7086,7 +7706,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4090.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:47",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1820&ttc=1"
+    },
+    "date_range": "17/01/2026 - 28/11/2026"
   },
   {
     "product_name": "Fjords et Maoris - Vols Premium Economy - Nouvelle-Zélande",
@@ -7115,9 +7743,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "06/01/2026",
+      "24/11/2026"
     ],
-    "duration": 18,
+    "duration": "18 jours / 14 nuits",
     "min_group_size": 8,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -7191,7 +7820,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 9890.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:52",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1824&ttc=1"
+    },
+    "date_range": "06/01/2026 - 24/11/2026"
   },
   {
     "product_name": "Séduction Thaïe - Thailande",
@@ -7224,12 +7861,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "08/09/2025",
+      "24/11/2025"
     ],
-    "duration": 12,
+    "duration": "12 jours / 9 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -7290,7 +7925,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2230.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:54",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1843&ttc=1"
+    },
+    "date_range": "08/09/2025 - 24/11/2025"
   },
   {
     "product_name": "Tonkin Hors Sentiers - Vietnam",
@@ -7303,11 +7946,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "03/04/2026",
+      "09/10/2026"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 4,
     "max_group_size": 12,
     "offer_type": "Circuits organisés en groupe",
@@ -7361,7 +8003,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2690.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:22:59",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1857&ttc=1"
+    },
+    "date_range": "03/04/2026 - 09/10/2026"
   },
   {
     "product_name": "Tonkin Hors Sentiers + extension Baie d'Halong - Vietnam",
@@ -7374,11 +8024,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "03/04/2026",
+      "09/10/2026"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 4,
     "max_group_size": 12,
     "offer_type": "Circuits organisés en groupe",
@@ -7436,7 +8085,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3280.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:00",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1858&ttc=1"
+    },
+    "date_range": "03/04/2026 - 09/10/2026"
   },
   {
     "product_name": "Rencontre à Formose, départ spécial festival des lanternes - Taiwan",
@@ -7457,10 +8114,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "01/03/2025"
+      "01/03/2026",
+      "01/03/2026"
     ],
-    "duration": 11,
+    "duration": "11 jours / 8 nuits",
     "min_group_size": 6,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -7519,7 +8176,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3490.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:04",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1872&ttc=1"
+    },
+    "date_range": "01/03/2026 - 01/03/2026"
   },
   {
     "product_name": "Thailande Essentielle + séjour Hua Hin 5*",
@@ -7560,12 +8225,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "16/09/2025",
+      "18/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -7626,7 +8289,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2135.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:05",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1873&ttc=1"
+    },
+    "date_range": "16/09/2025 - 18/11/2025"
   },
   {
     "product_name": "Thailande Essentielle + séjour Phuket 4*",
@@ -7667,12 +8338,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "16/09/2025",
+      "18/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -7733,7 +8402,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2120.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:11",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1893&ttc=1"
+    },
+    "date_range": "16/09/2025 - 18/11/2025"
   },
   {
     "product_name": "Samourais et Jardins zen + Alpes japonaises - Japon",
@@ -7762,9 +8439,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "20/03/2026",
+      "30/10/2026"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 10,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -7824,7 +8502,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 6490.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:14",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1904&ttc=1"
+    },
+    "date_range": "20/03/2026 - 30/10/2026"
   },
   {
     "product_name": "Séduction Thaïe + extension Khao Sok 3* et Khao Lak 4* - Thailande",
@@ -7857,12 +8543,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "08/09/2025",
+      "24/11/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -7932,7 +8616,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2810.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:18",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1913&ttc=1"
+    },
+    "date_range": "08/09/2025 - 24/11/2025"
   },
   {
     "product_name": "Princes d'Ouzbékistan",
@@ -7953,12 +8645,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/09/2025"
+      "03/09/2025",
+      "22/10/2025"
     ],
-    "duration": 11,
+    "duration": "11 jours / 9 nuits",
     "min_group_size": 6,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -8019,7 +8709,15 @@
         "01/09/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2501.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:22",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=1921&ttc=1"
+    },
+    "date_range": "03/09/2025 - 22/10/2025"
   },
   {
     "product_name": "Népal Intimiste",
@@ -8032,11 +8730,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "01/09/2025"
+      "22/10/2025",
+      "22/10/2025"
     ],
-    "duration": 13,
+    "duration": "13 jours / 10 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -8099,7 +8796,15 @@
         "01/09/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4120.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:26",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2115&ttc=1"
+    },
+    "date_range": "22/10/2025 - 22/10/2025"
   },
   {
     "product_name": "Couleurs Philippines + extension Visayas",
@@ -8124,9 +8829,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "09/11/2025",
+      "09/11/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -8188,7 +8894,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4028.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:29",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2117&ttc=1"
+    },
+    "date_range": "09/11/2025 - 09/11/2025"
   },
   {
     "product_name": "Couleurs Philippines + extension Visayas et séjour Panglao 3*sup",
@@ -8213,9 +8927,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "09/11/2025",
+      "09/11/2025"
     ],
-    "duration": 18,
+    "duration": "18 jours / 15 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -8277,7 +8992,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4433.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:32",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2118&ttc=1"
+    },
+    "date_range": "09/11/2025 - 09/11/2025"
   },
   {
     "product_name": "Nomad's Land - Kazakhstan, Kirghizistan",
@@ -8298,10 +9021,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "15/08/2025",
+      "19/09/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": null,
     "max_group_size": null,
     "offer_type": "Circuits organisés en groupe",
@@ -8355,7 +9078,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3703.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:33",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2121&ttc=1"
+    },
+    "date_range": "15/08/2025 - 19/09/2025"
   },
   {
     "product_name": "Iles et Volcans d'Indonésie",
@@ -8372,10 +9103,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "07/09/2025",
+      "12/10/2025"
     ],
-    "duration": 19,
+    "duration": "19 jours / 17 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -8440,7 +9171,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4723.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:39",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2126&ttc=1"
+    },
+    "date_range": "07/09/2025 - 12/10/2025"
   },
   {
     "product_name": "La Grande Traversée de l'Australie",
@@ -8477,9 +9216,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "01/11/2025",
+      "11/07/2026"
     ],
-    "duration": 22,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 10,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -8542,7 +9282,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 800.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:38",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2127&ttc=1"
+    },
+    "date_range": "01/11/2025 - 11/07/2026"
   },
   {
     "product_name": "Rajasthan Intimiste, Foire de Pushkar - Inde",
@@ -8571,10 +9319,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "27/07/2025"
+      "21/10/2025",
+      "21/10/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 14 nuits",
     "min_group_size": 6,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -8639,7 +9387,15 @@
         "27/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2983.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:45",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2145&ttc=1"
+    },
+    "date_range": "21/10/2025 - 21/10/2025"
   },
   {
     "product_name": "La Réunion intimiste",
@@ -8656,9 +9412,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "04/09/2025",
+      "02/10/2025"
     ],
-    "duration": 11,
+    "duration": "11 jours / 8 nuits",
     "min_group_size": 6,
     "max_group_size": 14,
     "offer_type": "Circuits organisés en groupe",
@@ -8722,7 +9479,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2990.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:45",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2160&ttc=1"
+    },
+    "date_range": "04/09/2025 - 02/10/2025"
   },
   {
     "product_name": "Sensations tanzaniennes",
@@ -8735,10 +9500,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "08/10/2025",
+      "19/11/2025"
     ],
-    "duration": 10,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 4,
     "max_group_size": 12,
     "offer_type": "Circuits organisés en groupe",
@@ -8797,7 +9562,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4628.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:50",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2197&ttc=1"
+    },
+    "date_range": "08/10/2025 - 19/11/2025"
   },
   {
     "product_name": "Princes d'Ouzbékistan + prologue vallée de Ferghana",
@@ -8822,12 +9595,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/09/2025"
+      "01/11/2025",
+      "11/07/2026"
     ],
-    "duration": 14,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 6,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -8889,7 +9660,15 @@
         "01/09/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 800.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:49",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2229&ttc=1"
+    },
+    "date_range": "01/11/2025 - 11/07/2026"
   },
   {
     "product_name": "Siam Intimiste + séjour Phuket 4* - Thailande",
@@ -8914,12 +9693,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "04/11/2025",
+      "25/11/2025"
     ],
-    "duration": 18,
+    "duration": "18 jours / 15 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -8983,7 +9760,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3363.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:57",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2230&ttc=1"
+    },
+    "date_range": "04/11/2025 - 25/11/2025"
   },
   {
     "product_name": "Couleurs Philippines + extension Visayas",
@@ -9008,9 +9793,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "11/01/2026",
+      "22/11/2026"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -9069,7 +9855,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3990.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:23:56",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2234&ttc=1"
+    },
+    "date_range": "11/01/2026 - 22/11/2026"
   },
   {
     "product_name": "Couleurs Philippines + extension Visayas et séjour Panglao 3*sup",
@@ -9094,9 +9888,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "11/01/2026",
+      "22/11/2026"
     ],
-    "duration": 18,
+    "duration": "18 jours / 15 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -9155,7 +9950,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4420.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:03",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2235&ttc=1"
+    },
+    "date_range": "11/01/2026 - 22/11/2026"
   },
   {
     "product_name": "Festivals du Bhoutan, Tsechu de Thimphu - Népal, Bhoutan",
@@ -9172,11 +9975,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "01/09/2025"
+      "29/09/2025",
+      "29/09/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -9246,7 +10048,15 @@
         "01/09/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 7045.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:03",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2243&ttc=1"
+    },
+    "date_range": "29/09/2025 - 29/09/2025"
   },
   {
     "product_name": "Festivals du Bhoutan, Tsechu de Bumthang - Népal, Bhoutan",
@@ -9263,11 +10073,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "01/09/2025"
+      "30/10/2025",
+      "30/10/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -9335,7 +10144,15 @@
         "01/09/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 7340.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:11",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2244&ttc=1"
+    },
+    "date_range": "30/10/2025 - 30/10/2025"
   },
   {
     "product_name": "Esprit du Japon",
@@ -9360,9 +10177,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "08/04/2026",
+      "21/10/2026"
     ],
-    "duration": 17,
+    "duration": "17 jours / 15 nuits",
     "min_group_size": 10,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -9422,7 +10240,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 8390.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:08",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2245&ttc=1"
+    },
+    "date_range": "08/04/2026 - 21/10/2026"
   },
   {
     "product_name": "Yunnan intimiste - Chine",
@@ -9447,11 +10273,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "31/05/2025"
+      "01/11/2025",
+      "11/07/2026"
     ],
-    "duration": 14,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 8,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -9518,7 +10343,15 @@
         "31/05/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 800.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:13",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2246&ttc=1"
+    },
+    "date_range": "01/11/2025 - 11/07/2026"
   },
   {
     "product_name": "Histoire de Jordanie + extension Aqaba",
@@ -9535,10 +10368,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "20/04/2026",
+      "19/10/2026"
     ],
-    "duration": 10,
+    "duration": "10 jours / 9 nuits",
     "min_group_size": 6,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -9596,7 +10429,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2490.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:19",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2256&ttc=1"
+    },
+    "date_range": "20/04/2026 - 19/10/2026"
   },
   {
     "product_name": "Thailande Essentielle",
@@ -9633,12 +10474,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "16/09/2025",
+      "18/11/2025"
     ],
-    "duration": 10,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -9692,7 +10531,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 1705.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:20",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2306&ttc=1"
+    },
+    "date_range": "16/09/2025 - 18/11/2025"
   },
   {
     "product_name": "Thailande Essentielle + séjour Khao Lak - Moracea 4*",
@@ -9729,12 +10576,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "16/09/2025",
+      "18/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -9797,7 +10642,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2195.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:25",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2308&ttc=1"
+    },
+    "date_range": "16/09/2025 - 18/11/2025"
   },
   {
     "product_name": "Thailande Essentielle + séjour Koh Samet 4*",
@@ -9834,12 +10687,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "16/09/2025",
+      "18/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -9893,7 +10744,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2095.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:26",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2310&ttc=1"
+    },
+    "date_range": "16/09/2025 - 18/11/2025"
   },
   {
     "product_name": "La Réunion intimiste + séjour Ile Maurice",
@@ -9918,9 +10777,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "04/09/2025",
+      "02/10/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 6,
     "max_group_size": 14,
     "offer_type": "Circuits organisés en groupe",
@@ -9986,7 +10846,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4013.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:33",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2317&ttc=1"
+    },
+    "date_range": "04/09/2025 - 02/10/2025"
   },
   {
     "product_name": "La Grande Traversée du Japon",
@@ -10027,9 +10895,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "30/09/2025",
+      "28/10/2025"
     ],
-    "duration": 20,
+    "duration": "20 jours / 18 nuits",
     "min_group_size": 10,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -10098,7 +10967,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 9723.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:34",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2318&ttc=1"
+    },
+    "date_range": "30/09/2025 - 28/10/2025"
   },
   {
     "product_name": "Chroniques d'Afrique Australe - Afrique du Sud, Zimbabwe, Eswatini",
@@ -10127,11 +11004,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "01/11/2025",
-      "01/07/2025"
+      "09/10/2025",
+      "09/10/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 6,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -10202,7 +11078,15 @@
         "01/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5906.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:38",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2324&ttc=1"
+    },
+    "date_range": "09/10/2025 - 09/10/2025"
   },
   {
     "product_name": "La Cantate du Mékong, pont principal hublot - Cambodge, Vietnam",
@@ -10223,10 +11107,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "11/01/2026",
+      "19/04/2026"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -10291,7 +11175,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3690.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:39",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2397&ttc=1"
+    },
+    "date_range": "11/01/2026 - 19/04/2026"
   },
   {
     "product_name": "La Cantate du Mékong, pont supérieur deluxe - Cambodge, Vietnam",
@@ -10312,10 +11204,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "11/01/2026",
+      "19/04/2026"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -10380,7 +11272,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4320.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:44",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2398&ttc=1"
+    },
+    "date_range": "11/01/2026 - 19/04/2026"
   },
   {
     "product_name": "La Cantate du Mékong, pont panorama deluxe - \nCambodge, Vietnam",
@@ -10401,10 +11301,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "11/01/2026",
+      "19/04/2026"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -10469,7 +11369,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4620.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:45",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2399&ttc=1"
+    },
+    "date_range": "11/01/2026 - 19/04/2026"
   },
   {
     "product_name": "La Cantate du Mékong, pont principal hublot + Hanoi / Halong - Cambodge, Vietnam",
@@ -10494,10 +11402,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "11/01/2026",
+      "19/04/2026"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -10565,7 +11473,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4550.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:52",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2400&ttc=1"
+    },
+    "date_range": "11/01/2026 - 19/04/2026"
   },
   {
     "product_name": "La Cantate du Mékong, pont supérieur deluxe + Hanoi / Halong - Cambodge, Vietnam",
@@ -10590,10 +11506,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "11/01/2026",
+      "19/04/2026"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -10661,7 +11577,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5180.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:51",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2401&ttc=1"
+    },
+    "date_range": "11/01/2026 - 19/04/2026"
   },
   {
     "product_name": "La Cantate du Mékong, pont panorama deluxe  + Hanoi / Halong - Cambodge, Vietnam",
@@ -10686,10 +11610,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "11/01/2026",
+      "19/04/2026"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -10757,7 +11681,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5480.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:56",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2402&ttc=1"
+    },
+    "date_range": "11/01/2026 - 19/04/2026"
   },
   {
     "product_name": "Ceylan Intimiste + séjour Trincomalee 4* - Sri Lanka",
@@ -10770,10 +11702,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "01/11/2025",
+      "11/07/2026"
     ],
-    "duration": 13,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 4,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -10843,7 +11775,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 800.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:24:57",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2511&ttc=1"
+    },
+    "date_range": "01/11/2025 - 11/07/2026"
   },
   {
     "product_name": "Thai Heritage - Thailande",
@@ -10876,12 +11816,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "26/10/2025",
+      "30/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -10947,7 +11885,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3125.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:02",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2512&ttc=1"
+    },
+    "date_range": "26/10/2025 - 30/11/2025"
   },
   {
     "product_name": "Aventure en Namibie",
@@ -10960,12 +11906,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025",
-      "01/07/2025"
+      "20/09/2025",
+      "20/12/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 2,
     "max_group_size": 7,
     "offer_type": "Circuits organisés en groupe",
@@ -11029,7 +11973,15 @@
         "01/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5383.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:02",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2515&ttc=1"
+    },
+    "date_range": "20/09/2025 - 20/12/2025"
   },
   {
     "product_name": "Aventure en Namibie + extension Fish River Canyon",
@@ -11042,12 +11994,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025",
-      "01/07/2025"
+      "20/09/2025",
+      "20/12/2025"
     ],
-    "duration": 19,
+    "duration": "19 jours / 16 nuits",
     "min_group_size": 2,
     "max_group_size": 7,
     "offer_type": "Circuits organisés en groupe",
@@ -11115,7 +12065,15 @@
         "01/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 6683.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:10",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2516&ttc=1"
+    },
+    "date_range": "20/09/2025 - 20/12/2025"
   },
   {
     "product_name": "Histoire de Jordanie + extension Aqaba",
@@ -11132,10 +12090,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "13/10/2025",
+      "13/10/2025"
     ],
-    "duration": 10,
+    "duration": "10 jours / 9 nuits",
     "min_group_size": 6,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -11192,7 +12150,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2661.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:10",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2518&ttc=1"
+    },
+    "date_range": "13/10/2025 - 13/10/2025"
   },
   {
     "product_name": "Légendes Impériales - Chine, Hong Kong",
@@ -11221,11 +12187,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "31/05/2025"
+      "17/09/2025",
+      "17/09/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 6,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -11293,7 +12258,15 @@
         "31/05/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3723.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:16",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2519&ttc=1"
+    },
+    "date_range": "17/09/2025 - 17/09/2025"
   },
   {
     "product_name": "Légendes Impériales + city break Hong Kong 4* - Chine",
@@ -11322,11 +12295,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "31/05/2025"
+      "03/09/2025",
+      "03/09/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 6,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -11394,7 +12366,15 @@
         "31/05/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3813.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:15",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2520&ttc=1"
+    },
+    "date_range": "03/09/2025 - 03/09/2025"
   },
   {
     "product_name": "La Grande Traversée de l’Indochine - Vietnam, Cambodge, Laos",
@@ -11435,10 +12415,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "30/10/2025",
+      "27/11/2025"
     ],
-    "duration": 20,
+    "duration": "20 jours / 17 nuits",
     "min_group_size": 4,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -11508,7 +12488,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5133.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:22",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2523&ttc=1"
+    },
+    "date_range": "30/10/2025 - 27/11/2025"
   },
   {
     "product_name": "Duo en Extrême Orient - Corée du Sud, Japon",
@@ -11541,10 +12529,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "14/10/2025",
+      "14/10/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": 10,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -11612,7 +12600,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 7023.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:22",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2524&ttc=1"
+    },
+    "date_range": "14/10/2025 - 14/10/2025"
   },
   {
     "product_name": "Balade Lao-khmère + détour sud Laos et Cambodge",
@@ -11641,10 +12637,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "07/11/2025",
+      "21/11/2025"
     ],
-    "duration": 20,
+    "duration": "20 jours / 17 nuits",
     "min_group_size": 6,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -11707,7 +12703,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5223.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:30",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2526&ttc=1"
+    },
+    "date_range": "07/11/2025 - 21/11/2025"
   },
   {
     "product_name": "Java Bali, perles de l'archipel + séjour Bali 4* - Indonésie",
@@ -11736,10 +12740,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "07/09/2025",
+      "19/10/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -11799,7 +12803,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3148.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:28",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2529&ttc=1"
+    },
+    "date_range": "07/09/2025 - 19/10/2025"
   },
   {
     "product_name": "Java Bali, perles de l'archipel + extension Est balinais - Indonésie",
@@ -11828,10 +12840,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "07/09/2025",
+      "19/10/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -11895,7 +12907,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3378.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:34",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2530&ttc=1"
+    },
+    "date_range": "07/09/2025 - 19/10/2025"
   },
   {
     "product_name": "Java Bali, perles de l'archipel + extension Kawa Ijen et Ouest Bali - Indonésie",
@@ -11924,10 +12944,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "07/09/2025",
+      "19/10/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -11987,7 +13007,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3563.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:35",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2531&ttc=1"
+    },
+    "date_range": "07/09/2025 - 19/10/2025"
   },
   {
     "product_name": "La Péninsule Etincelante (avril/août/sept. 2025) - Malaisie",
@@ -12012,10 +13040,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "07/09/2025",
+      "07/09/2025"
     ],
-    "duration": 11,
+    "duration": "11 jours / 9 nuits",
     "min_group_size": 8,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -12076,7 +13104,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3183.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:40",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2533&ttc=1"
+    },
+    "date_range": "07/09/2025 - 07/09/2025"
   },
   {
     "product_name": "Rajasthan Intimiste avec Lufthansa - Inde",
@@ -12105,10 +13141,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "27/07/2025"
+      "10/09/2025",
+      "26/11/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": 6,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -12172,7 +13208,15 @@
         "27/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2523.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:41",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2534&ttc=1"
+    },
+    "date_range": "10/09/2025 - 26/11/2025"
   },
   {
     "product_name": "Carpe Diem à Bali Lombok",
@@ -12189,10 +13233,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "21/09/2025",
+      "19/10/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": 2,
     "max_group_size": 12,
     "offer_type": "Circuits organisés en groupe",
@@ -12255,7 +13299,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3023.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:46",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2543&ttc=1"
+    },
+    "date_range": "21/09/2025 - 19/10/2025"
   },
   {
     "product_name": "Samourais et Jardins zen avec Emirates - Japon",
@@ -12284,9 +13336,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "18/08/2025",
+      "10/11/2025"
     ],
-    "duration": 13,
+    "duration": "13 jours / 10 nuits",
     "min_group_size": 10,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -12350,7 +13403,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5423.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:49",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2546&ttc=1"
+    },
+    "date_range": "18/08/2025 - 10/11/2025"
   },
   {
     "product_name": "Samourais et Jardins zen + Alpes japonaises avec Emirates - Japon",
@@ -12379,9 +13440,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "19/09/2025",
+      "07/11/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 10,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -12446,7 +13508,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 6423.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:54",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2547&ttc=1"
+    },
+    "date_range": "19/09/2025 - 07/11/2025"
   },
   {
     "product_name": "Carpe Diem au Sri Lanka",
@@ -12459,10 +13529,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "26/11/2025",
+      "26/11/2025"
     ],
-    "duration": 13,
+    "duration": "13 jours / 11 nuits",
     "min_group_size": 4,
     "max_group_size": 12,
     "offer_type": "Circuits organisés en groupe",
@@ -12528,7 +13598,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3083.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:55",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2548&ttc=1"
+    },
+    "date_range": "26/11/2025 - 26/11/2025"
   },
   {
     "product_name": "Carpe Diem au Japon",
@@ -12545,9 +13623,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "21/10/2025",
+      "21/10/2025"
     ],
-    "duration": 10,
+    "duration": "10 jours / 8 nuits",
     "min_group_size": 8,
     "max_group_size": 14,
     "offer_type": "Circuits organisés en groupe",
@@ -12604,7 +13683,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4723.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:25:59",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2552&ttc=1"
+    },
+    "date_range": "21/10/2025 - 21/10/2025"
   },
   {
     "product_name": "Carpe Diem en Thaïlande (14 jours/11 nuits)",
@@ -12633,12 +13720,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "09/11/2025",
+      "09/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 4,
     "max_group_size": 12,
     "offer_type": "Circuits organisés en groupe",
@@ -12707,7 +13792,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3503.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:00",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2565&ttc=1"
+    },
+    "date_range": "09/11/2025 - 09/11/2025"
   },
   {
     "product_name": "Carpe Diem en Indochine - Laos, Cambodge",
@@ -12728,10 +13821,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "05/11/2025",
+      "19/11/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 12 nuits",
     "min_group_size": 4,
     "max_group_size": 12,
     "offer_type": "Circuits organisés en groupe",
@@ -12795,7 +13888,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3783.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:05",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2566&ttc=1"
+    },
+    "date_range": "05/11/2025 - 19/11/2025"
   },
   {
     "product_name": "Horizons Ladakh, Festival de Phyang - Inde",
@@ -12820,10 +13921,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "27/07/2025"
+      "01/11/2025",
+      "11/07/2026"
     ],
-    "duration": 14,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 6,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -12885,7 +13986,15 @@
         "27/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 800.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:05",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2570&ttc=1"
+    },
+    "date_range": "01/11/2025 - 11/07/2026"
   },
   {
     "product_name": "Horizons Ladakh, Festival de Takthok - Inde",
@@ -12910,10 +14019,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "27/07/2025"
+      "01/11/2025",
+      "11/07/2026"
     ],
-    "duration": 14,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 6,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -12974,7 +14083,15 @@
         "27/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 800.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:10",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2572&ttc=1"
+    },
+    "date_range": "01/11/2025 - 11/07/2026"
   },
   {
     "product_name": "Odyssée en Afrique australe - Zimbabwe, Botswana, Namibie",
@@ -12995,12 +14112,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025",
-      "01/07/2025"
+      "29/08/2025",
+      "14/11/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 2,
     "max_group_size": 7,
     "offer_type": "Circuits organisés en groupe",
@@ -13069,7 +14184,15 @@
         "01/07/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 6200.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:10",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2592&ttc=1"
+    },
+    "date_range": "29/08/2025 - 14/11/2025"
   },
   {
     "product_name": "Thailande Essentielle + séjour Khao Lak Laguna Resort 4* (cat. Oriental Villa)",
@@ -13106,12 +14229,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "16/09/2025",
+      "18/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -13174,7 +14295,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2315.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:15",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2607&ttc=1"
+    },
+    "date_range": "16/09/2025 - 18/11/2025"
   },
   {
     "product_name": "Séduction Thaïe + séjour Khao Lak Laguna Resort 4* (cat. Siam Chalet) - Thailande",
@@ -13207,12 +14336,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "08/09/2025",
+      "24/11/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -13282,7 +14409,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2740.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:18",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2608&ttc=1"
+    },
+    "date_range": "08/09/2025 - 24/11/2025"
   },
   {
     "product_name": "Séduction Thaïe + séjour Khao Lak Laguna Resort 4* (cat. Oriental Villa) - Thailande",
@@ -13315,12 +14450,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "08/09/2025",
+      "24/11/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -13390,7 +14523,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2840.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:20",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2609&ttc=1"
+    },
+    "date_range": "08/09/2025 - 24/11/2025"
   },
   {
     "product_name": "La Cantate du Mékong, pont principal hublot - 2e semestre 2025 - Cambodge, Vietnam",
@@ -13411,10 +14552,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "05/10/2025",
+      "30/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -13480,7 +14621,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3823.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:25",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2617&ttc=1"
+    },
+    "date_range": "05/10/2025 - 30/11/2025"
   },
   {
     "product_name": "La Cantate du Mékong, pont supérieur deluxe - 2e semestre 2025 - Cambodge, Vietnam",
@@ -13501,10 +14650,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "05/10/2025",
+      "30/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -13570,7 +14719,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4423.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:26",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2618&ttc=1"
+    },
+    "date_range": "05/10/2025 - 30/11/2025"
   },
   {
     "product_name": "La Cantate du Mékong, pont panorama deluxe - 2e semestre 2025 - Cambodge, Vietnam",
@@ -13591,10 +14748,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "05/10/2025",
+      "30/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -13660,7 +14817,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4623.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:30",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2619&ttc=1"
+    },
+    "date_range": "05/10/2025 - 30/11/2025"
   },
   {
     "product_name": "La Cantate du Mékong, pont principal hublot + Hanoi / Halong - 2e semestre 2025 - Cambodge, Vietnam",
@@ -13685,10 +14850,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "05/10/2025",
+      "30/11/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -13757,7 +14922,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4743.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:32",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2620&ttc=1"
+    },
+    "date_range": "05/10/2025 - 30/11/2025"
   },
   {
     "product_name": "La Cantate du Mékong, pont supérieur deluxe + Hanoi / Halong - 2e semestre 2025 - Cambodge, Vietnam",
@@ -13782,10 +14955,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "05/10/2025",
+      "30/11/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -13854,7 +15027,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5343.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:35",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2621&ttc=1"
+    },
+    "date_range": "05/10/2025 - 30/11/2025"
   },
   {
     "product_name": "La Cantate du Mékong, pont panorama deluxe  + Hanoi / Halong - 2e semestre 2025 - Cambodge, Vietnam",
@@ -13879,10 +15060,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "05/10/2025",
+      "30/11/2025"
     ],
-    "duration": 17,
+    "duration": "17 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 16,
     "offer_type": "Circuits organisés en groupe",
@@ -13951,7 +15132,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 5543.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:36",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2622&ttc=1"
+    },
+    "date_range": "05/10/2025 - 30/11/2025"
   },
   {
     "product_name": "Mirages d'Arabie (novembre/décembre 2025) - Arabie Saoudite",
@@ -13976,9 +15165,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "02/11/2025",
+      "07/12/2025"
     ],
-    "duration": 9,
+    "duration": "9 jours / 8 nuits",
     "min_group_size": 2,
     "max_group_size": 20,
     "offer_type": "Circuits organisés en groupe",
@@ -14028,7 +15218,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4493.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:42",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2647&ttc=1"
+    },
+    "date_range": "02/11/2025 - 07/12/2025"
   },
   {
     "product_name": "Bali Intimiste (départ 25 sep. 2025)",
@@ -14045,10 +15243,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "25/09/2025",
+      "25/09/2025"
     ],
-    "duration": 12,
+    "duration": "12 jours / 10 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -14105,7 +15303,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3033.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:43",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2648&ttc=1"
+    },
+    "date_range": "25/09/2025 - 25/09/2025"
   },
   {
     "product_name": "Bali Intimiste + séjour Bali 5* (départ 25 sep. 2025)",
@@ -14122,10 +15328,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "25/09/2025",
+      "25/09/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -14186,7 +15392,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3563.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:50",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2650&ttc=1"
+    },
+    "date_range": "25/09/2025 - 25/09/2025"
   },
   {
     "product_name": "La Palette Indonésienne base Novotel bali Benoa 5*",
@@ -14211,10 +15425,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "01/11/2025",
+      "11/07/2026"
     ],
-    "duration": 17,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -14276,7 +15490,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 800.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:48",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2651&ttc=1"
+    },
+    "date_range": "01/11/2025 - 11/07/2026"
   },
   {
     "product_name": "La Palette Indonésienne base Novotel Bali Benoa + séjour Bali 5*",
@@ -14301,10 +15523,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "01/11/2025",
+      "11/07/2026"
     ],
-    "duration": 20,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -14366,7 +15588,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 800.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:54",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2652&ttc=1"
+    },
+    "date_range": "01/11/2025 - 11/07/2026"
   },
   {
     "product_name": "La Palette Indonésienne base Novotel Bali Benoa 5* + extension Komodo",
@@ -14391,10 +15621,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "01/11/2025",
+      "11/07/2026"
     ],
-    "duration": 20,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -14459,7 +15689,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 800.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:26:56",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2653&ttc=1"
+    },
+    "date_range": "01/11/2025 - 11/07/2026"
   },
   {
     "product_name": "Bali Intimiste + extension Célèbes (départ 25 sep. 2025)",
@@ -14476,10 +15714,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "25/09/2025",
+      "25/09/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -14539,7 +15777,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4113.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:00",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2654&ttc=1"
+    },
+    "date_range": "25/09/2025 - 25/09/2025"
   },
   {
     "product_name": "Bali Intimiste + extension Komodo (départ 25 sep. 2025)",
@@ -14556,10 +15802,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025"
+      "25/09/2025",
+      "25/09/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 14 nuits",
     "min_group_size": 2,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -14621,7 +15867,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4633.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:03",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2655&ttc=1"
+    },
+    "date_range": "25/09/2025 - 25/09/2025"
   },
   {
     "product_name": "Thailande Essentielle + séjour Krabi Tup Kaek Sunset Beach Resort 4*",
@@ -14662,12 +15916,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "16/09/2025",
+      "18/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -14729,7 +15981,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2265.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:08",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2656&ttc=1"
+    },
+    "date_range": "16/09/2025 - 18/11/2025"
   },
   {
     "product_name": "Séduction Thaïe + séjour Krabi Tup Kaek Sunset Beach Resort 4* - Thailande",
@@ -14766,12 +16026,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "06/10/2025",
+      "17/11/2025"
     ],
-    "duration": 16,
+    "duration": "16 jours / 13 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -14841,7 +16099,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2945.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:10",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2657&ttc=1"
+    },
+    "date_range": "06/10/2025 - 17/11/2025"
   },
   {
     "product_name": "Thailande Essentielle (départ 02 dec. 2025)",
@@ -14878,12 +16144,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "02/12/2025",
+      "02/12/2025"
     ],
-    "duration": 10,
+    "duration": "10 jours / 7 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -14937,7 +16201,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 1895.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:12",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2658&ttc=1"
+    },
+    "date_range": "02/12/2025 - 02/12/2025"
   },
   {
     "product_name": "Thailande Essentielle + séjour Phuket 4* (départ 02 dec. 2025)",
@@ -14978,12 +16250,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "02/12/2025",
+      "02/12/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -15044,7 +16314,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2470.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:14",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2659&ttc=1"
+    },
+    "date_range": "02/12/2025 - 02/12/2025"
   },
   {
     "product_name": "Thailande Essentielle + séjour Khao Lak - Moracea 4* (départ 02 dec. 2025)",
@@ -15081,12 +16359,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "02/12/2025",
+      "02/12/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -15149,7 +16425,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2520.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:19",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2660&ttc=1"
+    },
+    "date_range": "02/12/2025 - 02/12/2025"
   },
   {
     "product_name": "Thailande Essentielle + séjour Khao Lak Laguna Resort 4* (cat. Siam Chalet)",
@@ -15186,12 +16470,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "16/09/2025",
+      "18/11/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -15254,7 +16536,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2215.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:22",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2662&ttc=1"
+    },
+    "date_range": "16/09/2025 - 18/11/2025"
   },
   {
     "product_name": "Thailande Essentielle + séjour Khao Lak Laguna Resort 4* (cat. Siam Chalet - départ 02 dec. 2025)",
@@ -15291,12 +16581,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "02/12/2025",
+      "02/12/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -15359,7 +16647,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2575.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:24",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2663&ttc=1"
+    },
+    "date_range": "02/12/2025 - 02/12/2025"
   },
   {
     "product_name": "Séduction Thaïe + séjour Phuket 4* - Thailande (départ 20 dec. 2025)",
@@ -15396,12 +16692,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "20/12/2025",
+      "20/12/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -15468,7 +16762,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3985.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:29",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2665&ttc=1"
+    },
+    "date_range": "20/12/2025 - 20/12/2025"
   },
   {
     "product_name": "Séduction Thaïe + séjour Khao Lak - Moracea 4* - Thailande (départ 20 dec. 2025)",
@@ -15501,12 +16803,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "20/12/2025",
+      "20/12/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -15573,7 +16873,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4285.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:29",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2668&ttc=1"
+    },
+    "date_range": "20/12/2025 - 20/12/2025"
   },
   {
     "product_name": "Séduction Thaïe + séjour Khao Lak Laguna Resort 4* (cat. Siam Chalet) - Thailande (départ 20 dec.)",
@@ -15606,12 +16914,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "20/12/2025",
+      "20/12/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -15681,7 +16987,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4345.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:33",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2669&ttc=1"
+    },
+    "date_range": "20/12/2025 - 20/12/2025"
   },
   {
     "product_name": "Séduction Thaïe + séjour Khao Lak Laguna Resort 4* (cat. Oriental Villa) - Thailande (départ 20 dec)",
@@ -15714,12 +17028,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "20/12/2025",
+      "20/12/2025"
     ],
-    "duration": 15,
+    "duration": "15 jours / 13 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -15789,7 +17101,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4445.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:35",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2670&ttc=1"
+    },
+    "date_range": "20/12/2025 - 20/12/2025"
   },
   {
     "product_name": "Impressions omanaises",
@@ -15802,13 +17122,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "01/12/2025",
-      "01/03/2025",
-      "28/02/2025",
-      "01/11/2025"
+      "03/11/2025",
+      "01/12/2025"
     ],
-    "duration": 8,
+    "duration": "8 jours / 6 nuits",
     "min_group_size": 10,
     "max_group_size": 20,
     "offer_type": "Circuits organisés en groupe",
@@ -15874,7 +17191,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2650.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:41",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2672&ttc=1"
+    },
+    "date_range": "03/11/2025 - 01/12/2025"
   },
   {
     "product_name": "Impressions omanaises + séjour Mascate 4*",
@@ -15887,13 +17212,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "01/12/2025",
-      "01/03/2025",
-      "28/02/2025",
-      "01/11/2025"
+      "03/11/2025",
+      "01/12/2025"
     ],
-    "duration": 11,
+    "duration": "11 jours / 9 nuits",
     "min_group_size": 10,
     "max_group_size": 20,
     "offer_type": "Circuits organisés en groupe",
@@ -15964,7 +17286,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3270.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:42",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2673&ttc=1"
+    },
+    "date_range": "03/11/2025 - 01/12/2025"
   },
   {
     "product_name": "Impressions omanaises + Péninsule du Musandam",
@@ -15981,13 +17311,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025",
-      "01/12/2025",
-      "01/03/2025",
-      "28/02/2025",
-      "01/11/2025"
+      "06/11/2025",
+      "06/11/2025"
     ],
-    "duration": 11,
+    "duration": "11 jours / 9 nuits",
     "min_group_size": 10,
     "max_group_size": 20,
     "offer_type": "Circuits organisés en groupe",
@@ -16057,7 +17384,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3790.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:48",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2674&ttc=1"
+    },
+    "date_range": "06/11/2025 - 06/11/2025"
   },
   {
     "product_name": "Thailande Essentielle + séjour Khao Lak Laguna Resort 4* (cat. Oriental Villa - départ 02 dec. 2025",
@@ -16094,12 +17429,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025",
-      "01/11/2025"
+      "02/12/2025",
+      "02/12/2025"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 6,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -16162,7 +17495,15 @@
         "01/11/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2685.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:50",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2675&ttc=1"
+    },
+    "date_range": "02/12/2025 - 02/12/2025"
   },
   {
     "product_name": "Odyssée Australienne + Melbourne - départ du 13/11/2025",
@@ -16195,9 +17536,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "13/11/2025",
+      "13/11/2025"
     ],
-    "duration": 20,
+    "duration": "20 jours / 17 nuits",
     "min_group_size": 10,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -16256,7 +17598,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 9260.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:54",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2677&ttc=1"
+    },
+    "date_range": "13/11/2025 - 13/11/2025"
   },
   {
     "product_name": "Japon Essentiel (9 nuits)",
@@ -16281,9 +17631,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/04/2025"
+      "27/03/2026",
+      "23/10/2026"
     ],
-    "duration": 11,
+    "duration": "11 jours / 9 nuits",
     "min_group_size": 10,
     "max_group_size": 24,
     "offer_type": "Circuits organisés en groupe",
@@ -16339,7 +17690,15 @@
         "01/04/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 4590.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:27:56",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2693&ttc=1"
+    },
+    "date_range": "27/03/2026 - 23/10/2026"
   },
   {
     "product_name": "Mosaïque Vietnamienne + séjour Mui Ne 5*",
@@ -16368,11 +17727,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/05/2025",
-      "01/03/2025",
-      "01/04/2025"
+      "08/01/2026",
+      "19/11/2026"
     ],
-    "duration": 17,
+    "duration": "18 jours / 15 nuits",
     "min_group_size": 4,
     "max_group_size": 22,
     "offer_type": "Circuits organisés en groupe",
@@ -16442,7 +17800,15 @@
         "01/03/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 3580.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:28:04",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2696&ttc=1"
+    },
+    "date_range": "08/01/2026 - 19/11/2026"
   },
   {
     "product_name": "Yunnan intimiste - Chine",
@@ -16467,11 +17833,10 @@
     ],
     "departure_city": "Paris",
     "dates": [
-      "01/03/2025",
-      "01/04/2025",
-      "31/05/2025"
+      "29/03/2026",
+      "01/11/2026"
     ],
-    "duration": 14,
+    "duration": "14 jours / 11 nuits",
     "min_group_size": 10,
     "max_group_size": 18,
     "offer_type": "Circuits organisés en groupe",
@@ -16537,6 +17902,14 @@
         "31/05/2025"
       ],
       "availability_notes": []
-    }
+    },
+    "price": {
+      "amount": 2990.0,
+      "currency": "€",
+      "price_type": "per_person",
+      "scraped_at": "2025-08-14 13:28:02",
+      "url": "https://www.asia.fr/ceto.cfm?idproduit=2709&ttc=1"
+    },
+    "date_range": "29/03/2026 - 01/11/2026"
   }
 ]

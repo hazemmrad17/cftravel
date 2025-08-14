@@ -6,7 +6,7 @@ import json
 import logging
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-from core.exceptions import DataError
+from core.exceptions import ProcessingError as DataError
 from models.data_models import TravelOffer
 
 logger = logging.getLogger(__name__)

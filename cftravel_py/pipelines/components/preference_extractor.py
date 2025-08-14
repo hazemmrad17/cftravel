@@ -44,12 +44,13 @@ class PreferenceExtractorComponent(PipelineComponent):
             r'\b(\d+)\s*(mois|months?)\b'
         ]
         
+        # Budget patterns (optional - only extract if clearly mentioned)
         self.budget_patterns = [
-            r'\b(budget\s+(bas|low|faible))\b',
-            r'\b(budget\s+(moyen|medium))\b',
-            r'\b(budget\s+(élevé|high|haut))\b',
-            r'\b(économique|cheap|pas cher)\b',
-            r'\b(luxe|luxury|premium)\b'
+            r'\b(budget\s+(luxe|premium|haut|élevé))\b',
+            r'\b(budget\s+(bas|faible|économique))\b',
+            r'\b(luxe|premium|haut|élevé)\s+budget\b',
+            r'\b(bas|faible|économique)\s+budget\b',
+            r'\b(\d+(?:[.,]\d+)?)\s*(?:€|euros?)\b'  # Numeric budget
         ]
         
         # Destination mapping for standardization
@@ -143,16 +144,16 @@ class PreferenceExtractorComponent(PipelineComponent):
                     preferences['duration'] = f"{number} jours"
                 break
         
-        # Extract budget
+        # Extract budget (optional - only if clearly mentioned)
         for pattern in self.budget_patterns:
             match = re.search(pattern, input_lower)
             if match:
-                if any(word in match.group(0) for word in ['bas', 'low', 'faible', 'économique', 'cheap']):
-                    preferences['budget'] = 'low'
-                elif any(word in match.group(0) for word in ['moyen', 'medium']):
-                    preferences['budget'] = 'medium'
-                elif any(word in match.group(0) for word in ['élevé', 'high', 'haut', 'luxe', 'luxury', 'premium']):
+                if any(word in match.group(0) for word in ['luxe', 'premium', 'haut', 'élevé']):
                     preferences['budget'] = 'high'
+                elif any(word in match.group(0) for word in ['bas', 'faible', 'économique']):
+                    preferences['budget'] = 'low'
+                elif match.group(1).isdigit():  # Numeric budget
+                    preferences['budget'] = match.group(1)
                 break
         
         # Extract travel style

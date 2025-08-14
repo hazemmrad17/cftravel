@@ -4,7 +4,7 @@ Provides REST API endpoints for the travel agent functionality
 """
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import StreamingResponse, HTMLResponse
+from fastapi.responses import StreamingResponse, HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -15,6 +15,7 @@ import time
 from typing import Dict, Any, List
 import os
 from pathlib import Path
+from core.exceptions import create_error_response, AgentError, APIKeyError, APITokensDepletedError, StreamError, NetworkError, ServerError, ValidationError
 
 # Import the pipeline
 from pipelines.modular_pipeline import ASIAModularPipeline
@@ -224,7 +225,10 @@ async def chat_stream(request: Request):
         conversation_id = body.get("conversation_id")
         
         if not user_message:
-            raise HTTPException(status_code=400, detail="Message is required")
+            error_response = create_error_response(
+                ValidationError("Message is required")
+            )
+            return JSONResponse(status_code=400, content=error_response)
         
         logger.info(f"📨 Received streaming message: {user_message[:50]}...")
         
@@ -281,8 +285,12 @@ async def chat_stream(request: Request):
                 
             except Exception as e:
                 logger.error(f"❌ Error in streaming: {e}")
-                error_message = f"Je suis désolé, j'ai rencontré une erreur: {str(e)}"
-                yield f"data: {json.dumps({'type': 'content', 'chunk': error_message})}\n\n"
+                error_response = create_error_response(e)
+                error_chunk = {
+                    "type": "error",
+                    "error_data": error_response
+                }
+                yield f"data: {json.dumps(error_chunk)}\n\n"
                 yield f"data: {json.dumps({'type': 'end'})}\n\n"
         
         return StreamingResponse(
@@ -297,7 +305,8 @@ async def chat_stream(request: Request):
         
     except Exception as e:
         logger.error(f"❌ Error in chat stream: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        error_response = create_error_response(e)
+        return JSONResponse(status_code=500, content=error_response)
 
 @app.post("/chat")
 async def chat(request: Request):
@@ -347,6 +356,27 @@ async def get_status():
         "agent": "Layla",
         "version": "1.0.0",
         "timestamp": time.time()
+    }
+
+@app.get("/health")
+async def health():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "timestamp": time.time()
+    }
+
+@app.get("/config")
+async def config():
+    """Get API configuration"""
+    return {
+        "api_version": "1.0.0",
+        "environment": "development",
+        "features": {
+            "streaming": True,
+            "error_handling": True,
+            "memory_service": True
+        }
     }
 
 @app.get("/models")

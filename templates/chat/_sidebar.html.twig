@@ -1,6 +1,58 @@
-<aside id="chat-sidebar" class="fixed inset-y-0 top-16 right-0 z-40 w-[288px] bg-[#e5e7eb] dark:bg-dark-primary border-l border-gray-100 dark:border-gray-800 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-auto translate-x-full" :class="{'translate-x-0': rightSidebarOpen, 'translate-x-full': !rightSidebarOpen}">
+<aside id="chat-sidebar" class="sidebar-smooth fixed inset-y-0 top-16 right-0 z-40 bg-[#e5e7eb] dark:bg-dark-primary border-l border-gray-100 dark:border-gray-800 transform lg:translate-x-0 lg:static lg:h-auto translate-x-full" 
+	:class="{
+		'translate-x-0': rightSidebarOpen, 
+		'translate-x-full': !rightSidebarOpen,
+		'w-[288px]': !rightSidebarCollapsed && window.innerWidth >= 1024,
+		'w-[80px]': rightSidebarCollapsed && window.innerWidth >= 1024
+	}">
     <div class="h-full flex flex-col p-4">
-        <div>
+        <!-- Toggle Button for Right Sidebar -->
+        <div class="flex justify-start lg:block mb-4">
+            <button @click="rightSidebarCollapsed = !rightSidebarCollapsed" 
+                class="sidebar-toggle-btn lg:absolute lg:top-6 lg:-left-3 p-2 rounded-full bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 text-gray-600 dark:text-gray-400 shadow-lg border border-gray-200 dark:border-gray-600"
+                x-show="window.innerWidth >= 1024">
+                <svg x-show="!rightSidebarCollapsed" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+                </svg>
+                <svg x-show="rightSidebarCollapsed" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Collapsed Right Sidebar Content -->
+        <div class="sidebar-wrapper flex flex-col items-center space-y-4" 
+            x-show="rightSidebarCollapsed && window.innerWidth >= 1024"
+            x-transition:enter="sidebar-slide-in-right"
+            x-transition:leave="sidebar-slide-out-right">
+            <!-- New Chat Icon -->
+            <button type="button" class="w-12 h-12 flex items-center justify-center">
+                <svg class="collapsed-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+            </button>
+            
+            <!-- Search Icon -->
+            <div class="w-12 h-12 flex items-center justify-center">
+                <svg class="collapsed-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+            </div>
+            
+            <!-- History Icon -->
+            <div class="w-12 h-12 flex items-center justify-center">
+                <svg class="collapsed-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 3v18h18"/>
+                    <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="sidebar-wrapper" 
+            x-show="!rightSidebarCollapsed || window.innerWidth < 1024"
+            x-transition:enter="sidebar-slide-in-right"
+            x-transition:leave="sidebar-slide-out-right">
             <!-- New Chat Button -->
             <button type="button" class="new-chat-btn w-full bg-gray-800 dark:bg-white/15 dark:hover:bg-white/25 font-medium text-sm hover:bg-gray-950 transition text-white py-3 px-5 rounded-full mb-4 flex items-center justify-center">
                 Nouvelle Discussion
@@ -20,7 +72,10 @@
         </div>
 
         <!-- Conversation List with improved spacing -->
-        <div class="pb-4 overflow-y-auto custom-scrollbar pr-2">
+        <div class="sidebar-wrapper pb-4 overflow-y-auto custom-scrollbar pr-2" 
+            x-show="!rightSidebarCollapsed || window.innerWidth < 1024"
+            x-transition:enter="sidebar-slide-in-right"
+            x-transition:leave="sidebar-slide-out-right">
             {% for group in [
               {'label': 'Aujourd\'hui', 'convs': conversationsToday},
               {'label': 'Hier', 'convs': conversationsYesterday},

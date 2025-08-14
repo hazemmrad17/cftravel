@@ -4,14 +4,20 @@ Core module for ASIA.fr Agent
 
 
 from .exceptions import (
-    ASIAException,
-    ConfigurationError,
-    LLMError,
-    DataError,
-    APIError,
+    AgentError,
+    APIKeyError,
+    APITokensDepletedError,
+    StreamError,
+    MessageSendError,
+    MessageReceiveError,
+    NetworkError,
+    ServerError,
     ValidationError,
     MemoryError,
-    OfferError          
+    ProcessingError,
+    create_error_response,
+    ErrorType,
+    ErrorSeverity
 )
 from .constants import (
     LLMProvider,
@@ -29,14 +35,20 @@ from .constants import (
 )
 
 __all__ = [
-    'ASIAException',
-    'ConfigurationError',
-    'LLMError',
-    'DataError',
-    'APIError',
+    'AgentError',
+    'APIKeyError',
+    'APITokensDepletedError',
+    'StreamError',
+    'MessageSendError',
+    'MessageReceiveError',
+    'NetworkError',
+    'ServerError',
     'ValidationError',
     'MemoryError',
-    'OfferError',
+    'ProcessingError',
+    'create_error_response',
+    'ErrorType',
+    'ErrorSeverity',
     'LLMProvider',
     'ModelType',
     'OfferType',

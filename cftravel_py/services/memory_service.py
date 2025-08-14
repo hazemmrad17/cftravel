@@ -26,6 +26,8 @@ class Conversation:
     created_at: str
     updated_at: str
     user_preferences: Optional[Dict[str, Any]] = None
+    offers_shown: Optional[List[Dict[str, Any]]] = None
+    conversation_context: Optional[Dict[str, Any]] = None
 
 class MemoryService:
     """Service for managing conversation memory"""
@@ -42,6 +44,8 @@ class MemoryService:
                 id=conversation_id,
                 messages=[],
                 user_preferences={},
+                offers_shown=[],
+                conversation_context={},
                 created_at=now,
                 updated_at=now
             )
@@ -219,4 +223,56 @@ class MemoryService:
             role = "User" if msg.role == "user" else "Assistant"
             history.append(f"{role}: {msg.content}")
         
-        return "\n".join(history) 
+        return "\n".join(history)
+    
+    def add_offers_shown(self, conversation_id: str, offers: List[Dict[str, Any]]) -> bool:
+        """Track offers shown to user"""
+        try:
+            conversation = self.get_conversation(conversation_id)
+            if not conversation:
+                conversation = self.create_conversation(conversation_id)
+            
+            if conversation.offers_shown is None:
+                conversation.offers_shown = []
+            
+            conversation.offers_shown.extend(offers)
+            conversation.updated_at = datetime.utcnow().isoformat()
+            
+            logger.info(f"✅ Added {len(offers)} offers to conversation {conversation_id}")
+            return True
+            
+        except Exception as e:
+            raise MemoryError(f"Failed to add offers: {e}")
+    
+    def get_offers_shown(self, conversation_id: str) -> List[Dict[str, Any]]:
+        """Get offers shown in conversation"""
+        conversation = self.get_conversation(conversation_id)
+        if not conversation or conversation.offers_shown is None:
+            return []
+        return conversation.offers_shown
+    
+    def update_conversation_context(self, conversation_id: str, context: Dict[str, Any]) -> bool:
+        """Update conversation context"""
+        try:
+            conversation = self.get_conversation(conversation_id)
+            if not conversation:
+                conversation = self.create_conversation(conversation_id)
+            
+            if conversation.conversation_context is None:
+                conversation.conversation_context = {}
+            
+            conversation.conversation_context.update(context)
+            conversation.updated_at = datetime.utcnow().isoformat()
+            
+            logger.info(f"✅ Updated context for conversation {conversation_id}")
+            return True
+            
+        except Exception as e:
+            raise MemoryError(f"Failed to update context: {e}")
+    
+    def get_conversation_context(self, conversation_id: str) -> Dict[str, Any]:
+        """Get conversation context"""
+        conversation = self.get_conversation(conversation_id)
+        if not conversation or conversation.conversation_context is None:
+            return {}
+        return conversation.conversation_context 

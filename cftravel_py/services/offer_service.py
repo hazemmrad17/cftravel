@@ -4,7 +4,7 @@ Offer service for ASIA.fr Agent
 
 import logging
 from typing import Dict, Any, List, Optional
-from core.exceptions import OfferError
+from core.exceptions import ProcessingError as OfferError
 from models.data_models import OfferCard, DetailedProgram
 from services.data_service import DataService
 
@@ -121,9 +121,9 @@ class OfferService:
         score = 0.0
         total_weight = 0.0
         
-        # Destination match (weight: 0.4)
+        # Destination match (weight: 0.6 - much more important)
         if preferences.get('destination'):
-            # Country name to country code mapping
+            # Enhanced country name to country code mapping
             country_mapping = {
                 'japan': 'jp',
                 'japon': 'jp',
@@ -136,15 +136,25 @@ class OfferService:
                 'myanmar': 'mm',
                 'singapore': 'sg',
                 'malaysia': 'my',
+                'malaisie': 'my',
                 'indonesia': 'id',
+                'indonésie': 'id',
                 'philippines': 'ph',
+                'philippine': 'ph',
                 'china': 'cn',
                 'chine': 'cn',
                 'india': 'in',
+                'inde': 'in',
                 'nepal': 'np',
+                'népal': 'np',
                 'bhutan': 'bt',
+                'bhoutan': 'bt',
+                'sri lanka': 'lk',
                 'sri lanka': 'lk',
                 'maldives': 'mv',
+                'maldive': 'mv',
+                'australia': 'au',
+                'australie': 'au',
                 'jordan': 'jo',
                 'jordanie': 'jo',
                 'lebanon': 'lb',
@@ -175,16 +185,19 @@ class OfferService:
             
             # Check if preference matches country code directly
             if pref_destination in offer_destinations:
-                score += 0.4
+                score += 0.6
             # Check if preference matches country name (mapped to country code)
             elif pref_destination in country_mapping:
                 country_code = country_mapping[pref_destination]
                 if country_code in offer_destinations:
-                    score += 0.4
-            # Check for partial matches
+                    score += 0.6
+            # Check for partial matches (less weight)
             elif any(pref_destination in dest for dest in offer_destinations):
-                score += 0.2
-            total_weight += 0.4
+                score += 0.3
+            # Check for similar destinations (very low weight)
+            elif any(dest in pref_destination for dest in offer_destinations):
+                score += 0.1
+            total_weight += 0.6
         
         # Duration match (weight: 0.3)
         if preferences.get('duration'):
@@ -206,7 +219,7 @@ class OfferService:
                 score += 0.15
             total_weight += 0.3
         
-        # Budget match (weight: 0.2)
+        # Budget match (weight: 0.1 - much less important)
         if preferences.get('budget'):
             offer_price = offer.get('price', 0)
             pref_budget = preferences['budget']
@@ -230,10 +243,10 @@ class OfferService:
                 budget_value = float(pref_budget)
             
             if offer_price <= budget_value:
-                score += 0.2
-            elif offer_price <= budget_value * 1.2:
                 score += 0.1
-            total_weight += 0.2
+            elif offer_price <= budget_value * 1.2:
+                score += 0.05
+            total_weight += 0.1
         
         # Travel style match (weight: 0.1)
         travel_style = preferences.get('travel_style') or preferences.get('style')

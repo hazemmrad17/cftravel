@@ -111,6 +111,10 @@ INTENT TYPES:
 4. **preference_complete**: We have sufficient preferences to show summary
 5. **general**: User is asking questions, seeking advice, or providing new information
 6. **suggestion_request**: User wants AI suggestions or recommendations
+7. **vague_question**: User asks vague questions that need clarification
+8. **information_request**: User wants general travel information
+9. **new_search**: User wants to start a new search with different criteria
+10. **recommendation_request**: User wants specific recommendations based on preferences
 
 RESPONSE TYPES:
 - **greeting**: Friendly response to greetings/thanks
@@ -120,13 +124,36 @@ RESPONSE TYPES:
 - **modification**: Help user modify preferences
 - **suggestion**: Provide AI recommendations
 - **conversation**: Natural conversation response
+- **clarification**: Ask for clarification on vague questions
+- **information**: Provide general travel information
+- **recommendation**: Provide specific, intelligent recommendations
 
 CONTEXT AWARENESS:
 - If user has already seen offers and wants to modify → intent: "modification"
 - If user asks for suggestions → intent: "suggestion_request"
+- If user asks for specific recommendations → intent: "recommendation_request"
 - If user is just chatting → intent: "general"
 - If user confirms after seeing offers → intent: "confirmation", should_show_offers: true
 - If user wants different offers → intent: "modification"
+- If user asks vague questions → intent: "vague_question"
+- If user wants general info → intent: "information_request"
+- If user wants to start fresh → intent: "new_search"
+
+RECOMMENDATION INTELLIGENCE:
+- When user asks for recommendations, analyze their preferences deeply
+- Consider destination-specific features (beaches, mountains, culture, etc.)
+- Match user interests with appropriate destinations
+- Provide intelligent suggestions based on travel style and interests
+- Don't just match keywords, understand the essence of what they want
+- Consider seasonal factors and travel timing
+- Suggest complementary destinations and experiences
+
+CONVERSATION MEMORY:
+- Preserve all conversation context and preferences
+- Remember previous offers shown
+- Track preference changes over time
+- Understand when user wants to modify vs start new search
+- Maintain conversation flow naturally
 
 UNDERSTAND NATURALLY:
 - Don't rely only on keywords, understand the conversation flow
@@ -134,6 +161,9 @@ UNDERSTAND NATURALLY:
 - Be flexible and conversational
 - Allow users to modify choices at any time
 - Provide helpful suggestions when appropriate
+- Handle vague questions intelligently
+- Preserve conversation memory and context
+- Be intelligent about destination matching and recommendations
 
 REQUIRED PREFERENCES FOR OFFERS:
 - destination (country/city)

@@ -162,9 +162,24 @@ if (typeof ApiService === 'undefined') {
                         if (line.startsWith('data: ')) {
                             try {
                                 const data = JSON.parse(line.slice(6));
-                                onChunk?.(data);
+                                
+                                // Handle different data types
+                                if (data.type === 'error' && data.error_data) {
+                                    // Display error message
+                                    if (window.errorMessage) {
+                                        window.errorMessage.displayError(data.error_data);
+                                    } else {
+                                        console.error('Error from server:', data.error_data);
+                                    }
+                                } else {
+                                    onChunk?.(data);
+                                }
                             } catch (parseError) {
                                 window.Logger.warn(`⚠️ Failed to parse streaming chunk: ${parseError.message}`);
+                                // Display parsing error
+                                if (window.errorMessage) {
+                                    window.errorMessage.handleStreamError(parseError);
+                                }
                             }
                         }
                     }

@@ -30,6 +30,251 @@
 			.offer-card:hover {
 				transform: translateY(-2px);
 			}
+			
+			/* Force microphone button styling */
+			#mic-button {
+				background: linear-gradient(to right, #1f2937, #111827) !important;
+				color: white !important;
+			}
+			
+			#mic-button:hover {
+				background: linear-gradient(to right, #dc2626, #b91c1c) !important;
+			}
+			
+			#mic-button.recording {
+				background: linear-gradient(to right, #eab308, #ca8a04) !important;
+			}
+			
+			/* Dark mode button borders */
+			.dark #mic-button,
+			.dark #chat-send-btn {
+				border-color: rgba(255, 255, 255, 0.2) !important;
+			}
+			
+			.dark #mic-button:hover,
+			.dark #chat-send-btn:hover {
+				border-color: rgba(255, 255, 255, 0.4) !important;
+			}
+			
+			/* Icon colors for light/dark mode */
+			.prompt-btn svg {
+				color: #6b7280 !important; /* Grey in light mode */
+			}
+			
+			.dark .prompt-btn svg {
+				color: white !important; /* White in dark mode */
+			}
+			
+			#mic-button svg {
+				color: white !important;
+			}
+			
+			/* Microphone message animations */
+			.microphone-message {
+				animation: slideInFromTop 0.5s ease-out;
+			}
+			
+			@keyframes slideInFromTop {
+				from {
+					transform: translateY(-20px);
+					opacity: 0;
+				}
+				to {
+					transform: translateY(0);
+					opacity: 1;
+				}
+			}
+			
+			.microphone-message.fade-out {
+				animation: slideOutToTop 0.5s ease-in forwards;
+			}
+			
+			@keyframes slideOutToTop {
+				from {
+					transform: translateY(0);
+					opacity: 1;
+				}
+				to {
+					transform: translateY(-20px);
+					opacity: 0;
+				}
+			}
+			
+			/* Close button hover effects */
+			.close-message-btn:hover {
+				transform: scale(1.1);
+			}
+			
+			.close-message-btn {
+				transition: all 0.2s ease;
+			}
+			
+			/* Prompt suggestions animations */
+			.animate-fade-in {
+				animation: fadeInUp 0.8s ease-out;
+			}
+			
+			@keyframes fadeInUp {
+				from {
+					opacity: 0;
+					transform: translateY(30px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			
+			/* Prompt button animations */
+			.prompt-btn {
+				animation: slideInFromBottom 0.6s ease-out;
+			}
+			
+			.prompt-btn:nth-child(1) { animation-delay: 0.1s; }
+			.prompt-btn:nth-child(2) { animation-delay: 0.2s; }
+			.prompt-btn:nth-child(3) { animation-delay: 0.3s; }
+			.prompt-btn:nth-child(4) { animation-delay: 0.4s; }
+			
+			@keyframes slideInFromBottom {
+				from {
+					opacity: 0;
+					transform: translateY(20px) scale(0.95);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0) scale(1);
+				}
+			}
+			
+			/* Hide prompt suggestions when chat has messages */
+			.prompt-suggestions-hidden {
+				display: none !important;
+			}
+			
+			/* Collapsible sidebar styles */
+			.sidebar-collapsed {
+				width: 80px !important;
+			}
+			
+			.sidebar-expanded {
+				width: 288px !important;
+			}
+			
+			/* Smooth transitions for sidebar content */
+			.sidebar-content {
+				transition: all 0.3s ease-in-out;
+			}
+			
+			/* Enhanced sidebar animations */
+			.sidebar-smooth {
+				transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+			
+			/* Smooth wrapper animations */
+			.sidebar-wrapper {
+				transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+				transform-origin: center;
+			}
+			
+			/* Slide in/out animations */
+			.sidebar-slide-in {
+				animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+			}
+			
+			.sidebar-slide-out {
+				animation: slideOut 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+			}
+			
+			@keyframes slideIn {
+				from {
+					opacity: 0;
+					transform: translateX(-20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
+			
+			@keyframes slideOut {
+				from {
+					opacity: 1;
+					transform: translateX(0);
+				}
+				to {
+					opacity: 0;
+					transform: translateX(-20px);
+				}
+			}
+			
+			/* Right sidebar slide animations */
+			.sidebar-slide-in-right {
+				animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+			}
+			
+			.sidebar-slide-out-right {
+				animation: slideOutRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+			}
+			
+			@keyframes slideInRight {
+				from {
+					opacity: 0;
+					transform: translateX(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
+			
+			@keyframes slideOutRight {
+				from {
+					opacity: 1;
+					transform: translateX(0);
+				}
+				to {
+					opacity: 0;
+					transform: translateX(20px);
+				}
+			}
+			
+			/* Toggle button hover effects */
+			.sidebar-toggle-btn {
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+			
+			.sidebar-toggle-btn:hover {
+				transform: scale(1.1);
+				box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+			}
+			
+			/* Toggle button icon animations */
+			.sidebar-toggle-btn svg {
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+			
+			.sidebar-toggle-btn:hover svg {
+				transform: rotate(5deg);
+			}
+			
+			/* Collapsed sidebar icon styles */
+			.collapsed-icon {
+				color: #6b7280 !important;
+				transition: all 0.3s ease;
+			}
+			
+			.dark .collapsed-icon {
+				color: #9ca3af !important;
+			}
+			
+			.collapsed-icon:hover {
+				color: #374151 !important;
+				transform: scale(1.1);
+			}
+			
+			.dark .collapsed-icon:hover {
+				color: #d1d5db !important;
+			}
 		</style>
 
 	</head>
@@ -37,6 +282,8 @@
 		class="dark:bg-dark-primary" x-data="{
 						        sidebarOpen: false,
 									        rightSidebarOpen: window.innerWidth >= 1024 ? true : false, // Always open on desktop
+						        leftSidebarCollapsed: false,
+						        rightSidebarCollapsed: false,
 						        showMoreHistory: false,
 						        activeDropdown: null,
 						        darkMode: localStorage.getItem('darkMode') === 'true',
@@ -237,11 +484,34 @@
 			<div
 				class="flex h-[calc(100vh-64px)]">
 				<!-- Left Sidebar -->
-				<aside class="fixed lg:static inset-y-0 top-16 left-0 z-20 w-[288px] bg-white dark:bg-dark-primary border-r border-gray-100 dark:border-gray-800 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:h-auto" :class="{'translate-x-0': sidebarOpen || window.innerWidth >= 1024, '-translate-x-full': !sidebarOpen && window.innerWidth < 1024}">
+				<aside class="sidebar-smooth fixed lg:static inset-y-0 top-16 left-0 z-20 bg-white dark:bg-dark-primary border-r border-gray-100 dark:border-gray-800 transform lg:translate-x-0 lg:h-auto" 
+					:class="{
+						'translate-x-0': sidebarOpen || window.innerWidth >= 1024, 
+						'-translate-x-full': !sidebarOpen && window.innerWidth < 1024,
+						'w-[288px]': !leftSidebarCollapsed && window.innerWidth >= 1024,
+						'w-[80px]': leftSidebarCollapsed && window.innerWidth >= 1024
+					}">
 					<div
 						class="h-full flex flex-col justify-between overflow-y-auto">
+						<!-- Toggle Button for Left Sidebar -->
+						<div class="px-3 pt-4 flex justify-end lg:block">
+							<button @click="leftSidebarCollapsed = !leftSidebarCollapsed" 
+								class="sidebar-toggle-btn lg:absolute lg:top-6 lg:-right-3 p-2 rounded-full bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 text-gray-600 dark:text-gray-400 shadow-lg border border-gray-200 dark:border-gray-600"
+								x-show="window.innerWidth >= 1024">
+								<svg x-show="!leftSidebarCollapsed" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+								</svg>
+								<svg x-show="leftSidebarCollapsed" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+								</svg>
+							</button>
+						</div>
+						
 						<!-- Products section -->
-						<div class="px-5 pt-6">
+						<div class="sidebar-wrapper px-5 pt-6" 
+							x-show="!leftSidebarCollapsed || window.innerWidth < 1024"
+							x-transition:enter="sidebar-slide-in"
+							x-transition:leave="sidebar-slide-out">
 							<h2 class="text-xs font-medium text-gray-400 dark:text-gray-400 capitalize tracking-wider">
 								Produits
 							</h2>
@@ -324,8 +594,47 @@
 							</nav>
 						</div>
 
+						<!-- Collapsed Left Sidebar Content -->
+						<div class="sidebar-wrapper px-2 pt-6" 
+							x-show="leftSidebarCollapsed && window.innerWidth >= 1024"
+							x-transition:enter="sidebar-slide-in"
+							x-transition:leave="sidebar-slide-out">
+							<div class="flex flex-col items-center space-y-4">
+								<!-- AI Trip Planner Icon Only -->
+								<div class="w-12 h-12 flex items-center justify-center">
+									<svg class="collapsed-icon w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 42 42" fill="none">
+										<g filter="url(#filter0_d_11222_4282)">
+											<g filter="url(#filter1_i_11222_4282)">
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M8.65016 30.069L8.65172 30.0672L8.66373 30.0529C8.67509 30.0393 8.69298 30.0176 8.71661 29.9884C8.76388 29.9299 8.83392 29.8415 8.92028 29.727C9.09325 29.4974 9.32961 29.166 9.57857 28.7639C10.0262 28.041 10.4852 27.1362 10.7156 26.2116C9.27786 24.168 8.43335 21.6756 8.43335 18.9882C8.43335 12.0479 14.0596 6.42157 21 6.42157C27.9404 6.42157 33.5667 12.0479 33.5667 18.9882C33.5667 25.9286 27.9404 31.5549 21 31.5549C19.4278 31.5549 17.9211 31.2657 16.5317 30.737C15.1235 31.2652 13.374 31.4628 12.0023 31.5368C11.2414 31.5779 10.5659 31.5822 10.0802 31.5763C9.83698 31.5733 9.6405 31.5678 9.50367 31.5629C9.43523 31.5605 9.38166 31.5582 9.34455 31.5565L9.30143 31.5545L9.2895 31.5539L9.28489 31.5536L9.33335 30.6549C9.28419 31.5536 9.28489 31.5536 9.28489 31.5536C8.94277 31.5349 8.64025 31.3235 8.50567 31.0084C8.37122 30.6936 8.42761 30.3291 8.65016 30.069ZM15.1666 17.4885C14.3381 17.4885 13.6666 18.16 13.6666 18.9885C13.6666 19.8169 14.3381 20.4885 15.1666 20.4885H15.1799C16.0083 20.4885 16.6799 19.8169 16.6799 18.9885C16.6799 18.16 16.0083 17.4885 15.1799 17.4885H15.1666ZM20.9999 17.4885C20.1715 17.4885 19.4999 18.16 19.4999 18.9885C19.4999 19.8169 20.1715 20.4885 20.9999 20.4885H21.0132C21.8417 20.4885 22.5132 19.8169 22.5132 18.9885C22.5132 18.16 21.8417 17.4885 21.0132 17.4885H20.9999ZM26.8332 17.4885C26.0048 17.4885 25.3332 18.16 25.3332 18.9885C25.3332 19.8169 26.0048 20.4885 26.8332 20.4885H26.8466C27.675 20.4885 28.3466 19.8169 28.3466 18.9885C28.3466 18.16 27.675 17.4885 26.8466 17.4885H26.8332Z" fill="url(#paint0_radial_11222_4282)"/>
+											</g>
+										</g>
+									</svg>
+								</div>
+								
+								<!-- Settings Icon -->
+								<a href="{{ path('settings_page') }}" class="w-12 h-12 flex items-center justify-center">
+									<svg class="collapsed-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+										<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+									</svg>
+								</a>
+								
+								<!-- Help Icon -->
+								<a href="{{ path('faq_page') }}" class="w-12 h-12 flex items-center justify-center">
+									<svg class="collapsed-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<circle cx="12" cy="12" r="10"/>
+										<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+										<path d="M12 17h.01"/>
+									</svg>
+								</a>
+							</div>
+						</div>
+						
 						<!-- Bottom section with improved spacing -->
-						<div class="px-3 space-y-6 pb-6">
+						<div class="sidebar-wrapper px-3 space-y-6 pb-6" 
+							x-show="!leftSidebarCollapsed || window.innerWidth < 1024"
+							x-transition:enter="sidebar-slide-in"
+							x-transition:leave="sidebar-slide-out">
 							<div class="px-2">
 								<h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 capitalize tracking-wider mb-3">
 									Liens importants
@@ -398,6 +707,73 @@
 						<div
 							class="chat-messages p-5 py-12 md:px-12 max-h-[90vh] overflow-y-auto custom-scrollbar relative z-20"><!-- Chat messages will be dynamically appended here by JS -->
 						</div>
+						
+						<!-- Predefined Prompt Buttons -->
+						<div id="prompt-suggestions" class="px-5 md:px-12 pb-24 animate-fade-in">
+							<h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 text-center mb-6">Vous ne savez pas par où commencer ?</h3>
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+								<button class="prompt-btn group bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl p-4 text-left hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg" data-prompt="Je veux planifier un voyage au Japon pour 2 semaines">
+									<div class="flex items-center space-x-3">
+										<div class="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+											<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+												<circle cx="12" cy="10" r="1.5" stroke="currentColor" stroke-width="2" fill="none"></circle>
+											</svg>
+										</div>
+										<div>
+											<h4 class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Voyage au Japon</h4>
+											<p class="text-sm text-gray-600 dark:text-gray-400">2 semaines d'aventure culturelle</p>
+										</div>
+									</div>
+								</button>
+								
+								<button class="prompt-btn group bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl p-4 text-left hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg" data-prompt="Aide-moi à trouver une destination de luxe pour une lune de miel">
+									<div class="flex items-center space-x-3">
+										<div class="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+											<svg class="w-6 h-6 text-gray-600 dark:text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+											</svg>
+										</div>
+										<div>
+											<h4 class="font-medium text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Lune de Miel</h4>
+											<p class="text-sm text-gray-600 dark:text-gray-400">Destinations romantiques de luxe</p>
+										</div>
+									</div>
+								</button>
+								
+								<button class="prompt-btn group bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl p-4 text-left hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg" data-prompt="Propose-moi des escapades de weekend en Asie">
+									<div class="flex items-center space-x-3">
+										<div class="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+											<svg class="w-6 h-6 text-gray-600 dark:text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"></circle>
+												<polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2" fill="none"></polyline>
+											</svg>
+										</div>
+										<div>
+											<h4 class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Escapades Weekend</h4>
+											<p class="text-sm text-gray-600 dark:text-gray-400">Voyages courts en Asie</p>
+										</div>
+									</div>
+								</button>
+								
+								<button class="prompt-btn group bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl p-4 text-left hover:border-teal-300 dark:hover:border-teal-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg" data-prompt="Je cherche un hôtel de luxe aux Maldives pour une famille de 4">
+									<div class="flex items-center space-x-3">
+										<div class="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-teal-500 to-blue-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+											<svg class="w-6 h-6 text-gray-600 dark:text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+												<rect x="3" y="7" width="18" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none"></rect>
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5V3a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+												<line x1="7" y1="11" x2="17" y2="11" stroke="currentColor" stroke-width="2"></line>
+												<line x1="7" y1="15" x2="17" y2="15" stroke="currentColor" stroke-width="2"></line>
+											</svg>
+										</div>
+										<div>
+											<h4 class="font-medium text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">Hôtels de Luxe</h4>
+											<p class="text-sm text-gray-600 dark:text-gray-400">Maldives pour familles</p>
+										</div>
+									</div>
+								</button>
+							</div>
+						</div>
 
 						<!-- Chat Input -->
 						<div class="absolute bottom-0 left-0 z-30 right-0 p-4 md:px-12">
@@ -438,9 +814,14 @@
 											</defs>
 										</svg>
 									</div>
-									<input id="chat-input" type="text" placeholder="Dites-moi où vous voulez partir ou ce que vous cherchez..." class="w-full p-4 pl-12 dark:text-white/90 focus:outline-0 placeholder:text-sm dark:placeholder:text-white/50 pr-28 backdrop-blur-[10px] dark:bg-white/5 dark:border-gray-600 rounded-full bg-white shadow-lg border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 transition-colors duration-200" autocomplete="off" data-placeholder-index="0"/>
+									<input id="chat-input" type="text" placeholder="Dites-moi où vous voulez partir ou ce que vous cherchez..." class="w-full p-4 pl-12 dark:text-white/90 focus:outline-0 placeholder:text-sm dark:placeholder:text-white/50 pr-32 backdrop-blur-[10px] dark:bg-white/5 dark:border-gray-600 rounded-full bg-white shadow-lg border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 transition-colors duration-200" autocomplete="off" data-placeholder-index="0"/>
 									<div class="absolute right-2 top-1/2 transform -translate-y-1/2 flex space-x-2">
-										<button type="submit" id="chat-send-btn" class="w-10 h-10 flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 rounded-full text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" style="background-color: #1f2937 !important;" onmouseover="this.style.setProperty('background-color', '#dc2626', 'important')" onmouseout="this.style.setProperty('background-color', '#1f2937', 'important')" title="Envoyer le message">
+										<button type="button" id="mic-button" class="w-10 h-10 flex items-center justify-center bg-gradient-to-r from-gray-800 to-gray-900 hover:from-red-600 hover:to-red-700 dark:from-gray-700 dark:to-gray-800 dark:hover:from-red-600 dark:hover:to-red-700 rounded-full text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 border-2 border-transparent dark:border-white/20" style="background: linear-gradient(to right, #1f2937, #111827) !important; color: white !important;" title="Utiliser le microphone">
+											<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+											</svg>
+										</button>
+										<button type="submit" id="chat-send-btn" class="w-10 h-10 flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700 rounded-full text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 border-2 border-transparent dark:border-white/20" style="background-color: #1f2937 !important;" onmouseover="this.style.setProperty('background-color', '#dc2626', 'important')" onmouseout="this.style.setProperty('background-color', '#1f2937', 'important')" title="Envoyer le message">
 											<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
 											</svg>
@@ -490,6 +871,8 @@
 
 		<script defer src="{{ asset('assets/js/alpine.min.js') }}"></script>
 		<script defer src="{{ asset('assets/js/glightbox.min.js') }}"></script>
+		<!-- Error handling component -->
+		<script defer src="{{ asset('assets/js/components/error-message.js') }}"></script>
 		<!-- Main application script - loaded only once -->
 		<script defer src="{{ asset('assets/js/app.js') }}"></script>
 	</body>

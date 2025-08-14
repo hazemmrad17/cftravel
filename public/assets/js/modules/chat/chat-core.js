@@ -36,6 +36,19 @@ if (typeof ChatCore === 'undefined') {
             this.initializeStreamingPlaceholder();
             this.attachEventListeners();
             
+            // Force microphone button styling after a short delay
+            setTimeout(() => {
+                const micButton = document.querySelector('#mic-button');
+                if (micButton) {
+                    micButton.style.background = 'linear-gradient(to right, #1f2937, #111827)';
+                    micButton.style.color = 'white';
+                    const micIcon = micButton.querySelector('svg');
+                    if (micIcon) {
+                        micIcon.style.color = 'white';
+                    }
+                }
+            }, 100);
+            
             // Try to update API config in background (non-blocking)
             this.updateApiConfig().catch(error => {
                 console.warn('⚠️ Failed to update API config:', error);
@@ -108,13 +121,25 @@ if (typeof ChatCore === 'undefined') {
             
             const chatInput = document.querySelector('#chat-input');
             const sendButton = document.querySelector('#chat-send-btn');
+            const micButton = document.querySelector('#mic-button');
             const chatForm = document.querySelector('#chat-form');
             
             console.log('🔍 Chat elements found:', {
                 chatInput: !!chatInput,
                 sendButton: !!sendButton,
+                micButton: !!micButton,
                 chatForm: !!chatForm
             });
+            
+            // Force microphone button styling
+            if (micButton) {
+                micButton.style.background = 'linear-gradient(to right, #1f2937, #111827)';
+                micButton.style.color = 'white';
+                const micIcon = micButton.querySelector('svg');
+                if (micIcon) {
+                    micIcon.style.color = 'white';
+                }
+            }
             
             if (chatInput && sendButton) {
                 // Prevent form submission from causing page refresh
@@ -133,6 +158,15 @@ if (typeof ChatCore === 'undefined') {
                     this.sendMessage();
                 });
                 
+                // Microphone button click
+                if (micButton) {
+                    micButton.addEventListener('click', (e) => {
+                        console.log('🎤 Microphone button clicked');
+                        e.preventDefault();
+                        this.toggleMicrophone();
+                    });
+                }
+                
                 // Enter key press
                 chatInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
@@ -145,11 +179,14 @@ if (typeof ChatCore === 'undefined') {
                 // Input change for visual feedback
                 chatInput.addEventListener('input', () => this.updateSendButtonState());
                 
-                // Start input placeholder cycling
-                this.startInputPlaceholderCycling(chatInput);
-                
-                this.eventListenersAttached = true;
-                console.log('[DEBUG] Attaching chat event listeners');
+                            // Start input placeholder cycling
+            this.startInputPlaceholderCycling(chatInput);
+            
+            // Add prompt button functionality
+            this.attachPromptButtonListeners();
+            
+            this.eventListenersAttached = true;
+            console.log('[DEBUG] Attaching chat event listeners');
             } else {
                 console.warn('⚠️ Chat elements not found, cannot attach event listeners');
             }
@@ -193,6 +230,9 @@ if (typeof ChatCore === 'undefined') {
             // Add user message to chat
             console.log('📝 Adding user message to chat...');
             this.appendMessage(message, true);
+            
+            // Hide prompt suggestions when user sends a message
+            this.hidePromptSuggestions();
             
             // Show AI typing immediately
             console.log('🤖 Showing AI typing immediately...');
@@ -480,6 +520,258 @@ if (typeof ChatCore === 'undefined') {
             chatInput.disabled = this.isSending || this.isAITyping;
             chatInput.style.opacity = (this.isSending || this.isAITyping) ? '0.5' : '1';
             chatInput.style.cursor = (this.isSending || this.isAITyping) ? 'not-allowed' : 'text';
+        },
+
+        // Microphone functionality
+        isRecording: false,
+        mediaRecorder: null,
+        audioChunks: [],
+
+        toggleMicrophone: function() {
+            if (this.isRecording) {
+                this.stopRecording();
+            } else {
+                this.startRecording();
+            }
+        },
+
+        startRecording: async function() {
+            try {
+                console.log('🎤 Starting microphone recording...');
+                
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                this.mediaRecorder = new MediaRecorder(stream);
+                this.audioChunks = [];
+                
+                this.mediaRecorder.ondataavailable = (event) => {
+                    this.audioChunks.push(event.data);
+                };
+                
+                this.mediaRecorder.onstop = () => {
+                    this.processAudioRecording();
+                };
+                
+                this.mediaRecorder.start();
+                this.isRecording = true;
+                this.updateMicrophoneButton();
+                
+                console.log('🎤 Recording started');
+                
+            } catch (error) {
+                console.error('❌ Error starting microphone:', error);
+                this.showMicrophoneError('Impossible d\'accéder au microphone. Vérifiez les permissions.');
+            }
+        },
+
+        stopRecording: function() {
+            if (this.mediaRecorder && this.isRecording) {
+                console.log('🎤 Stopping recording...');
+                this.mediaRecorder.stop();
+                this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                this.isRecording = false;
+                this.updateMicrophoneButton();
+                console.log('🎤 Recording stopped');
+            }
+        },
+
+        updateMicrophoneButton: function() {
+            const micButton = document.querySelector('#mic-button');
+            if (micButton) {
+                if (this.isRecording) {
+                    micButton.innerHTML = `
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path>
+                        </svg>
+                    `;
+                    micButton.classList.add('recording', 'animate-pulse');
+                    micButton.style.background = 'linear-gradient(to right, #eab308, #ca8a04)';
+                    micButton.title = 'Arrêter l\'enregistrement';
+                } else {
+                    micButton.innerHTML = `
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                        </svg>
+                    `;
+                    micButton.classList.remove('recording', 'animate-pulse');
+                    micButton.style.background = 'linear-gradient(to right, #1f2937, #111827)';
+                    micButton.title = 'Utiliser le microphone';
+                }
+            }
+        },
+
+        processAudioRecording: function() {
+            console.log('🎤 Processing audio recording...');
+            
+            if (this.audioChunks.length === 0) {
+                console.warn('⚠️ No audio data recorded');
+                return;
+            }
+            
+            const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+            console.log('🎤 Audio blob created:', audioBlob.size, 'bytes');
+            
+            // For now, just show a message that speech-to-text is not implemented
+            // In a real implementation, you would send this to a speech-to-text service
+            this.showMicrophoneMessage('Fonctionnalité de reconnaissance vocale en cours de développement. Veuillez taper votre message.');
+        },
+
+        showMicrophoneError: function(message) {
+            const chatArea = document.querySelector('.chat-messages');
+            if (chatArea) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'microphone-message bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-6 py-4 rounded-xl mb-4 shadow-lg backdrop-blur-sm transform -translate-y-4 opacity-0 transition-all duration-500 ease-out';
+                errorDiv.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold text-red-800 dark:text-red-200 mb-1">Microphone Error</h4>
+                                <p class="text-sm text-red-600 dark:text-red-300">${message}</p>
+                            </div>
+                        </div>
+                        <button class="close-message-btn ml-3 p-1 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200" title="Fermer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                chatArea.appendChild(errorDiv);
+                
+                // Animate in
+                setTimeout(() => {
+                    errorDiv.classList.remove('-translate-y-4', 'opacity-0');
+                    errorDiv.classList.add('translate-y-0', 'opacity-100');
+                }, 10);
+                
+                // Add close button functionality
+                const closeBtn = errorDiv.querySelector('.close-message-btn');
+                closeBtn.addEventListener('click', () => {
+                    this.fadeOutAndRemove(errorDiv);
+                });
+                
+                // Auto-remove after 8 seconds
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        this.fadeOutAndRemove(errorDiv);
+                    }
+                }, 8000);
+            }
+        },
+
+        showMicrophoneMessage: function(message) {
+            const chatArea = document.querySelector('.chat-messages');
+            if (chatArea) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'microphone-message bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300 px-6 py-4 rounded-xl mb-4 shadow-lg backdrop-blur-sm transform -translate-y-4 opacity-0 transition-all duration-500 ease-out';
+                messageDiv.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-1">Voice Recognition</h4>
+                                <p class="text-sm text-blue-600 dark:text-blue-300">${message}</p>
+                            </div>
+                        </div>
+                        <button class="close-message-btn ml-3 p-1 text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200" title="Fermer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                chatArea.appendChild(messageDiv);
+                
+                // Animate in
+                setTimeout(() => {
+                    messageDiv.classList.remove('-translate-y-4', 'opacity-0');
+                    messageDiv.classList.add('translate-y-0', 'opacity-100');
+                }, 10);
+                
+                // Add close button functionality
+                const closeBtn = messageDiv.querySelector('.close-message-btn');
+                closeBtn.addEventListener('click', () => {
+                    this.fadeOutAndRemove(messageDiv);
+                });
+                
+                // Auto-remove after 8 seconds
+                setTimeout(() => {
+                    if (messageDiv.parentNode) {
+                        this.fadeOutAndRemove(messageDiv);
+                    }
+                }, 8000);
+            }
+        },
+
+        fadeOutAndRemove: function(element) {
+            if (!element || !element.parentNode) return;
+            
+            // Animate out
+            element.classList.remove('translate-y-0', 'opacity-100');
+            element.classList.add('-translate-y-4', 'opacity-0');
+            
+            // Remove from DOM after animation
+            setTimeout(() => {
+                if (element.parentNode) {
+                    element.parentNode.removeChild(element);
+                }
+            }, 500);
+        },
+
+        attachPromptButtonListeners: function() {
+            const promptButtons = document.querySelectorAll('.prompt-btn');
+            
+            promptButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const prompt = button.getAttribute('data-prompt');
+                    if (prompt) {
+                        this.usePrompt(prompt);
+                    }
+                });
+            });
+        },
+
+        usePrompt: function(prompt) {
+            console.log('🎯 Using prompt:', prompt);
+            
+            // Set the prompt in the input field
+            const chatInput = document.querySelector('#chat-input');
+            if (chatInput) {
+                chatInput.value = prompt;
+                chatInput.focus();
+                
+                // Add a small delay for visual feedback
+                setTimeout(() => {
+                    this.sendMessage();
+                }, 300);
+            }
+            
+            // Hide prompt suggestions after using one
+            this.hidePromptSuggestions();
+        },
+
+        hidePromptSuggestions: function() {
+            const promptSuggestions = document.querySelector('#prompt-suggestions');
+            if (promptSuggestions) {
+                promptSuggestions.classList.add('prompt-suggestions-hidden');
+            }
+        },
+
+        showPromptSuggestions: function() {
+            const promptSuggestions = document.querySelector('#prompt-suggestions');
+            if (promptSuggestions) {
+                promptSuggestions.classList.remove('prompt-suggestions-hidden');
+            }
         },
 
         clearMemory: async function() {
