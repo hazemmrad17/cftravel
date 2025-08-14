@@ -26,17 +26,28 @@ class ChatController extends AbstractController
         $this->apiService = $apiService;
         $this->config = $config;
         $this->logger = $logger;
-        $this->agentApiUrl = $_ENV['ENVIRONMENT'] === 'production' ? 'http://localhost:8000' : 'http://localhost:8000';
+        
+        // Use configuration service to get the correct backend URL
+        $servers = $this->config->get('servers');
+        $this->agentApiUrl = $servers['backend']['url'] ?? 'http://localhost:8000';
     }
 
     private function addCorsHeaders(array $headers = []): array
     {
         $corsConfig = $this->config->getCors();
         
+        // Get the current origin
+        $origin = $_SERVER['HTTP_ORIGIN'] ?? '*';
+        
+        // Check if origin is in allowed origins
+        $allowedOrigins = $corsConfig['allowed_origins'] ?? ['*'];
+        $allowOrigin = in_array($origin, $allowedOrigins) || in_array('*', $allowedOrigins) ? $origin : '*';
+        
         return array_merge($headers, [
-            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Origin' => $allowOrigin,
             'Access-Control-Allow-Methods' => implode(', ', $corsConfig['allowed_methods']),
             'Access-Control-Allow-Headers' => implode(', ', $corsConfig['allowed_headers']),
+            'Access-Control-Allow-Credentials' => 'true',
         ]);
     }
 

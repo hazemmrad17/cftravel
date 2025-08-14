@@ -137,7 +137,11 @@ class RecommendationEngineComponent(PipelineComponent):
             'népal': ['Népal', 'Katmandou', 'Népalais', 'Népal culturel'],
             'bhutan': ['Bhoutan', 'Thimphou', 'Bhoutanais', 'Bhoutan culturel'],
             'mongolia': ['Mongolie', 'Oulan-Bator', 'Mongol', 'Mongolie culturel'],
-            'mongolie': ['Mongolie', 'Oulan-Bator', 'Mongol', 'Mongolie culturel']
+            'mongolie': ['Mongolie', 'Oulan-Bator', 'Mongol', 'Mongolie culturel'],
+            'maldives': ['Maldives', 'Maldive', 'Îles Maldives', 'Atoll Maldives', 'Plage paradisiaque', 'Eau turquoise', 'Bungalow sur pilotis'],
+            'maldive': ['Maldives', 'Maldive', 'Îles Maldives', 'Atoll Maldives', 'Plage paradisiaque', 'Eau turquoise', 'Bungalow sur pilotis'],
+            'australia': ['Australie', 'Sydney', 'Melbourne', 'Perth', 'Adélaïde', 'Australien', 'Australie culturel'],
+            'australie': ['Australie', 'Sydney', 'Melbourne', 'Perth', 'Adélaïde', 'Australien', 'Australie culturel']
         }
         
         # Add destination terms

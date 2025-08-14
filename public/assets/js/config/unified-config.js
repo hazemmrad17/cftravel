@@ -84,10 +84,11 @@ if (typeof UnifiedConfig === 'undefined') {
             // Determine if we should force proxy usage
             const forceProxy = debug.forceProxy;
             const isLocalDevelopment = debug.isLocalDevelopment;
+            const isProduction = hostname.includes('cftravel.net') || hostname.includes('ovg-iagent');
             
             // Set API base URL based on environment
             let apiBaseUrl;
-            if (forceProxy || !isLocalDevelopment) {
+            if (forceProxy || !isLocalDevelopment || isProduction) {
                 apiBaseUrl = '/api';
             } else {
                 apiBaseUrl = 'http://localhost:8000';
@@ -105,9 +106,9 @@ if (typeof UnifiedConfig === 'undefined') {
                         url: `${window.location.protocol}//${hostname}${port ? ':' + port : ''}`
                     },
                     backend: {
-                        host: isLocalDevelopment ? 'localhost' : hostname,
-                        port: isLocalDevelopment ? '8000' : '8000',
-                        url: isLocalDevelopment ? 'http://localhost:8000' : `https://${hostname}:8000`
+                        host: isLocalDevelopment ? 'localhost' : 'localhost',
+                        port: '8000',
+                        url: isLocalDevelopment ? 'http://localhost:8000' : 'http://localhost:8000'
                     }
                 },
                 api: {

@@ -24,14 +24,18 @@ return [
     // =============================================================================
     'servers' => [
         'frontend' => [
-            'host' => '127.0.0.1',
-            'port' => 8001,
-            'url' => 'http://127.0.0.1:8001'
+            'host' => $_SERVER['HTTP_HOST'] ?? '127.0.0.1',
+            'port' => $_ENV['ENVIRONMENT'] === 'production' ? '443' : '8001',
+            'url' => $_ENV['ENVIRONMENT'] === 'production' 
+                ? 'https://' . ($_SERVER['HTTP_HOST'] ?? 'ovg-iagent.cftravel.net')
+                : 'http://127.0.0.1:8001'
         ],
         'backend' => [
-            'host' => '0.0.0.0',
+            'host' => $_ENV['ENVIRONMENT'] === 'production' ? 'localhost' : '0.0.0.0',
             'port' => 8000,
-            'url' => 'http://localhost:8000'
+            'url' => $_ENV['ENVIRONMENT'] === 'production' 
+                ? 'http://localhost:8000'
+                : 'http://localhost:8000'
         ]
     ],
     
