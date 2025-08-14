@@ -1,0 +1,3 @@
+when@dev:
+    # Debug configuration is handled by framework.yaml
+    # The debug bar is controlled by web_profiler.yaml 
