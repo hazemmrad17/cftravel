@@ -25,10 +25,9 @@ class BackupModelService:
             logger.warning("⚠️ No API key found. Some features may not work properly.")
             self.client = None
         else:
-            # Initialize Groq client - Groq client handles the base URL internally
-            # Don't pass base_url as it causes URL duplication
+            # Initialize Groq client without base_url to prevent URL duplication
             self.client = Groq(api_key=api_key)
-            logger.info("🔧 Initialized Groq client")
+            logger.info(f"🔧 Initialized Groq client with API key: {api_key[:10]}...")
         
         self.models = self.config.get('models', {})
         

@@ -95,10 +95,12 @@ class ConfigurationService
     public function getApiEndpoint(string $endpoint): string
     {
         $apiConfig = $this->getApi();
-        $baseUrl = $apiConfig['base_url'] ?? '';
         $endpointPath = $apiConfig['endpoints'][$endpoint] ?? $endpoint;
         
-        return rtrim($baseUrl, '/') . '/' . ltrim($endpointPath, '/');
+        // For internal API calls (from PHP to Python), always use the backend server URL
+        $backendUrl = $this->getServer('backend')['url'] ?? 'http://localhost:8000';
+        
+        return rtrim($backendUrl, '/') . '/' . ltrim($endpointPath, '/');
     }
 
     /**

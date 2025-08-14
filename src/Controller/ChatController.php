@@ -316,7 +316,7 @@ class ChatController extends AbstractController
         }
     }
 
-    #[Route('/chat/memory/clear', name: 'chat_memory_clear', methods: ['POST', 'OPTIONS'])]
+    #[Route('/api/memory/clear', name: 'api_memory_clear', methods: ['POST', 'OPTIONS'])]
     public function clearMemory(Request $request): JsonResponse
     {
         // Handle preflight OPTIONS request
@@ -379,7 +379,7 @@ class ChatController extends AbstractController
         }
     }
 
-    #[Route('/api/{path}', name: 'api_proxy', requirements: ['path' => '^(?!config$).+'], methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])]
+    #[Route('/api/{path}', name: 'api_proxy', requirements: ['path' => '^(?!config$|memory/clear$).+'], methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])]
     public function apiProxy(Request $request, string $path = ''): Response
     {
         // Handle preflight OPTIONS request

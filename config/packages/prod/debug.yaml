@@ -1,0 +1,4 @@
+when@prod:
+    debug:
+        # Disable debug mode in production
+        enabled: false 
