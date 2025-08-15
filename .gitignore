@@ -48,7 +48,7 @@ __pycache__/
 
 # Environment templates (include in git)
 !.env
-!env.production
+!env.production.example
 !env.local
 
 ###> OS ###
