@@ -327,36 +327,41 @@ Example format:
 
 To help you find the perfect trip, I need a few details:
 
-• 🌍 Destination (you've got this covered!)
+• Destination (you've got this covered!)
 
-• ⏱️ How long are you planning to stay?
+• How long are you planning to stay?
 
-• 👥 How many people are traveling?
+• How many people are traveling?
 
-• 🎯 What kind of experience are you looking for? (culture, adventure, relaxation, etc.)
+• What kind of experience are you looking for? (culture, adventure, relaxation, etc.)
 
-• 💰 Any budget in mind? (optional)
+• When do you want to travel?
+
+• Any budget in mind? (optional)
 
 Just let me know these details and I'll find you some amazing options!"
 
 RESPOND ONLY WITH THE RESPONSE TEXT:
 """
             else:
-                # Have enough preferences, ask for confirmation
+                # Have enough preferences - create summary and ask for confirmation
+                preference_summary = self._create_preference_summary_text(context.user_preferences)
+                
                 prompt = f"""
-You are ASIA.fr Agent, a friendly and enthusiastic French travel specialist with a warm personality like Layla.ai. You're excited to help them find their perfect Asian adventure!
+You are ASIA.fr Agent, a friendly and enthusiastic French travel specialist. The user has provided travel preferences and you need to create a natural summary and ask for confirmation.
 
 CURRENT PREFERENCES: {json.dumps(context.user_preferences, indent=2, ensure_ascii=False)}
+PREFERENCE SUMMARY: {preference_summary}
 USER INPUT: {context.user_input}
 
-Generate a warm, enthusiastic response in French that:
+Generate a warm, friendly response in French that:
 1. 🌟 Shows genuine enthusiasm about their travel plans
-2. ✨ Asks for confirmation in a natural, conversational way
+2. ✨ Presents the preference summary naturally
 3. Uses emojis naturally to express your excitement
-4. Sounds like you're genuinely happy to help them
-5. Avoids formal language - keep it casual and friendly
+4. Asks for explicit confirmation before searching
+5. Keeps it conversational and friendly
 
-Keep it friendly, warm and encouraging - like talking to a friend!
+IMPORTANT: Always ask for confirmation before searching. Example: "Does this summary look correct so I can search for the best offers?"
 
 RESPOND ONLY WITH THE RESPONSE TEXT:
 """
@@ -365,14 +370,11 @@ RESPOND ONLY WITH THE RESPONSE TEXT:
             response = await self.llm_service.create_generation_completion(messages, stream=False)
             response_text = response.strip()
             
-            # Add preference summary when asking for confirmation
+            # Return the response text directly
             if preference_count >= 2:
-                preference_summary = self._create_preference_summary_text(context.user_preferences)
-                full_response = f"{response_text}\n\n📋 **Récapitulatif de vos préférences :**\n{preference_summary}\n\nDites-moi si ces préférences vous conviennent pour que je puisse vous montrer les meilleures offres !"
                 return {
-                    'text': full_response,
-                    'type': 'general',
-                    'show_preference_summary': True
+                    'text': response_text,
+                    'type': 'general'
                 }
             else:
                 formatted_response = self._format_with_bullet_points(response_text)
@@ -441,37 +443,27 @@ RESPOND ONLY WITH THE RESPONSE TEXT:
         }
     
     def _create_preference_summary_text(self, preferences: Dict[str, Any]) -> str:
-        """Create preference summary text"""
+        """Create a natural language summary of user preferences"""
         parts = []
         
+        # Build natural language summary
         if preferences.get('destination'):
-            parts.append(f"🌍 **Destination :** {preferences['destination']}")
+            parts.append(f"destination {preferences['destination']}")
         if preferences.get('duration'):
-            parts.append(f"⏱️ **Durée :** {preferences['duration']}")
-        if preferences.get('budget'):
-            parts.append(f"💰 **Budget :** {preferences['budget']}")
-        if preferences.get('style'):
-            parts.append(f"🎯 **Style de voyage :** {preferences['style']}")
+            parts.append(f"pour {preferences['duration']}")
         if preferences.get('group_size'):
-            parts.append(f"👥 **Taille du groupe :** {preferences['group_size']}")
-        if preferences.get('timing'):
-            parts.append(f"📅 **Période :** {preferences['timing']}")
+            parts.append(f"pour {preferences['group_size']}")
+        if preferences.get('travel_dates'):
+            parts.append(f"en {preferences['travel_dates']}")
+        if preferences.get('style'):
+            parts.append(f"style {preferences['style']}")
+        if preferences.get('budget_amount'):
+            parts.append(f"avec un budget de {preferences['budget_amount']}€")
         
-        # Add missing preferences as placeholders
-        missing_prefs = []
-        if not preferences.get('destination'):
-            missing_prefs.append("🌍 Destination")
-        if not preferences.get('duration'):
-            missing_prefs.append("⏱️ Durée")
-        if not preferences.get('style'):
-            missing_prefs.append("🎯 Style de voyage")
-        if not preferences.get('group_size'):
-            missing_prefs.append("👥 Taille du groupe")
-        
-        summary = "\n".join(parts) if parts else "Aucune préférence spécifique détectée"
-        
-        # Add missing preferences section if any
-        if missing_prefs:
-            summary += f"\n\n❓ **Préférences manquantes :**\n" + "\n".join([f"• {pref}" for pref in missing_prefs])
+        # Create natural summary
+        if parts:
+            summary = f"Vous planifiez un voyage vers {', '.join(parts)}."
+        else:
+            summary = "Vous avez commencé à planifier votre voyage."
         
         return summary 

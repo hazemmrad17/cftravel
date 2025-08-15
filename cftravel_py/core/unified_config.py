@@ -238,25 +238,28 @@ class UnifiedConfig:
                     'reasoning': {
                         'name': 'moonshotai/kimi-k2-instruct',
                         'temperature': 0.1,
-                        'max_tokens': 1024,
+                        'max_tokens': 512,
                         'enabled': True
                     },
                     'generation': {
                         'name': 'moonshotai/kimi-k2-instruct',
                         'temperature': 0.7,
-                        'max_tokens': 2048,
+                        'max_tokens': 1024,
                         'enabled': True
                     },
                     'matcher': {
-                        'name': 'moonshotai/kimi-k2-instruct',
-                        'temperature': 0.1,
-                        'max_tokens': 512,
+                        'name': 'openai/gpt-oss-120b',
+                        'temperature': 0.3,
+                        'max_tokens': 2000,
+                        'top_p': 0.8,
+                        'reasoning_effort': 'medium',
                         'enabled': True
                     },
                     'extractor': {
                         'name': 'moonshotai/kimi-k2-instruct',
-                        'temperature': 0.1,
-                        'max_tokens': 1024,
+                        'temperature': 0.6,
+                        'max_tokens': 4096,
+                        'top_p': 1,
                         'enabled': True
                     }
                 }
@@ -342,25 +345,28 @@ class UnifiedConfig:
                     'reasoning': {
                         'name': 'moonshotai/kimi-k2-instruct',
                         'temperature': 0.1,
-                        'max_tokens': 1024,
+                        'max_tokens': 512,
                         'enabled': True
                     },
                     'generation': {
                         'name': 'moonshotai/kimi-k2-instruct',
                         'temperature': 0.7,
-                        'max_tokens': 2048,
+                        'max_tokens': 1024,
                         'enabled': True
                     },
                     'matcher': {
-                        'name': 'moonshotai/kimi-k2-instruct',
-                        'temperature': 0.1,
-                        'max_tokens': 512,
+                        'name': 'openai/gpt-oss-120b',
+                        'temperature': 0.3,
+                        'max_tokens': 2000,
+                        'top_p': 0.8,
+                        'reasoning_effort': 'medium',
                         'enabled': True
                     },
                     'extractor': {
                         'name': 'moonshotai/kimi-k2-instruct',
-                        'temperature': 0.1,
-                        'max_tokens': 1024,
+                        'temperature': 0.6,
+                        'max_tokens': 4096,
+                        'top_p': 1,
                         'enabled': True
                     }
                 }

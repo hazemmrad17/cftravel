@@ -5,6 +5,7 @@ Handles intelligent extraction of travel preferences from user input
 
 import json
 import re
+from datetime import datetime, timedelta
 from typing import Dict, Any, List
 from ..core import PipelineComponent, PipelineContext, PipelineState
 from services.llm_service import LLMService
@@ -35,7 +36,9 @@ class PreferenceExtractorComponent(PipelineComponent):
             r'\b(sri lanka|sri lankais)\b',
             r'\b(nepal|népal|népalais)\b',
             r'\b(bhutan|bhoutan|bhoutanais)\b',
-            r'\b(mongolia|mongolie|mongol)\b'
+            r'\b(mongolia|mongolie|mongol)\b',
+            r'\b(maldives|maldive)\b',
+            r'\b(australia|australie)\b'
         ]
         
         self.duration_patterns = [
@@ -44,13 +47,60 @@ class PreferenceExtractorComponent(PipelineComponent):
             r'\b(\d+)\s*(mois|months?)\b'
         ]
         
+        # Enhanced date patterns with current date awareness
+        self.date_patterns = [
+            r'\b(printemps|spring)\b',
+            r'\b(été|summer)\b',
+            r'\b(automne|fall|autumn)\b',
+            r'\b(hiver|winter)\b',
+            r'\b(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\b',
+            r'\b(january|february|march|april|may|june|july|august|september|october|november|december)\b',
+            r'\b(\d{1,2})/(\d{1,2})/(\d{4})\b',  # MM/DD/YYYY or DD/MM/YYYY
+            r'\b(\d{1,2})-(\d{1,2})-(\d{4})\b',  # MM-DD-YYYY or DD-MM-YYYY
+            r'\b(dans|in)\s+(\d+)\s*(jours?|days?|semaines?|weeks?|mois|months?)\b',
+            r'\b(prochain|next)\s+(mois|month|semaine|week)\b',
+            r'\b(cette|this)\s+(année|year)\b',
+            r'\b(l\'année|next year)\s+prochaine\b',
+            r'\b(ce|this)\s+(printemps|été|automne|hiver)\b',
+            r'\b(le|on)\s+(\d{1,2})\s+(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\b'
+        ]
+        
         # Budget patterns (optional - only extract if clearly mentioned)
         self.budget_patterns = [
-            r'\b(budget\s+(luxe|premium|haut|élevé))\b',
-            r'\b(budget\s+(bas|faible|économique))\b',
-            r'\b(luxe|premium|haut|élevé)\s+budget\b',
-            r'\b(bas|faible|économique)\s+budget\b',
-            r'\b(\d+(?:[.,]\d+)?)\s*(?:€|euros?)\b'  # Numeric budget
+            r'\b(\d+(?:[.,]\d+)?)\s*(?:€|euros?)\b',  # Numeric budget amount
+            r'\b(budget\s+de\s+(\d+(?:[.,]\d+)?)\s*(?:€|euros?))\b',  # "budget de X euros"
+            r'\b(environ|maximum|jusqu\'à)\s+(\d+(?:[.,]\d+)?)\s*(?:€|euros?)\b',  # "environ X euros"
+            r'\b(prix|coût|tarif)\s+(de\s+)?(\d+(?:[.,]\d+)?)\s*(?:€|euros?)\b'  # "prix de X euros"
+        ]
+        
+        # Enhanced hotel/resort patterns for better matching
+        self.accommodation_patterns = [
+            r'\b(hôtel|hotel)\b',
+            r'\b(resort|station)\s+balnéaire\b',
+            r'\b(bungalow|villa|suite)\b',
+            r'\b(5\s*étoiles?|5\s*stars?)\b',
+            r'\b(4\s*étoiles?|4\s*stars?)\b',
+            r'\b(3\s*étoiles?|3\s*stars?)\b',
+            r'\b(luxe|premium|standard|économique)\s+(hôtel|hotel)\b'
+        ]
+        
+        # Activity and experience patterns
+        self.activity_patterns = [
+            r'\b(plage|beach)\b',
+            r'\b(culture|culturel)\b',
+            r'\b(aventure|adventure)\b',
+            r'\b(détente|relaxation)\b',
+            r'\b(gastronomie|cuisine|food)\b',
+            r'\b(sport|activité)\b',
+            r'\b(visite|découverte)\b',
+            r'\b(shopping|achats)\b',
+            r'\b(nature|paysage)\b',
+            r'\b(histoire|historique)\b',
+            r'\b(tradition|traditionnel)\b',
+            r'\b(plongée|diving)\b',
+            r'\b(surf|kitesurf)\b',
+            r'\b(yoga|méditation)\b',
+            r'\b(spa|massage)\b'
         ]
         
         # Destination mapping for standardization
@@ -70,7 +120,25 @@ class PreferenceExtractorComponent(PipelineComponent):
             'sri lanka': 'Sri Lanka', 'sri lankais': 'Sri Lanka',
             'nepal': 'Nepal', 'népal': 'Nepal', 'népalais': 'Nepal',
             'bhutan': 'Bhutan', 'bhoutan': 'Bhutan', 'bhoutanais': 'Bhutan',
-            'mongolia': 'Mongolia', 'mongolie': 'Mongolia', 'mongol': 'Mongolia'
+            'mongolia': 'Mongolia', 'mongolie': 'Mongolia', 'mongol': 'Mongolia',
+            'maldives': 'Maldives', 'maldive': 'Maldives',
+            'australia': 'Australia', 'australie': 'Australia'
+        }
+        
+        # Month mapping for date processing
+        self.month_mapping = {
+            'janvier': 1, 'january': 1,
+            'février': 2, 'february': 2,
+            'mars': 3, 'march': 3,
+            'avril': 4, 'april': 4,
+            'mai': 5, 'may': 5,
+            'juin': 6, 'june': 6,
+            'juillet': 7, 'july': 7,
+            'août': 8, 'august': 8,
+            'septembre': 9, 'september': 9,
+            'octobre': 10, 'october': 10,
+            'novembre': 11, 'november': 11,
+            'décembre': 12, 'december': 12
         }
     
     def is_required(self, context: PipelineContext) -> bool:
@@ -88,6 +156,9 @@ class PreferenceExtractorComponent(PipelineComponent):
             
             # Merge preferences (LLM takes precedence)
             merged_preferences = self._merge_preferences(fast_preferences, llm_preferences)
+            
+            # Add current date context for date-aware processing
+            merged_preferences['current_date'] = datetime.now().strftime('%Y-%m-%d')
             
             # Update context with new preferences
             if merged_preferences:
@@ -108,7 +179,6 @@ class PreferenceExtractorComponent(PipelineComponent):
                 context.add_metadata('is_modification', True)
                 self.logger.info("🔄 Detected preference modification request")
             
-            return context
             context.add_metadata('preference_count', len(context.user_preferences))
             
             return context
@@ -144,24 +214,34 @@ class PreferenceExtractorComponent(PipelineComponent):
                     preferences['duration'] = f"{number} jours"
                 break
         
+        # Extract travel dates/timing with current date awareness
+        timing_info = self._extract_timing_info(input_lower)
+        if timing_info:
+            preferences['timing'] = timing_info
+        
         # Extract budget (optional - only if clearly mentioned)
-        for pattern in self.budget_patterns:
-            match = re.search(pattern, input_lower)
-            if match:
-                if any(word in match.group(0) for word in ['luxe', 'premium', 'haut', 'élevé']):
-                    preferences['budget'] = 'high'
-                elif any(word in match.group(0) for word in ['bas', 'faible', 'économique']):
-                    preferences['budget'] = 'low'
-                elif match.group(1).isdigit():  # Numeric budget
-                    preferences['budget'] = match.group(1)
-                break
+        budget_info = self._extract_budget_info(input_lower)
+        if budget_info:
+            preferences['budget'] = budget_info
+        
+        # Extract accommodation preferences
+        accommodation_info = self._extract_accommodation_info(input_lower)
+        if accommodation_info:
+            preferences['accommodation'] = accommodation_info
+        
+        # Extract activities and experiences
+        activities = self._extract_activities(input_lower)
+        if activities:
+            preferences['activities'] = activities
         
         # Extract travel style
         style_patterns = {
             'cultural': ['culturel', 'cultural', 'tradition', 'histoire', 'historique'],
             'adventure': ['aventure', 'adventure', 'trekking', 'randonnée', 'hiking'],
             'relaxation': ['détente', 'relaxation', 'plage', 'bien-être', 'spa'],
-            'gastronomy': ['gastronomie', 'cuisine', 'food', 'culinaire', 'dégustation']
+            'gastronomy': ['gastronomie', 'cuisine', 'food', 'culinaire', 'dégustation'],
+            'luxury': ['luxe', 'premium', 'haut de gamme', 'exclusif'],
+            'budget': ['économique', 'budget', 'pas cher', 'bon marché']
         }
         
         for style, keywords in style_patterns.items():
@@ -184,6 +264,84 @@ class PreferenceExtractorComponent(PipelineComponent):
         
         return preferences
     
+    def _extract_timing_info(self, input_lower: str) -> str:
+        """Extract travel timing with current date awareness"""
+        current_date = datetime.now()
+        
+        # Check for specific dates
+        for pattern in self.date_patterns:
+            match = re.search(pattern, input_lower)
+            if match:
+                if 'printemps' in match.group(0) or 'spring' in match.group(0):
+                    return "printemps"
+                elif 'été' in match.group(0) or 'summer' in match.group(0):
+                    return "été"
+                elif 'automne' in match.group(0) or 'fall' in match.group(0) or 'autumn' in match.group(0):
+                    return "automne"
+                elif 'hiver' in match.group(0) or 'winter' in match.group(0):
+                    return "hiver"
+                elif any(month in match.group(0) for month in self.month_mapping.keys()):
+                    # Extract month
+                    for month_name, month_num in self.month_mapping.items():
+                        if month_name in match.group(0):
+                            return month_name
+                elif 'dans' in match.group(0) or 'in' in match.group(0):
+                    # Relative timing like "dans 2 semaines"
+                    return match.group(0)
+                elif 'prochain' in match.group(0) or 'next' in match.group(0):
+                    return "prochain mois"
+                elif 'cette année' in match.group(0) or 'this year' in match.group(0):
+                    return "cette année"
+        
+        return None
+    
+    def _extract_budget_info(self, input_lower: str) -> str:
+        """Extract budget information (optional) - returns numeric amount"""
+        for pattern in self.budget_patterns:
+            match = re.search(pattern, input_lower)
+            if match:
+                # Extract numeric amount from the match
+                if len(match.groups()) >= 1:
+                    amount_str = match.group(1) if match.group(1) else match.group(2)
+                    if amount_str:
+                        # Convert to float, handling comma as decimal separator
+                        amount = float(amount_str.replace(',', '.'))
+                        return str(amount)
+        
+        return None
+    
+    def _extract_accommodation_info(self, input_lower: str) -> str:
+        """Extract accommodation preferences"""
+        for pattern in self.accommodation_patterns:
+            match = re.search(pattern, input_lower)
+            if match:
+                if '5' in match.group(0):
+                    return '5_stars'
+                elif '4' in match.group(0):
+                    return '4_stars'
+                elif '3' in match.group(0):
+                    return '3_stars'
+                elif 'luxe' in match.group(0) or 'premium' in match.group(0):
+                    return 'luxury'
+                elif 'économique' in match.group(0):
+                    return 'budget'
+                else:
+                    return 'standard'
+        
+        return None
+    
+    def _extract_activities(self, input_lower: str) -> List[str]:
+        """Extract activity and experience preferences"""
+        activities = []
+        for pattern in self.activity_patterns:
+            match = re.search(pattern, input_lower)
+            if match:
+                activity = match.group(1)
+                if activity not in activities:
+                    activities.append(activity)
+        
+        return activities if activities else None
+    
     async def _llm_preference_extraction(self, context: PipelineContext) -> Dict[str, Any]:
         """Use LLM for intelligent preference extraction"""
         prompt = self._build_extraction_prompt(context)
@@ -198,10 +356,13 @@ class PreferenceExtractorComponent(PipelineComponent):
     
     def _build_extraction_prompt(self, context: PipelineContext) -> str:
         """Build the preference extraction prompt"""
+        current_date = datetime.now().strftime('%d/%m/%Y')
         return f"""
 You are an expert travel preference extractor. Extract ALL travel-related information from this user message. You MUST RESPOND IN FRENCH.
 
 LANGUAGE REQUIREMENT: You are a French travel agent. All your analysis and reasoning must be in French.
+
+CURRENT DATE: {current_date}
 
 USER INPUT: {context.user_input}
 ORCHESTRATION CONTEXT: {json.dumps(context.get_metadata('orchestration_result', {}), indent=2, ensure_ascii=False)}
@@ -209,15 +370,18 @@ ORCHESTRATION CONTEXT: {json.dumps(context.get_metadata('orchestration_result', 
 EXTRACT and return a JSON object with these fields:
 - destination: specific places, countries, cities mentioned
 - duration: how long they want to travel
-- budget: low/medium/high based on language used
-- style: travel style (cultural, adventure, luxury, relaxation, etc.)
+- travel_dates: when they want to travel (season, month, relative dates like "dans 2 semaines") - REQUIRED
+- budget_amount: numeric amount in euros (optional - only if clearly mentioned with specific amount)
+- style: travel style (cultural, adventure, luxury, relaxation, gastronomy, etc.)
 - group_size: solo, couple, family, group
-- timing: when they want to travel (season, month, etc.)
+- accommodation: hotel preferences (5_stars, 4_stars, 3_stars, luxury, budget, standard)
+- activities: array of activities they want (plage, culture, aventure, détente, gastronomie, etc.)
 
 EXAMPLES:
-- "Je veux aller au Japon pour 2 semaines" → {{"destination": "Japan", "duration": "2 semaines"}}
-- "Budget moyen pour une aventure culturelle" → {{"budget": "medium", "style": "cultural"}}
-- "Philippines en famille pour 10 jours" → {{"destination": "Philippines", "duration": "10 jours", "group_size": "family"}}
+- "Je veux aller au Japon pour 2 semaines en avril" → {{"destination": "Japan", "duration": "2 semaines", "travel_dates": "avril"}}
+- "Budget de 3000 euros pour une aventure culturelle" → {{"budget_amount": 3000, "style": "cultural"}}
+- "Philippines en famille pour 10 jours avec plages" → {{"destination": "Philippines", "duration": "10 jours", "group_size": "family", "activities": ["plage"]}}
+- "Hôtel 5 étoiles au Maldives" → {{"destination": "Maldives", "accommodation": "5_stars"}}
 
 RESPOND ONLY WITH VALID JSON:
 """

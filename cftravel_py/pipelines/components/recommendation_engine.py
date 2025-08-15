@@ -199,14 +199,19 @@ class RecommendationEngineComponent(PipelineComponent):
                 query_parts.extend(["gastronomie", "cuisine locale", "dégustations"])
         
         # Budget is optional - only add if clearly specified
-        if preferences.get('budget'):
-            budget = str(preferences['budget']).lower()
-            # Only add budget terms if it's a clear budget preference
-            if any(word in budget for word in ['luxe', 'premium', 'haut', 'high']):
-                query_parts.append("luxe premium")
-            elif any(word in budget for word in ['bas', 'petit', 'low', 'économique']):
-                query_parts.append("économique")
-            # For unclear budget terms, don't add budget constraints - focus on destination
+        if preferences.get('budget_amount'):
+            try:
+                budget_amount = float(preferences['budget_amount'])
+                # Add budget context to query
+                if budget_amount < 2000:
+                    query_parts.append("économique")
+                elif budget_amount > 5000:
+                    query_parts.append("luxe premium")
+                else:
+                    query_parts.append("moyen de gamme")
+            except (ValueError, TypeError):
+                # If budget amount is not a valid number, skip budget constraints
+                pass
         
         if preferences.get('group_size'):
             group_size = preferences['group_size']
@@ -216,9 +221,9 @@ class RecommendationEngineComponent(PipelineComponent):
             elif 'grand' in group_size.lower() or 'large' in group_size.lower():
                 query_parts.append("groupe important")
         
-        if preferences.get('timing'):
-            timing = preferences['timing']
-            query_parts.append(f"période {timing}")
+        if preferences.get('travel_dates'):
+            travel_dates = preferences['travel_dates']
+            query_parts.append(f"période {travel_dates}")
         
         # Add enhanced context words
         query_parts.extend([
@@ -399,9 +404,16 @@ RESPOND ONLY WITH VALID JSON ARRAY:
                 score += 0.2
         
         # Budget matching
-        if preferences.get('budget'):
-            price_range = offer.get('price_range', '')
-            if preferences['budget'] in price_range:
-                score += 0.1
+        if preferences.get('budget_amount'):
+            try:
+                budget_amount = float(preferences['budget_amount'])
+                offer_price = offer.get('price', {}).get('amount', 0)
+                
+                # Allow offers within 30% of the budget
+                budget_tolerance = budget_amount * 0.3
+                if abs(offer_price - budget_amount) <= budget_tolerance:
+                    score += 0.1
+            except (ValueError, TypeError):
+                pass
         
         return min(score, 1.0) 

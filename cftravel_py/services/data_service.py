@@ -41,6 +41,12 @@ class DataService:
             self.load_data()
         return self._data
     
+    def get_all_offers(self) -> List[Dict[str, Any]]:
+        """
+        Alias for get_offers method - used by enhanced pipeline
+        """
+        return self.get_offers()
+    
     def get_offers(self) -> List[Dict[str, Any]]:
         """Get all offers from data"""
         data = self.get_data()

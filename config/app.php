@@ -115,30 +115,31 @@ return [
         'models' => [
             'reasoning' => [
                 'name' => 'moonshotai/kimi-k2-instruct',
-                'temperature' => 0.7,
-                'max_tokens' => 4000,
+                'temperature' => 0.1,
+                'max_tokens' => 512,
                 'top_p' => 0.9,
                 'enabled' => true
             ],
             'generation' => [
                 'name' => 'moonshotai/kimi-k2-instruct',
-                'temperature' => 0.8,
-                'max_tokens' => 4000,
+                'temperature' => 0.7,
+                'max_tokens' => 1024,
                 'top_p' => 0.9,
                 'enabled' => true
             ],
             'matcher' => [
-                'name' => 'moonshotai/kimi-k2-instruct',
+                'name' => 'openai/gpt-oss-120b',
                 'temperature' => 0.3,
                 'max_tokens' => 2000,
                 'top_p' => 0.8,
+                'reasoning_effort' => 'medium',
                 'enabled' => true
             ],
             'extractor' => [
                 'name' => 'moonshotai/kimi-k2-instruct',
-                'temperature' => 0.1,
-                'max_tokens' => 2000,
-                'top_p' => 0.7,
+                'temperature' => 0.6,
+                'max_tokens' => 4096,
+                'top_p' => 1,
                 'enabled' => true
             ]
         ],

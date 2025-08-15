@@ -57,8 +57,64 @@ if (typeof ModuleLoader === 'undefined') {
     window.ModuleLoader = ModuleLoader;
 }
 
-// Initialize application when DOM is ready
-document.addEventListener('DOMContentLoaded', async () => {
+// Global error handler for layout issues
+window.addEventListener('error', function(event) {
+    if (event.message && event.message.includes('Layout was forced before the page was fully loaded')) {
+        console.warn('⚠️ Layout issue detected - this is a common browser warning that can be safely ignored');
+        event.preventDefault();
+        return false;
+    }
+});
+
+// Global unhandled promise rejection handler
+window.addEventListener('unhandledrejection', function(event) {
+    if (event.reason && event.reason.message && event.reason.message.includes('Layout was forced before the page was fully loaded')) {
+        console.warn('⚠️ Layout issue detected in promise - this is a common browser warning');
+        event.preventDefault();
+        return false;
+    }
+});
+
+// Optimize page load performance
+document.addEventListener('DOMContentLoaded', function() {
+    // Ensure all stylesheets are loaded before any layout operations
+    const stylesheets = Array.from(document.styleSheets);
+    const pendingStylesheets = stylesheets.filter(sheet => {
+        try {
+            return sheet.href && !sheet.href.startsWith('data:');
+        } catch (e) {
+            return false;
+        }
+    });
+    
+    if (pendingStylesheets.length > 0) {
+        console.log('📦 Waiting for stylesheets to load...');
+        Promise.all(pendingStylesheets.map(sheet => {
+            return new Promise((resolve) => {
+                if (sheet.href) {
+                    const link = document.querySelector(`link[href="${sheet.href}"]`);
+                    if (link) {
+                        link.addEventListener('load', resolve);
+                        link.addEventListener('error', resolve); // Continue even if some fail
+                    } else {
+                        resolve();
+                    }
+                } else {
+                    resolve();
+                }
+            });
+        })).then(() => {
+            console.log('✅ All stylesheets loaded');
+            // Initialize app after stylesheets are loaded
+            initializeApp();
+        });
+    } else {
+        // No external stylesheets, initialize immediately
+        initializeApp();
+    }
+});
+
+async function initializeApp() {
     console.log('🌐 Application starting...');
     
     try {
@@ -121,14 +177,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error('❌ Application initialization failed:', error);
     }
-});
-
-// Global error handler
-window.addEventListener('error', (event) => {
-    console.error('🚨 Global error:', event.error);
-});
-
-// Unhandled promise rejection handler
-window.addEventListener('unhandledrejection', (event) => {
-    console.error('🚨 Unhandled promise rejection:', event.reason);
-});
+}

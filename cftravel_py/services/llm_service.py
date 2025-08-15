@@ -5,10 +5,11 @@ Enhanced LLM service that uses priority-based backup models with automatic fallb
 """
 
 import logging
-from typing import Dict, List, Optional, Any, Generator
+from typing import Dict, List, Optional, Any, Generator, Union
 from groq import Groq, GroqError
 from core.unified_config import unified_config
 from services.backup_model_service import backup_model_service
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,10 @@ class LLMService:
         else:
             self.client = Groq(api_key=api_key)
         self.models = self.config.get('models', {})
+        
+        # Dashboard settings support
+        self.debug_mode = False
+        self.enabled = True
         
         # Log model configuration on startup
         self._log_model_configuration()
@@ -179,6 +184,65 @@ class LLMService:
         except Exception as e:
             logger.error(f"❌ Single response failed for {model_type}: {e}")
             raise
+
+    async def reason(self, prompt: str, max_tokens: int = 1024, temperature: float = 0.1) -> Union[str, Dict[str, Any]]:
+        """Optimized reasoning with faster response times"""
+        try:
+            # Use optimized parameters for speed
+            messages = [{"role": "user", "content": prompt}]
+            
+            # Optimized parameters for faster responses
+            params = {
+                "model": self.reasoning_model,
+                "messages": messages,
+                "temperature": temperature,
+                "max_tokens": min(max_tokens, 512),  # Limit tokens for speed
+                "top_p": 0.95,
+                "stream": False,
+                "stop": None,
+                "timeout": 15  # Reduced timeout for faster fallback
+            }
+            
+            logger.debug(f"🔄 Fast reasoning with {self.reasoning_model}")
+            
+            # Try primary model first
+            try:
+                response = await self.backup_model_service.create_completion(
+                    model=self.reasoning_model,
+                    messages=messages,
+                    **params
+                )
+                
+                # Try to parse as JSON first
+                try:
+                    result = json.loads(response)
+                    return result
+                except json.JSONDecodeError:
+                    # Return as string if not JSON
+                    return response
+                    
+            except Exception as e:
+                logger.warning(f"⚠️ Primary model failed, using fallback: {e}")
+                # Return simple fallback response
+                return {
+                    "intent": "preference_gathering",
+                    "confidence": 0.5,
+                    "should_show_offers": False,
+                    "semantic_search_enabled": False,
+                    "search_query": "",
+                    "extracted_preferences": {}
+                }
+                
+        except Exception as e:
+            logger.error(f"❌ Reasoning failed: {e}")
+            return {
+                "intent": "preference_gathering",
+                "confidence": 0.3,
+                "should_show_offers": False,
+                "semantic_search_enabled": False,
+                "search_query": "",
+                "extracted_preferences": {}
+            }
 
 # Global instance
 llm_service = LLMService() 

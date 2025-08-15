@@ -36,6 +36,10 @@ class MemoryService:
         self._conversations: Dict[str, Conversation] = {}
         self._user_preferences: Dict[str, Dict[str, Any]] = {}
         
+        # Dashboard settings support
+        self.debug_mode = False
+        self.enabled = True
+        
     def create_conversation(self, conversation_id: str, user_id: Optional[str] = None) -> Conversation:
         """Create a new conversation"""
         try:
@@ -136,6 +140,25 @@ class MemoryService:
             
         except Exception as e:
             raise MemoryError(f"Failed to set preference: {e}")
+    
+    def update_preferences(self, conversation_id: str, preferences: Dict[str, Any]) -> bool:
+        """Update user preferences for conversation"""
+        try:
+            conversation = self.get_conversation(conversation_id)
+            if not conversation:
+                conversation = self.create_conversation(conversation_id)
+            
+            if conversation.user_preferences is None:
+                conversation.user_preferences = {}
+            
+            conversation.user_preferences.update(preferences)
+            conversation.updated_at = datetime.utcnow().isoformat()
+            
+            logger.info(f"✅ Updated preferences for conversation {conversation_id}")
+            return True
+            
+        except Exception as e:
+            raise MemoryError(f"Failed to update preferences: {e}")
     
     def get_user_preferences(self, conversation_id: str) -> Dict[str, Any]:
         """Get user preferences for conversation"""

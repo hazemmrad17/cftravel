@@ -56,6 +56,10 @@ class OptimizedSemanticService:
         self.search_times = []
         self.embedding_times = []
         
+        # Dashboard settings support
+        self.debug_mode = False
+        self.enabled = True
+        
         # Initialize
         self._load_model()
         self._load_or_build_index()
@@ -288,6 +292,12 @@ class OptimizedSemanticService:
             
         except Exception as e:
             logger.error(f"❌ Failed to save index: {e}")
+    
+    def search_offers(self, query: str, top_k: int = 10, threshold: float = 0.1) -> List[Dict[str, Any]]:
+        """
+        Alias for search method - used by enhanced pipeline
+        """
+        return self.search(query, top_k, threshold)
     
     def search(self, query: str, top_k: int = 10, threshold: float = 0.1) -> List[Dict[str, Any]]:
         """

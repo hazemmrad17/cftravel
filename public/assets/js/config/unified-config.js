@@ -128,31 +128,34 @@ if (typeof UnifiedConfig === 'undefined') {
                 ai: {
                     provider: 'groq',
                     api_key: '', // Remove process.env reference
-                    models: {
-                        reasoning: {
-                            name: 'moonshotai/kimi-k2-instruct',
-                            temperature: 0.1,
-                            max_tokens: 1024,
-                            enabled: true
-                        },
-                        generation: {
-                            name: 'moonshotai/kimi-k2-instruct',
-                            temperature: 0.7,
-                            max_tokens: 2048,
-                            enabled: true
-                        },
-                        matcher: {
-                            name: 'moonshotai/kimi-k2-instruct',
-                            temperature: 0.1,
-                            max_tokens: 512,
-                            enabled: true
-                        },
-                        extractor: {
-                            name: 'moonshotai/kimi-k2-instruct',
-                            temperature: 0.1,
-                            max_tokens: 1024,
-                            enabled: true
-                        }
+                                        models: {
+                                reasoning: {
+            name: 'moonshotai/kimi-k2-instruct',
+            temperature: 0.1,
+            max_tokens: 512,
+            enabled: true
+        },
+        generation: {
+            name: 'moonshotai/kimi-k2-instruct',
+            temperature: 0.7,
+            max_tokens: 1024,
+            enabled: true
+        },
+        matcher: {
+            name: 'openai/gpt-oss-120b',
+            temperature: 0.3,
+            max_tokens: 2000,
+            top_p: 0.8,
+            reasoning_effort: 'medium',
+            enabled: true
+        },
+        extractor: {
+            name: 'moonshotai/kimi-k2-instruct',
+            temperature: 0.6,
+            max_tokens: 4096,
+            top_p: 1,
+            enabled: true
+        }
                     }
                 }
             };

@@ -18,10 +18,12 @@ from pathlib import Path
 from core.exceptions import create_error_response, AgentError, APIKeyError, APITokensDepletedError, StreamError, NetworkError, ServerError, ValidationError
 
 # Import the pipeline
-from pipelines.modular_pipeline import ASIAModularPipeline
+from pipelines.enhanced_modular_pipeline import EnhancedASIAModularPipeline
 from services.memory_service import MemoryService
-
 from services.backup_model_service import backup_model_service
+
+# Import settings API
+from api.settings_api import router as settings_router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -29,6 +31,9 @@ logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(title="ASIA.fr Agent API", version="1.0.0")
+
+# Include settings API router
+app.include_router(settings_router)
 
 # Import unified configuration
 from core.unified_config import unified_config
@@ -73,12 +78,12 @@ _memory_service = None
 _templates = None
 
 def get_pipeline():
-    """Lazy load the pipeline only when needed"""
+    """Lazy load the enhanced pipeline only when needed"""
     global _pipeline
     if _pipeline is None:
-        logger.info("🚀 Initializing ASIA.fr Pipeline...")
-        _pipeline = ASIAModularPipeline()
-        logger.info("✅ ASIA.fr Pipeline initialized successfully")
+        logger.info("🚀 Initializing Enhanced ASIA.fr Pipeline...")
+        _pipeline = EnhancedASIAModularPipeline()
+        logger.info("✅ Enhanced ASIA.fr Pipeline initialized successfully")
     return _pipeline
 
 def get_memory_service():
@@ -217,12 +222,13 @@ async def handle_confirmation(request: Request):
 
 @app.post("/chat/stream")
 async def chat_stream(request: Request):
-    """Streaming chat endpoint with optimized performance"""
+    """Enhanced streaming chat endpoint with intelligent orchestration and semantic search"""
     try:
         # Parse request body
         body = await request.json()
         user_message = body.get("message", "").strip()
         conversation_id = body.get("conversation_id")
+        user_id = body.get("user_id", "1")
         
         if not user_message:
             error_response = create_error_response(
@@ -230,30 +236,40 @@ async def chat_stream(request: Request):
             )
             return JSONResponse(status_code=400, content=error_response)
         
-        logger.info(f"📨 Received streaming message: {user_message[:50]}...")
+        logger.info(f"🧠🌊 Enhanced streaming - Received message: {user_message[:50]}...")
         
-        # Lazy load pipeline only when first message is received
+        # Lazy load enhanced pipeline only when first message is received
         pipeline = get_pipeline()
         
         async def generate_stream():
-            """Generate streaming response with optimized performance"""
+            """Generate enhanced streaming response with intelligent orchestration"""
             try:
-                # Process the message with conversation context
+                # Process the message with enhanced features
                 result = await pipeline.process_user_input(user_message, conversation_id)
+                
+                # Send enhanced metadata first
+                metadata = {
+                    "type": "metadata",
+                    "enhanced": True,
+                    "intent_detected": result.get("intent", "unknown"),
+                    "semantic_search_used": result.get("semantic_search_used", False),
+                    "current_date_aware": True,
+                    "budget_processed": result.get("budget_processed", False),
+                    "date_processed": result.get("date_processed", False)
+                }
+                yield f"data: {json.dumps(metadata)}\n\n"
                 
                 # Extract response text
                 response_text = result.get("response", "") if isinstance(result, dict) else str(result)
                 
-                # No confirmation dialog - just stream the response text
-                
-                # Check if we need to show offers (only after confirmation)
+                # Check if we need to show enhanced offers
                 if isinstance(result, dict) and result.get("offers"):
-                    # Send offers data first
+                    # Send enhanced offers data
                     offers = result["offers"]
-                    yield f"data: {json.dumps({'type': 'offers', 'offers': [offer.model_dump() if hasattr(offer, 'model_dump') else offer for offer in offers]})}\n\n"
+                    yield f"data: {json.dumps({'type': 'offers', 'offers': [offer.model_dump() if hasattr(offer, 'model_dump') else offer for offer in offers], 'match_scores': result.get('match_scores', []), 'budget_indicators': result.get('budget_indicators', []), 'llm_selected': result.get('llm_selected', False), 'confidence': result.get('confidence', 'medium')})}\n\n"
                     
                     # For offers, send a short intro message only
-                    intro_message = "Voici les offres qui correspondent parfaitement à vos critères :"
+                    intro_message = "Parfait ! J'ai analysé toutes les offres disponibles dans notre base de données et sélectionné les 3 meilleures options qui correspondent à vos critères :"
                     yield f"data: {json.dumps({'type': 'content', 'chunk': intro_message})}\n\n"
                     
                     # Send end marker immediately after offers
@@ -269,14 +285,14 @@ async def chat_stream(request: Request):
                     else:
                         yield f"data: {json.dumps({'type': 'content', 'chunk': word})}\n\n"
                     
-                    # Optimized delays for better performance
+                    # Optimized delays for faster response
                     if i < len(words) - 1:  # Don't delay after the last word
-                        # Shorter delays for faster response
-                        delay = min(0.05 + (len(word) * 0.01), 0.15)  # Between 0.05 and 0.15 seconds
+                        # Faster delays for better performance
+                        delay = min(0.02 + (len(word) * 0.005), 0.08)  # Between 0.02 and 0.08 seconds
                         
-                        # Add extra delay after punctuation for natural flow
+                        # Minimal delay after punctuation for natural flow
                         if word.endswith(('.', '!', '?', ':', ';')):
-                            delay += 0.1
+                            delay += 0.05
                         
                         await asyncio.sleep(delay)
                 
@@ -284,7 +300,7 @@ async def chat_stream(request: Request):
                 yield f"data: {json.dumps({'type': 'end'})}\n\n"
                 
             except Exception as e:
-                logger.error(f"❌ Error in streaming: {e}")
+                logger.error(f"❌ Error in enhanced streaming: {e}")
                 error_response = create_error_response(e)
                 error_chunk = {
                     "type": "error",
@@ -310,42 +326,52 @@ async def chat_stream(request: Request):
 
 @app.post("/chat")
 async def chat(request: Request):
-    """Regular chat endpoint (fallback for non-streaming)"""
+    """Enhanced chat endpoint with intelligent orchestration and semantic search"""
     try:
         # Parse request body
         body = await request.json()
         user_message = body.get("message", "").strip()
         conversation_id = body.get("conversation_id")
+        user_id = body.get("user_id", "1")
         
         if not user_message:
             raise HTTPException(status_code=400, detail="Message is required")
         
-        logger.info(f"📨 Received regular message: {user_message[:50]}...")
+        logger.info(f"🧠 Enhanced chat - Received message: {user_message[:50]}...")
         
-        # Get pipeline
+        # Get enhanced pipeline
         pipeline = get_pipeline()
         
-        # Process the message
+        # Process the message with enhanced features
         result = await pipeline.process_user_input(user_message, conversation_id)
         
         # Extract response text
         response_text = result.get("response", "") if isinstance(result, dict) else str(result)
         
-        # Prepare response
+        # Prepare enhanced response
         response_data = {
             "response": response_text,
             "conversation_id": conversation_id,
-            "status": "success"
+            "status": "success",
+            "enhanced": True,
+            "metadata": {
+                "intent_detected": result.get("intent", "unknown"),
+                "semantic_search_used": result.get("semantic_search_used", False),
+                "current_date_aware": True,
+                "budget_processed": result.get("budget_processed", False),
+                "date_processed": result.get("date_processed", False)
+            }
         }
         
-        # Add offers if present
+        # Add enhanced offers if present
         if isinstance(result, dict) and result.get("offers"):
             response_data["offers"] = result["offers"]
+            response_data["enhanced_offers"] = True
         
         return response_data
         
     except Exception as e:
-        logger.error(f"❌ Error in regular chat: {e}")
+        logger.error(f"❌ Error in enhanced chat: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/status")

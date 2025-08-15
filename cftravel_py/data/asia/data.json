@@ -57,16 +57,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=115"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=115&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 1990.0,
       "currency": "€",
@@ -156,15 +146,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=411"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=411&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 7990.0,
       "currency": "€",
@@ -254,17 +235,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=532"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=532&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3790.0,
       "currency": "€",
@@ -352,17 +322,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=537"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=537&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2390.0,
       "currency": "€",
@@ -458,17 +417,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=543"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=543&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2990.0,
       "currency": "€",
@@ -558,17 +506,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=550"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=550&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3023.0,
       "currency": "€",
@@ -642,16 +579,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=556"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=556&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3105.0,
       "currency": "€",
@@ -742,18 +669,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=557"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=557&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 1650.0,
       "currency": "€",
@@ -821,17 +736,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=574"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=574&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2923.0,
       "currency": "€",
@@ -923,16 +827,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=586"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=586&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4375.0,
       "currency": "€",
@@ -1034,18 +928,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=588"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=588&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2140.0,
       "currency": "€",
@@ -1135,17 +1017,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=606"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=606&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2990.0,
       "currency": "€",
@@ -1250,16 +1121,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=608"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=608&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3930.0,
       "currency": "€",
@@ -1349,16 +1210,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=644"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=644&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4890.0,
       "currency": "€",
@@ -1447,16 +1298,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=966"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=966&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "27/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 1908.0,
       "currency": "€",
@@ -1544,16 +1385,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=968"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=968&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "27/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3523.0,
       "currency": "€",
@@ -1655,16 +1486,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=969"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=969&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "27/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2723.0,
       "currency": "€",
@@ -1759,16 +1580,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=975"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=975&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "27/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2923.0,
       "currency": "€",
@@ -1844,16 +1655,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=977"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=977&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2028.0,
       "currency": "€",
@@ -1938,15 +1739,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=979"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=979&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3428.0,
       "currency": "€",
@@ -2037,16 +1829,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=986"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=986&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4103.0,
       "currency": "€",
@@ -2122,16 +1904,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=998"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=998&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2753.0,
       "currency": "€",
@@ -2204,18 +1976,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1002"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1002&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3100.0,
       "currency": "€",
@@ -2288,16 +2048,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1005"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1005&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2595.0,
       "currency": "€",
@@ -2382,16 +2132,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1009"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1009&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4123.0,
       "currency": "€",
@@ -2479,17 +2219,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1011"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1011&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2423.0,
       "currency": "€",
@@ -2585,17 +2314,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1012"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1012&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2983.0,
       "currency": "€",
@@ -2683,17 +2401,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1013"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1013&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3823.0,
       "currency": "€",
@@ -2779,15 +2486,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1021"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1021&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4523.0,
       "currency": "€",
@@ -2879,15 +2577,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1022"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1022&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5390.0,
       "currency": "€",
@@ -2963,16 +2652,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1071"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1071&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2935.0,
       "currency": "€",
@@ -3054,16 +2733,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1073"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1073&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3835.0,
       "currency": "€",
@@ -3177,16 +2846,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1078"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1078&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "27/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3783.0,
       "currency": "€",
@@ -3291,16 +2950,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1079"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1079&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "27/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3650.0,
       "currency": "€",
@@ -3397,16 +3046,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1083"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1083&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3353.0,
       "currency": "€",
@@ -3510,16 +3149,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1084"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1084&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3913.0,
       "currency": "€",
@@ -3615,16 +3244,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1085"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1085&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4943.0,
       "currency": "€",
@@ -3704,16 +3323,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1087"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1087&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2988.0,
       "currency": "€",
@@ -3792,16 +3401,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1088"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1088&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3783.0,
       "currency": "€",
@@ -3892,16 +3491,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1089"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1089&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2883.0,
       "currency": "€",
@@ -3985,15 +3574,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1096"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1096&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3820.0,
       "currency": "€",
@@ -4080,18 +3660,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1103"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1103&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3350.0,
       "currency": "€",
@@ -4172,16 +3740,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1110"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1110&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2398.0,
       "currency": "€",
@@ -4261,16 +3819,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1111"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1111&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3153.0,
       "currency": "€",
@@ -4351,16 +3899,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1128"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1128&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4303.0,
       "currency": "€",
@@ -4457,16 +3995,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1241"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1241&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3330.0,
       "currency": "€",
@@ -4556,16 +4084,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1244"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1244&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3990.0,
       "currency": "€",
@@ -4653,16 +4171,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1247"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1247&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3393.0,
       "currency": "€",
@@ -4739,17 +4247,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1251"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1251&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "01/09/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3690.0,
       "currency": "€",
@@ -4813,16 +4310,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1252"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1252&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2990.0,
       "currency": "€",
@@ -4906,15 +4393,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1253"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1253&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3390.0,
       "currency": "€",
@@ -4994,16 +4472,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1254"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1254&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2990.0,
       "currency": "€",
@@ -5080,15 +4548,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1259"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1259&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3590.0,
       "currency": "€",
@@ -5194,15 +4653,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1261"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1261&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 7790.0,
       "currency": "€",
@@ -5297,17 +4747,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1266"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1266&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": "printemps",
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "31/05/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 800.0,
       "currency": "€",
@@ -5395,16 +4834,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1271"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1271&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3828.0,
       "currency": "€",
@@ -5490,15 +4919,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1278"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1278&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 8130.0,
       "currency": "€",
@@ -5597,16 +5017,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1302"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1302&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4980.0,
       "currency": "€",
@@ -5675,16 +5085,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1303"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1303&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3480.0,
       "currency": "€",
@@ -5775,16 +5175,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1307"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1307&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4128.0,
       "currency": "€",
@@ -5875,16 +5265,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1308"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1308&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5278.0,
       "currency": "€",
@@ -5971,15 +5351,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1309"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1309&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3833.0,
       "currency": "€",
@@ -6076,16 +5447,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1318"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1318&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "27/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3923.0,
       "currency": "€",
@@ -6185,18 +5546,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1323"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1323&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2855.0,
       "currency": "€",
@@ -6273,15 +5622,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1348"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1348&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3880.0,
       "currency": "€",
@@ -6376,15 +5716,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1352"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1352&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 8790.0,
       "currency": "€",
@@ -6464,18 +5795,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1502"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1502&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3093.0,
       "currency": "€",
@@ -6560,18 +5879,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1503"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1503&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3363.0,
       "currency": "€",
@@ -6638,16 +5945,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1528"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1528&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2241.0,
       "currency": "€",
@@ -6718,16 +6015,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1533"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1533&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3113.0,
       "currency": "€",
@@ -6807,16 +6094,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1539"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1539&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3283.0,
       "currency": "€",
@@ -6899,15 +6176,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1577"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1577&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 7523.0,
       "currency": "€",
@@ -7005,17 +6273,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1584"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1584&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "01/09/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2770.0,
       "currency": "€",
@@ -7102,15 +6359,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1587"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1587&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4853.0,
       "currency": "€",
@@ -7202,15 +6450,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1590"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1590&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 9523.0,
       "currency": "€",
@@ -7282,17 +6521,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1596"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1596&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3528.0,
       "currency": "€",
@@ -7391,16 +6619,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1640"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1640&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4013.0,
       "currency": "€",
@@ -7500,16 +6718,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1664"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1664&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5123.0,
       "currency": "€",
@@ -7589,16 +6797,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1665"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1665&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3578.0,
       "currency": "€",
@@ -7697,16 +6895,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1820"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1820&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4090.0,
       "currency": "€",
@@ -7812,15 +7000,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1824"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1824&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 9890.0,
       "currency": "€",
@@ -7914,18 +7093,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1843"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1843&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2230.0,
       "currency": "€",
@@ -7993,17 +7160,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1857"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1857&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2690.0,
       "currency": "€",
@@ -8075,17 +7231,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1858"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1858&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3280.0,
       "currency": "€",
@@ -8167,16 +7312,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1872"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1872&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3490.0,
       "currency": "€",
@@ -8278,18 +7413,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1873"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1873&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2135.0,
       "currency": "€",
@@ -8391,18 +7514,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1893"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1893&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2120.0,
       "currency": "€",
@@ -8494,15 +7605,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1904"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1904&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 6490.0,
       "currency": "€",
@@ -8605,18 +7707,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1913"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1913&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2810.0,
       "currency": "€",
@@ -8698,18 +7788,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=1921"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=1921&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/09/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2501.0,
       "currency": "€",
@@ -8786,17 +7864,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2115"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2115&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "01/09/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4120.0,
       "currency": "€",
@@ -8886,15 +7953,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2117"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2117&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4028.0,
       "currency": "€",
@@ -8984,15 +8042,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2118"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2118&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4433.0,
       "currency": "€",
@@ -9069,16 +8118,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2121"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2121&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3703.0,
       "currency": "€",
@@ -9162,16 +8201,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2126"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2126&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4723.0,
       "currency": "€",
@@ -9274,15 +8303,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2127"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2127&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 800.0,
       "currency": "€",
@@ -9378,16 +8398,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2145"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2145&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "27/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2983.0,
       "currency": "€",
@@ -9471,15 +8481,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2160"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2160&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2990.0,
       "currency": "€",
@@ -9553,16 +8554,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2197"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2197&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4628.0,
       "currency": "€",
@@ -9649,18 +8640,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2229"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2229&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/09/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 800.0,
       "currency": "€",
@@ -9749,18 +8728,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2230"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2230&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3363.0,
       "currency": "€",
@@ -9847,15 +8814,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2234"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2234&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3990.0,
       "currency": "€",
@@ -9942,15 +8900,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2235"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2235&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4420.0,
       "currency": "€",
@@ -10038,17 +8987,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2243"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2243&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "01/09/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 7045.0,
       "currency": "€",
@@ -10134,17 +9072,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2244"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2244&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "01/09/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 7340.0,
       "currency": "€",
@@ -10232,15 +9159,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2245"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2245&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 8390.0,
       "currency": "€",
@@ -10333,17 +9251,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2246"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2246&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": "printemps",
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "31/05/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 800.0,
       "currency": "€",
@@ -10420,16 +9327,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2256"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2256&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2490.0,
       "currency": "€",
@@ -10520,18 +9417,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2306"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2306&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 1705.0,
       "currency": "€",
@@ -10631,18 +9516,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2308"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2308&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2195.0,
       "currency": "€",
@@ -10733,18 +9606,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2310"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2310&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2095.0,
       "currency": "€",
@@ -10838,15 +9699,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2317"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2317&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4013.0,
       "currency": "€",
@@ -10959,15 +9811,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2318"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2318&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 9723.0,
       "currency": "€",
@@ -11068,17 +9911,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2324"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2324&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/11/2025",
-        "01/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5906.0,
       "currency": "€",
@@ -11166,16 +9998,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2397"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2397&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3690.0,
       "currency": "€",
@@ -11263,16 +10085,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2398"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2398&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4320.0,
       "currency": "€",
@@ -11360,16 +10172,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2399"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2399&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4620.0,
       "currency": "€",
@@ -11464,16 +10266,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2400"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2400&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4550.0,
       "currency": "€",
@@ -11568,16 +10360,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2401"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2401&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5180.0,
       "currency": "€",
@@ -11672,16 +10454,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2402"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2402&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5480.0,
       "currency": "€",
@@ -11766,16 +10538,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2511"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2511&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 800.0,
       "currency": "€",
@@ -11874,18 +10636,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2512"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2512&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3125.0,
       "currency": "€",
@@ -11962,18 +10712,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2515"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2515&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025",
-        "01/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5383.0,
       "currency": "€",
@@ -12054,18 +10792,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2516"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2516&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025",
-        "01/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 6683.0,
       "currency": "€",
@@ -12141,16 +10867,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2518"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2518&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2661.0,
       "currency": "€",
@@ -12248,17 +10964,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2519"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2519&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": "printemps",
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "31/05/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3723.0,
       "currency": "€",
@@ -12356,17 +11061,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2520"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2520&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": "printemps",
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "31/05/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3813.0,
       "currency": "€",
@@ -12479,16 +11173,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2523"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2523&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5133.0,
       "currency": "€",
@@ -12591,16 +11275,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2524"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2524&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 7023.0,
       "currency": "€",
@@ -12694,16 +11368,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2526"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2526&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5223.0,
       "currency": "€",
@@ -12794,16 +11458,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2529"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2529&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3148.0,
       "currency": "€",
@@ -12898,16 +11552,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2530"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2530&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3378.0,
       "currency": "€",
@@ -12998,16 +11642,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2531"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2531&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3563.0,
       "currency": "€",
@@ -13095,16 +11729,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2533"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2533&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3183.0,
       "currency": "€",
@@ -13199,16 +11823,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2534"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2534&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "27/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2523.0,
       "currency": "€",
@@ -13290,16 +11904,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2543"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2543&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3023.0,
       "currency": "€",
@@ -13395,15 +11999,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2546"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2546&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5423.0,
       "currency": "€",
@@ -13500,15 +12095,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2547"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2547&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 6423.0,
       "currency": "€",
@@ -13589,16 +12175,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2548"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2548&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3083.0,
       "currency": "€",
@@ -13675,15 +12251,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2552"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2552&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4723.0,
       "currency": "€",
@@ -13781,18 +12348,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2565"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2565&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3503.0,
       "currency": "€",
@@ -13879,16 +12434,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2566"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2566&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3783.0,
       "currency": "€",
@@ -13977,16 +12522,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2570"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2570&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "27/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 800.0,
       "currency": "€",
@@ -14074,16 +12609,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2572"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2572&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "27/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 800.0,
       "currency": "€",
@@ -14173,18 +12698,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2592"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2592&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025",
-        "01/07/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 6200.0,
       "currency": "€",
@@ -14284,18 +12797,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2607"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2607&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2315.0,
       "currency": "€",
@@ -14398,18 +12899,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2608"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2608&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2740.0,
       "currency": "€",
@@ -14512,18 +13001,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2609"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2609&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2840.0,
       "currency": "€",
@@ -14612,16 +13089,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2617"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2617&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3823.0,
       "currency": "€",
@@ -14710,16 +13177,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2618"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2618&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4423.0,
       "currency": "€",
@@ -14808,16 +13265,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2619"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2619&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4623.0,
       "currency": "€",
@@ -14913,16 +13360,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2620"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2620&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4743.0,
       "currency": "€",
@@ -15018,16 +13455,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2621"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2621&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5343.0,
       "currency": "€",
@@ -15123,16 +13550,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2622"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2622&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 5543.0,
       "currency": "€",
@@ -15210,15 +13627,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2647"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2647&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4493.0,
       "currency": "€",
@@ -15294,16 +13702,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2648"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2648&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3033.0,
       "currency": "€",
@@ -15383,16 +13781,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2650"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2650&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3563.0,
       "currency": "€",
@@ -15481,16 +13869,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2651"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2651&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 800.0,
       "currency": "€",
@@ -15579,16 +13957,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2652"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2652&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 800.0,
       "currency": "€",
@@ -15680,16 +14048,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2653"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2653&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 800.0,
       "currency": "€",
@@ -15768,16 +14126,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2654"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2654&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4113.0,
       "currency": "€",
@@ -15858,16 +14206,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2655"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2655&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4633.0,
       "currency": "€",
@@ -15970,18 +14308,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2656"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2656&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2265.0,
       "currency": "€",
@@ -16088,18 +14414,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2657"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2657&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2945.0,
       "currency": "€",
@@ -16190,18 +14504,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2658"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2658&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 1895.0,
       "currency": "€",
@@ -16303,18 +14605,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2659"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2659&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2470.0,
       "currency": "€",
@@ -16414,18 +14704,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2660"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2660&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2520.0,
       "currency": "€",
@@ -16525,18 +14803,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2662"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2662&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2215.0,
       "currency": "€",
@@ -16636,18 +14902,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2663"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2663&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2575.0,
       "currency": "€",
@@ -16751,18 +15005,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2665"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2665&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3985.0,
       "currency": "€",
@@ -16862,18 +15104,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2668"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2668&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4285.0,
       "currency": "€",
@@ -16976,18 +15206,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2669"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2669&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4345.0,
       "currency": "€",
@@ -17090,18 +15308,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2670"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2670&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4445.0,
       "currency": "€",
@@ -17179,19 +15385,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2672"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2672&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": "hiver",
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/12/2025",
-        "01/03/2025",
-        "28/02/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2650.0,
       "currency": "€",
@@ -17274,19 +15467,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2673"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2673&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": "hiver",
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/12/2025",
-        "01/03/2025",
-        "28/02/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3270.0,
       "currency": "€",
@@ -17372,19 +15552,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2674"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2674&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": "hiver",
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/12/2025",
-        "01/03/2025",
-        "28/02/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3790.0,
       "currency": "€",
@@ -17484,18 +15651,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2675"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2675&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025",
-        "01/11/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2685.0,
       "currency": "€",
@@ -17590,15 +15745,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2677"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2677&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 9260.0,
       "currency": "€",
@@ -17682,15 +15828,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2693"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2693&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 4590.0,
       "currency": "€",
@@ -17790,17 +15927,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2696"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2696&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": null,
-      "date_range": null,
-      "specific_dates": [
-        "01/05/2025",
-        "01/04/2025",
-        "01/03/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 3580.0,
       "currency": "€",
@@ -17892,17 +16018,6 @@
       "https://www.asia.fr/ceto.cfm?idproduit=2709"
     ],
     "price_url": "https://www.asia.fr/ceto.cfm?idproduit=2709&ttc=1",
-    "date_context": {
-      "is_flexible": false,
-      "seasonal_preference": "printemps",
-      "date_range": null,
-      "specific_dates": [
-        "01/04/2025",
-        "01/03/2025",
-        "31/05/2025"
-      ],
-      "availability_notes": []
-    },
     "price": {
       "amount": 2990.0,
       "currency": "€",

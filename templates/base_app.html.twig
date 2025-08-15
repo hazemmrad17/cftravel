@@ -126,7 +126,7 @@
                   <div class="space-y-1">
                     <a
                       {% if mostRecentConversationId %}
-                        href="{{ path('chat_agent', {'agent': 'tentatio', 'conversation_id': mostRecentConversationId}) }}"
+                        				href="{{ path('chat_home') }}"
                       {% else %}
                         href="{{ path('create_conversation_route') }}"
                       {% endif %}
@@ -136,7 +136,7 @@
                     </a>
                     <a
                       {% if mostRecentConversationId %}
-                        href="{{ path('chat_agent', {'agent': 'ovoyages', 'conversation_id': mostRecentConversationId}) }}"
+                        				href="{{ path('chat_home') }}"
                       {% else %}
                         href="{{ path('create_conversation_route') }}"
                       {% endif %}
@@ -177,6 +177,12 @@
                   class="dropdown-menu absolute left-0 w-[266px] bg-white dark:bg-dark-secondary dark:border-gray-800 rounded-2xl shadow-theme-lg border border-gray-100 p-3 z-50 hidden"
                 >
                   <div class="space-y-1">
+                    <a
+                      href="{{ path('app_dashboard') }}"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Dashboard
+                    </a>
                     <a
                       href="{{ path('settings_page') }}"
                       class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
@@ -388,6 +394,32 @@
               {% set current_route = app.request.attributes.get('_route') %}
 
               <nav class="space-y-1">
+                <a
+                  href="{{ path('app_dashboard')}}"
+                  class="group flex gap-2.5 items-center px-10 py-3 text-sm font-medium transition-colors
+                    {% if current_route == 'app_dashboard' %}
+                        dark:bg-gray-600/10 border-l-3 border-gray-600 text-gray-700 dark:text-gray-400
+                    {% else %}
+                        dark:hover:bg-gray-600/10 hover:bg-gray-100 border-l-3 border-transparent hover:border-l-3 hover:border-gray-600 hover:text-gray-600 text-gray-700 dark:text-gray-400
+                    {% endif %}
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 22 22"
+                    fill="none"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M3.66667 2.75C3.66667 2.33579 3.33088 2 2.91667 2C2.50245 2 2.16667 2.33579 2.16667 2.75V19.25C2.16667 19.6642 2.50245 20 2.91667 20H19.0833C19.4975 20 19.8333 19.6642 19.8333 19.25V2.75C19.8333 2.33579 19.4975 2 19.0833 2C18.6691 2 18.3333 2.33579 18.3333 2.75V18.5H3.66667V2.75ZM6.41667 5.5C6.41667 5.08579 6.75245 4.75 7.16667 4.75H14.8333C15.2475 4.75 15.5833 5.08579 15.5833 5.5C15.5833 5.91421 15.2475 6.25 14.8333 6.25H7.16667C6.75245 6.25 6.41667 5.91421 6.41667 5.5ZM7.16667 8.25C6.75245 8.25 6.41667 8.58579 6.41667 9C6.41667 9.41421 6.75245 9.75 7.16667 9.75H14.8333C15.2475 9.75 15.5833 9.41421 15.5833 9C15.5833 8.58579 15.2475 8.25 14.8333 8.25H7.16667ZM6.41667 12.5C6.41667 12.0858 6.75245 11.75 7.16667 11.75H11.8333C12.2475 11.75 12.5833 12.0858 12.5833 12.5C12.5833 12.9142 12.2475 13.25 11.8333 13.25H7.16667C6.75245 13.25 6.41667 12.9142 6.41667 12.5ZM7.16667 15.25C6.75245 15.25 6.41667 15.5858 6.41667 16C6.41667 16.4142 6.75245 16.75 7.16667 16.75H10.8333C11.2475 16.75 11.5833 16.4142 11.5833 16C11.5833 15.5858 11.2475 15.25 10.8333 15.25H7.16667Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  Dashboard
+                </a>
                 <a
                   href="{{ path('settings_page')}}"
                   class="group flex gap-2.5 items-center px-10 py-3 text-sm font-medium transition-colors

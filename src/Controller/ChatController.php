@@ -63,6 +63,18 @@ class ChatController extends AbstractController
         ]);
     }
     
+    #[Route('/asia', name: 'asia_agent')]
+    public function asiaAgent(): Response
+    {
+        return $this->render('chat/index.html.twig', [
+            'mostRecentConversationId' => null,
+            'currentConversationId' => null,
+            'agent' => 'asia', // Asia.fr agent
+            'conversations' => [],
+            'today' => new \DateTime()
+        ]);
+    }
+    
     #[Route('/home', name: 'home_page')]
     public function home(): Response
     {
@@ -158,29 +170,25 @@ class ChatController extends AbstractController
             $conversationId = $data['conversation_id'] ?? null;
             $userId = $data['user_id'] ?? '1';
 
-            $this->logger->info('Sending message to travel agent', [
+            $this->logger->info('Sending enhanced message to travel agent', [
                 'conversation_id' => $conversationId,
-                'user_input' => $userInput
+                'user_input' => $userInput,
+                'enhanced' => true
             ]);
 
             $responseData = $this->apiService->sendChatMessage($userInput, $conversationId, $userId);
+
+            return new JsonResponse($responseData, 200, $this->addCorsHeaders());
             
-            $this->logger->info('Received response from travel agent', [
-                'status' => $responseData['status'] ?? 'unknown'
-            ]);
-
-            return new JsonResponse($responseData);
-
         } catch (\Exception $e) {
-            $this->logger->error('Error in chat message', [
+            $this->logger->error('Enhanced chat message failed', [
                 'error' => $e->getMessage()
             ]);
-
+            
             return new JsonResponse([
-                'status' => 'error',
-                'response' => 'Désolé, je rencontre des difficultés techniques. Veuillez réessayer.',
-                'error' => $e->getMessage()
-            ], 500);
+                'error' => 'Une erreur s\'est produite lors du traitement de votre message.',
+                'details' => $e->getMessage()
+            ], 500, $this->addCorsHeaders());
         }
     }
 
@@ -198,24 +206,23 @@ class ChatController extends AbstractController
             $conversationId = $data['conversation_id'] ?? null;
             $userId = $data['user_id'] ?? '1';
 
-            $this->logger->info('Sending streaming message to travel agent', [
+            $this->logger->info('Sending enhanced streaming message to travel agent', [
                 'conversation_id' => $conversationId,
-                'user_input' => $userInput
+                'user_input' => $userInput,
+                'enhanced' => true
             ]);
 
             return $this->apiService->getChatStream($userInput, $conversationId, $userId);
-
+            
         } catch (\Exception $e) {
-            $this->logger->error('Error in streaming chat', [
+            $this->logger->error('Enhanced streaming chat failed', [
                 'error' => $e->getMessage()
             ]);
-
+            
             return new Response(
                 "data: " . json_encode(['type' => 'error', 'error' => $e->getMessage()]) . "\n\n",
                 500,
-                $this->addCorsHeaders([
-                    'Content-Type' => 'text/event-stream',
-                ])
+                array_merge($this->addCorsHeaders(), ['Content-Type' => 'text/event-stream'])
             );
         }
     }

@@ -582,9 +582,20 @@
             return '';
         };
         
+        // Get confidence color for LLM selection
+        const getConfidenceColor = (confidence) => {
+            switch(confidence) {
+                case 'high': return 'bg-green-500';
+                case 'medium': return 'bg-yellow-500';
+                case 'low': return 'bg-red-500';
+                default: return 'bg-gray-500';
+            }
+        };
+        
         // Add getMatchColor and getMatchAnimation methods to the class
         this.getMatchColor = getMatchColor;
         this.getMatchAnimation = getMatchAnimation;
+        this.getConfidenceColor = getConfidenceColor;
         
         // Enhanced price range display based on offer type and group size
         const getPriceRange = (offer) => {
@@ -673,6 +684,15 @@
                             <div class="bg-gradient-to-r ${getMatchColor(offer.match_score)} ${getMatchAnimation(offer.match_score)} text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg border border-white/20 offer-card-badge"
                                  style="${offer.match_score >= 0.9 ? 'background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899) !important; animation: pulse 2s infinite;' : ''}">
                                 ${Math.round(offer.match_score * 100)}%
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <!-- LLM Selection Indicator -->
+                    ${offer.llm_selected ? `
+                        <div class="absolute top-3 right-3">
+                            <div class="${getConfidenceColor(offer.confidence)} text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg border border-white/20">
+                                🤖 IA ${offer.confidence === 'high' ? '✓' : offer.confidence === 'medium' ? '~' : '?'}
                             </div>
                         </div>
                     ` : ''}
@@ -766,7 +786,7 @@
                     <!-- Enhanced Price and Travel Type Info -->
                     <div class="text-center pt-2">
                         <div class="text-sm text-mode-secondary">
-                            <span class="font-bold text-success-600 text-lg">${getPriceRange(offer)}</span>
+                            <span class="font-bold text-success-600 text-lg">${offer.budget_indicator || getPriceRange(offer)}</span>
                             <span class="ml-2 font-medium">${getGroupSize(offer)} • ${getTravelStyle(offer)}</span>
                         </div>
                     </div>

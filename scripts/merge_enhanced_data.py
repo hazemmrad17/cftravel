@@ -65,6 +65,18 @@ def main():
     
     logger.info(f"Loaded {len(offers)} offers and {len(scraped_data)} scraped data entries")
     
+    # Clean up old date fields in all offers before merging
+    logger.info("Cleaning up old date fields...")
+    for offer in offers:
+        # Remove old date_context field if it exists
+        if 'date_context' in offer:
+            del offer['date_context']
+        
+        # Remove any null or empty date_range entries
+        if offer.get('date_range') is None or offer.get('date_range') == '':
+            if 'date_range' in offer:
+                del offer['date_range']
+    
     # Create a mapping of reference to enhanced data
     enhanced_data_map = {}
     for data_entry in scraped_data:
@@ -109,9 +121,18 @@ def main():
                 if enhanced_data['departure_dates']:
                     offer['dates'] = enhanced_data['departure_dates']
                 
-                # Add date range information
+                # Add date range information (this will overwrite any existing date_range)
                 if enhanced_data['date_range']:
                     offer['date_range'] = enhanced_data['date_range']
+                
+                # Clean up old date fields that might cause confusion
+                # Remove date_context if it exists (old field structure)
+                if 'date_context' in offer:
+                    del offer['date_context']
+                
+                # Remove any null or empty date_range entries
+                if offer.get('date_range') is None or offer.get('date_range') == '':
+                    del offer['date_range']
                 
                 offers_with_dates += 1
         else:

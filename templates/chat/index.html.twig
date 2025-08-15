@@ -507,17 +507,15 @@
 							</button>
 						</div>
 						
-						<!-- Products section -->
-						<div class="sidebar-wrapper px-5 pt-6" 
+						<!-- AI Trip Planner - Moved to top -->
+						<div class="sidebar-wrapper px-5 pt-2" 
 							x-show="!leftSidebarCollapsed || window.innerWidth < 1024"
 							x-transition:enter="sidebar-slide-in"
 							x-transition:leave="sidebar-slide-out">
-							<h2 class="text-xs font-medium text-gray-400 dark:text-gray-400 capitalize tracking-wider">
-								Produits
-							</h2>
-							<nav class="mt-3 space-y-1">
+							<nav class="space-y-1">
+								<!-- Asia.fr Agent -->
 								{% if mostRecentConversationId %}
-									<a href="{{ path('chat_agent', {'agent': agent, 'conversation_id': mostRecentConversationId}) }}" class="flex items-center bg-gray-100 dark:bg-white/5 dark:text-white/90 h-11 text-gray-800 px-2 py-3 text-sm font-medium rounded-full">
+									<a href="{{ path('asia_agent') }}" class="flex items-center bg-gray-100 dark:bg-white/5 dark:text-white/90 h-11 text-gray-800 dark:text-white px-2 py-3 text-sm font-medium rounded-full">
 										<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewbox="0 0 42 42" fill="none">
 											<g filter="url(#filter0_d_11222_4282)">
 												<g filter="url(#filter1_i_11222_4282)">
@@ -551,10 +549,10 @@
 												</radialGradient>
 											</defs>
 										</svg>
-										AI Trip Planner
+										Asia.fr Agent
 									</a>
 								{% else %}
-									<span class="flex items-center bg-gray-100 dark:bg-white/5 dark:text-white/90 h-11 text-gray-400 px-2 py-3 text-sm font-medium rounded-full cursor-not-allowed">
+									<span class="flex items-center bg-gray-100 dark:bg-white/5 dark:text-white/90 h-11 text-gray-800 dark:text-white px-2 py-3 text-sm font-medium rounded-full">
 										<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewbox="0 0 42 42" fill="none">
 											<g filter="url(#filter0_d_11222_4282)">
 												<g filter="url(#filter1_i_11222_4282)">
@@ -588,28 +586,77 @@
 												</radialGradient>
 											</defs>
 										</svg>
-										AI Trip Planner
+										Asia.fr Agent
 									</span>
 								{% endif %}
+								
+								<!-- Ovoyages Agent -->
+								<a href="https://www.ovoyages.com/" target="_blank" class="flex items-center h-11 text-gray-800 dark:text-white px-2 py-3 text-sm font-medium rounded-full hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+									<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewbox="0 0 42 42" fill="none">
+										<g filter="url(#filter0_d_ovoyages)">
+											<g filter="url(#filter1_i_ovoyages)">
+												<path fill-rule="evenodd" clip-rule="evenodd" d="M8.65016 30.069L8.65172 30.0672L8.66373 30.0529C8.67509 30.0393 8.69298 30.0176 8.71661 29.9884C8.76388 29.9299 8.83392 29.8415 8.92028 29.727C9.09325 29.4974 9.32961 29.166 9.57857 28.7639C10.0262 28.041 10.4852 27.1362 10.7156 26.2116C9.27786 24.168 8.43335 21.6756 8.43335 18.9882C8.43335 12.0479 14.0596 6.42157 21 6.42157C27.9404 6.42157 33.5667 12.0479 33.5667 18.9882C33.5667 25.9286 27.9404 31.5549 21 31.5549C19.4278 31.5549 17.9211 31.2657 16.5317 30.737C15.1235 31.2652 13.374 31.4628 12.0023 31.5368C11.2414 31.5779 10.5659 31.5822 10.0802 31.5763C9.83698 31.5733 9.6405 31.5678 9.50367 31.5629C9.43523 31.5605 9.38166 31.5582 9.34455 31.5565L9.30143 31.5545L9.2895 31.5539L9.28489 31.5536L9.33335 30.6549C9.28419 31.5536 9.28489 31.5536 9.28489 31.5536C8.94277 31.5349 8.64025 31.3235 8.50567 31.0084C8.37122 30.6936 8.42761 30.3291 8.65016 30.069ZM15.1666 17.4885C14.3381 17.4885 13.6666 18.16 13.6666 18.9885C13.6666 19.8169 14.3381 20.4885 15.1666 20.4885H15.1799C16.0083 20.4885 16.6799 19.8169 16.6799 18.9885C16.6799 18.16 16.0083 17.4885 15.1799 17.4885H15.1666ZM20.9999 17.4885C20.1715 17.4885 19.4999 18.16 19.4999 18.9885C19.4999 19.8169 20.1715 20.4885 20.9999 20.4885H21.0132C21.8417 20.4885 22.5132 19.8169 22.5132 18.9885C22.5132 18.16 21.8417 17.4885 21.0132 17.4885H20.9999ZM26.8332 17.4885C26.0048 17.4885 25.3332 18.16 25.3332 18.9885C25.3332 19.8169 26.0048 20.4885 26.8332 20.4885H26.8466C27.675 20.4885 28.3466 19.8169 28.3466 18.9885C28.3466 18.16 27.675 17.4885 26.8466 17.4885H26.8332Z" fill="url(#paint0_radial_ovoyages)"/>
+											</g>
+										</g>
+										<defs>
+											<filter id="filter0_d_ovoyages" x="-3" y="-3" width="48" height="48" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+												<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+												<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+												<feOffset dy="2"/>
+												<feGaussianBlur stddeviation="4"/>
+												<feComposite in2="hardAlpha" operator="out"/>
+												<feColorMatrix type="matrix" values="0 0 0 0 0.498039 0 0 0 0 0.407843 0 0 0 0 1 0 0 0 0.25 0"/>
+												<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_ovoyages"/>
+												<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_ovoyages" result="shape"/>
+											</filter>
+											<filter id="filter1_i_ovoyages" x="8.43335" y="6.42157" width="26.6571" height="26.6807" filterunits="userSpaceOnUse" color-interpolation-filters="sRGB">
+												<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+												<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+												<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+												<feOffset dx="1.52381" dy="1.52381"/>
+												<feGaussianBlur stddeviation="1.14286"/>
+												<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+												<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"/>
+												<feBlend mode="normal" in2="shape" result="effect1_innerShadow_ovoyages"/>
+											</filter>
+											<radialGradient id="paint0_radial_ovoyages" cx="0" cy="0" r="1" gradientunits="userSpaceOnUse" gradienttransform="translate(22.0839 27.1287) rotate(-60.1772) scale(24.8321 24.8204)">
+												<stop stop-color="#EC4899"/>
+												<stop offset="1" stop-color="#F472B6"/>
+											</radialGradient>
+										</defs>
+									</svg>
+									Ovoyages Agent
+								</a>
 							</nav>
 						</div>
 
 						<!-- Collapsed Left Sidebar Content -->
-						<div class="sidebar-wrapper px-2 pt-6" 
+						<div class="sidebar-wrapper px-2 pt-2" 
 							x-show="leftSidebarCollapsed && window.innerWidth >= 1024"
 							x-transition:enter="sidebar-slide-in"
 							x-transition:leave="sidebar-slide-out">
 							<div class="flex flex-col items-center space-y-4">
-								<!-- AI Trip Planner Icon Only -->
-								<div class="w-12 h-12 flex items-center justify-center">
-									<svg class="collapsed-icon w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 42 42" fill="none">
-										<g filter="url(#filter0_d_11222_4282)">
-											<g filter="url(#filter1_i_11222_4282)">
-												<path fill-rule="evenodd" clip-rule="evenodd" d="M8.65016 30.069L8.65172 30.0672L8.66373 30.0529C8.67509 30.0393 8.69298 30.0176 8.71661 29.9884C8.76388 29.9299 8.83392 29.8415 8.92028 29.727C9.09325 29.4974 9.32961 29.166 9.57857 28.7639C10.0262 28.041 10.4852 27.1362 10.7156 26.2116C9.27786 24.168 8.43335 21.6756 8.43335 18.9882C8.43335 12.0479 14.0596 6.42157 21 6.42157C27.9404 6.42157 33.5667 12.0479 33.5667 18.9882C33.5667 25.9286 27.9404 31.5549 21 31.5549C19.4278 31.5549 17.9211 31.2657 16.5317 30.737C15.1235 31.2652 13.374 31.4628 12.0023 31.5368C11.2414 31.5779 10.5659 31.5822 10.0802 31.5763C9.83698 31.5733 9.6405 31.5678 9.50367 31.5629C9.43523 31.5605 9.38166 31.5582 9.34455 31.5565L9.30143 31.5545L9.2895 31.5539L9.28489 31.5536L9.33335 30.6549C9.28419 31.5536 9.28489 31.5536 9.28489 31.5536C8.94277 31.5349 8.64025 31.3235 8.50567 31.0084C8.37122 30.6936 8.42761 30.3291 8.65016 30.069ZM15.1666 17.4885C14.3381 17.4885 13.6666 18.16 13.6666 18.9885C13.6666 19.8169 14.3381 20.4885 15.1666 20.4885H15.1799C16.0083 20.4885 16.6799 19.8169 16.6799 18.9885C16.6799 18.16 16.0083 17.4885 15.1799 17.4885H15.1666ZM20.9999 17.4885C20.1715 17.4885 19.4999 18.16 19.4999 18.9885C19.4999 19.8169 20.1715 20.4885 20.9999 20.4885H21.0132C21.8417 20.4885 22.5132 19.8169 22.5132 18.9885C22.5132 18.16 21.8417 17.4885 21.0132 17.4885H20.9999ZM26.8332 17.4885C26.0048 17.4885 25.3332 18.16 25.3332 18.9885C25.3332 19.8169 26.0048 20.4885 26.8332 20.4885H26.8466C27.675 20.4885 28.3466 19.8169 28.3466 18.9885C28.3466 18.16 27.675 17.4885 26.8466 17.4885H26.8332Z" fill="url(#paint0_radial_11222_4282)"/>
-											</g>
-										</g>
+								<!-- Asia.fr Agent Icon Only -->
+								{% if mostRecentConversationId %}
+									<a href="{{ path('asia_agent') }}" class="w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-white/5 rounded-lg">
+										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 42 42" fill="none">
+											<path fill-rule="evenodd" clip-rule="evenodd" d="M8.65016 30.069L8.65172 30.0672L8.66373 30.0529C8.67509 30.0393 8.69298 30.0176 8.71661 29.9884C8.76388 29.9299 8.83392 29.8415 8.92028 29.727C9.09325 29.4974 9.32961 29.166 9.57857 28.7639C10.0262 28.041 10.4852 27.1362 10.7156 26.2116C9.27786 24.168 8.43335 21.6756 8.43335 18.9882C8.43335 12.0479 14.0596 6.42157 21 6.42157C27.9404 6.42157 33.5667 12.0479 33.5667 18.9882C33.5667 25.9286 27.9404 31.5549 21 31.5549C19.4278 31.5549 17.9211 31.2657 16.5317 30.737C15.1235 31.2652 13.374 31.4628 12.0023 31.5368C11.2414 31.5779 10.5659 31.5822 10.0802 31.5763C9.83698 31.5733 9.6405 31.5678 9.50367 31.5629C9.43523 31.5605 9.38166 31.5582 9.34455 31.5565L9.30143 31.5545L9.2895 31.5539L9.28489 31.5536L9.33335 30.6549C9.28419 31.5536 9.28489 31.5536 9.28489 31.5536C8.94277 31.5349 8.64025 31.3235 8.50567 31.0084C8.37122 30.6936 8.42761 30.3291 8.65016 30.069ZM15.1666 17.4885C14.3381 17.4885 13.6666 18.16 13.6666 18.9885C13.6666 19.8169 14.3381 20.4885 15.1666 20.4885H15.1799C16.0083 20.4885 16.6799 19.8169 16.6799 18.9885C16.6799 18.16 16.0083 17.4885 15.1799 17.4885H15.1666ZM20.9999 17.4885C20.1715 17.4885 19.4999 18.16 19.4999 18.9885C19.4999 19.8169 20.1715 20.4885 20.9999 20.4885H21.0132C21.8417 20.4885 22.5132 19.8169 22.5132 18.9885C22.5132 18.16 21.8417 17.4885 21.0132 17.4885H20.9999ZM26.8332 17.4885C26.0048 17.4885 25.3332 18.16 25.3332 18.9885C25.3332 19.8169 26.0048 20.4885 26.8332 20.4885H26.8466C27.675 20.4885 28.3466 19.8169 28.3466 18.9885C28.3466 18.16 27.675 17.4885 26.8466 17.4885H26.8332Z" fill="#DC2626"/>
+										</svg>
+									</a>
+								{% else %}
+									<div class="w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-white/5 rounded-lg">
+										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 42 42" fill="none">
+											<path fill-rule="evenodd" clip-rule="evenodd" d="M8.65016 30.069L8.65172 30.0672L8.66373 30.0529C8.67509 30.0393 8.69298 30.0176 8.71661 29.9884C8.76388 29.9299 8.83392 29.8415 8.92028 29.727C9.09325 29.4974 9.32961 29.166 9.57857 28.7639C10.0262 28.041 10.4852 27.1362 10.7156 26.2116C9.27786 24.168 8.43335 21.6756 8.43335 18.9882C8.43335 12.0479 14.0596 6.42157 21 6.42157C27.9404 6.42157 33.5667 12.0479 33.5667 18.9882C33.5667 25.9286 27.9404 31.5549 21 31.5549C19.4278 31.5549 17.9211 31.2657 16.5317 30.737C15.1235 31.2652 13.374 31.4628 12.0023 31.5368C11.2414 31.5779 10.5659 31.5822 10.0802 31.5763C9.83698 31.5733 9.6405 31.5678 9.50367 31.5629C9.43523 31.5605 9.38166 31.5582 9.34455 31.5565L9.30143 31.5545L9.2895 31.5539L9.28489 31.5536L9.33335 30.6549C9.28419 31.5536 9.28489 31.5536 9.28489 31.5536C8.94277 31.5349 8.64025 31.3235 8.50567 31.0084C8.37122 30.6936 8.42761 30.3291 8.65016 30.069ZM15.1666 17.4885C14.3381 17.4885 13.6666 18.16 13.6666 18.9885C13.6666 19.8169 14.3381 20.4885 15.1666 20.4885H15.1799C16.0083 20.4885 16.6799 19.8169 16.6799 18.9885C16.6799 18.16 16.0083 17.4885 15.1799 17.4885H15.1666ZM20.9999 17.4885C20.1715 17.4885 19.4999 18.16 19.4999 18.9885C19.4999 19.8169 20.1715 20.4885 20.9999 20.4885H21.0132C21.8417 20.4885 22.5132 19.8169 22.5132 18.9885C22.5132 18.16 21.8417 17.4885 21.0132 17.4885H20.9999ZM26.8332 17.4885C26.0048 17.4885 25.3332 18.16 25.3332 18.9885C25.3332 19.8169 26.0048 20.4885 26.8332 20.4885H26.8466C27.675 20.4885 28.3466 19.8169 28.3466 18.9885C28.3466 18.16 27.675 17.4885 26.8466 17.4885H26.8332Z" fill="#DC2626"/>
+										</svg>
+									</div>
+								{% endif %}
+								
+								<!-- Ovoyages Agent Icon Only -->
+								<a href="https://www.ovoyages.com/" target="_blank" class="w-12 h-12 flex items-center justify-center">
+									<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 42 42" fill="none">
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M8.65016 30.069L8.65172 30.0672L8.66373 30.0529C8.67509 30.0393 8.69298 30.0176 8.71661 29.9884C8.76388 29.9299 8.83392 29.8415 8.92028 29.727C9.09325 29.4974 9.32961 29.166 9.57857 28.7639C10.0262 28.041 10.4852 27.1362 10.7156 26.2116C9.27786 24.168 8.43335 21.6756 8.43335 18.9882C8.43335 12.0479 14.0596 6.42157 21 6.42157C27.9404 6.42157 33.5667 12.0479 33.5667 18.9882C33.5667 25.9286 27.9404 31.5549 21 31.5549C19.4278 31.5549 17.9211 31.2657 16.5317 30.737C15.1235 31.2652 13.374 31.4628 12.0023 31.5368C11.2414 31.5779 10.5659 31.5822 10.0802 31.5763C9.83698 31.5733 9.6405 31.5678 9.50367 31.5629C9.43523 31.5605 9.38166 31.5582 9.34455 31.5565L9.30143 31.5545L9.2895 31.5539L9.28489 31.5536L9.33335 30.6549C9.28419 31.5536 9.28489 31.5536 9.28489 31.5536C8.94277 31.5349 8.64025 31.3235 8.50567 31.0084C8.37122 30.6936 8.42761 30.3291 8.65016 30.069ZM15.1666 17.4885C14.3381 17.4885 13.6666 18.16 13.6666 18.9885C13.6666 19.8169 14.3381 20.4885 15.1666 20.4885H15.1799C16.0083 20.4885 16.6799 19.8169 16.6799 18.9885C16.6799 18.16 16.0083 17.4885 15.1799 17.4885H15.1666ZM20.9999 17.4885C20.1715 17.4885 19.4999 18.16 19.4999 18.9885C19.4999 19.8169 20.1715 20.4885 20.9999 20.4885H21.0132C21.8417 20.4885 22.5132 19.8169 22.5132 18.9885C22.5132 18.16 21.8417 17.4885 21.0132 17.4885H20.9999ZM26.8332 17.4885C26.0048 17.4885 25.3332 18.16 25.3332 18.9885C25.3332 19.8169 26.0048 20.4885 26.8332 20.4885H26.8466C27.675 20.4885 28.3466 19.8169 28.3466 18.9885C28.3466 18.16 27.675 17.4885 26.8466 17.4885H26.8332Z" fill="#EC4899"/>
 									</svg>
-								</div>
+								</a>
 								
 								<!-- Settings Icon -->
 								<a href="{{ path('settings_page') }}" class="w-12 h-12 flex items-center justify-center">
@@ -875,6 +922,48 @@
 		<script defer src="{{ asset('assets/js/components/error-message.js') }}"></script>
 		<!-- Main application script - loaded only once -->
 		<script defer src="{{ asset('assets/js/app.js') }}"></script>
+		
+		<script>
+			// Function to create new conversation and clear memory
+			async function createNewConversation() {
+				try {
+					// Clear memory via API
+					const response = await fetch('/api/memory/clear', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						}
+					});
+					
+					if (response.ok) {
+						// Clear chat messages from UI
+						const chatMessages = document.querySelector('#chat-messages');
+						if (chatMessages) {
+							chatMessages.innerHTML = '';
+						}
+						
+						// Clear chat input
+						const chatInput = document.querySelector('#chat-input');
+						if (chatInput) {
+							chatInput.value = '';
+						}
+						
+						// Show prompt suggestions again
+						const promptSuggestions = document.querySelector('#prompt-suggestions');
+						if (promptSuggestions) {
+							promptSuggestions.classList.remove('prompt-suggestions-hidden');
+						}
+						
+						// Redirect to new conversation
+						window.location.href = '{{ path('chat_home') }}';
+					} else {
+						console.error('Failed to clear memory');
+					}
+				} catch (error) {
+					console.error('Error creating new conversation:', error);
+				}
+			}
+		</script>
 	</body>
 
 	<!-- Mirrored from ai-agent.preview.uideck.com/text-generator by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 10 Jul 2025 08:11:36 GMT -->

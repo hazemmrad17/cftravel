@@ -34,6 +34,7 @@ if (typeof ChatCore === 'undefined') {
             // Initialize UI components immediately
             this.addBackupModelDashboardButton();
             this.initializeStreamingPlaceholder();
+            this.initializeDashboardIntegration();
             this.attachEventListeners();
             
             // Force microphone button styling after a short delay
@@ -113,6 +114,227 @@ if (typeof ChatCore === 'undefined') {
                 });
                 
                 chatHeader.appendChild(button);
+            }
+        },
+
+        initializeDashboardIntegration: function() {
+            // Dashboard settings integration
+            this.dashboardSettings = {
+                debugMode: false,
+                llmDebugMode: false,
+                pipelineDebugMode: false,
+                apiDebugMode: false,
+                semanticDebugMode: false,
+                memoryDebugMode: false,
+                streamingSpeed: 5,
+                darkMode: false,
+                semanticSearch: true,
+                enhancedPipeline: true,
+                cacheEnabled: true,
+                turboMode: false,
+                consoleLogging: true,
+                typingSound: true,
+                suggestions: true,
+                conversationMemory: true,
+                experimentalFeatures: false,
+                gpuAcceleration: false,
+                animations: true,
+                detailedLogging: false,
+                metrics: false,
+                devMode: false
+            };
+
+            // Load settings from localStorage
+            this.loadDashboardSettings();
+
+            // Expose methods for dashboard
+            window.chatCore = {
+                setDebugMode: (value) => this.setDebugMode(value),
+                setLLMDebugMode: (value) => this.setLLMDebugMode(value),
+                setPipelineDebugMode: (value) => this.setPipelineDebugMode(value),
+                setAPIDebugMode: (value) => this.setAPIDebugMode(value),
+                setSemanticDebugMode: (value) => this.setSemanticDebugMode(value),
+                setMemoryDebugMode: (value) => this.setMemoryDebugMode(value),
+                setStreamingSpeed: (value) => this.setStreamingSpeed(value),
+                setDarkMode: (value) => this.setDarkMode(value),
+                setSemanticSearch: (value) => this.setSemanticSearch(value),
+                setEnhancedPipeline: (value) => this.setEnhancedPipeline(value),
+                setCacheEnabled: (value) => this.setCacheEnabled(value),
+                setTurboMode: (value) => this.setTurboMode(value),
+                setConsoleLogging: (value) => this.setConsoleLogging(value),
+                setTypingSound: (value) => this.setTypingSound(value),
+                setSuggestions: (value) => this.setSuggestions(value),
+                setConversationMemory: (value) => this.setConversationMemory(value),
+                setExperimentalFeatures: (value) => this.setExperimentalFeatures(value),
+                setGPUAcceleration: (value) => this.setGPUAcceleration(value),
+                setAnimations: (value) => this.setAnimations(value),
+                setDetailedLogging: (value) => this.setDetailedLogging(value),
+                setMetrics: (value) => this.setMetrics(value),
+                setDevMode: (value) => this.setDevMode(value),
+                updateApiConfig: (config) => this.updateApiConfigFromDashboard(config)
+            };
+
+            console.log('✅ Dashboard integration initialized');
+        },
+
+        loadDashboardSettings: function() {
+            try {
+                const savedSettings = localStorage.getItem('dashboard-settings');
+                if (savedSettings) {
+                    const settings = JSON.parse(savedSettings);
+                    Object.assign(this.dashboardSettings, settings);
+                    console.log('📋 Loaded dashboard settings:', this.dashboardSettings);
+                }
+            } catch (error) {
+                console.warn('⚠️ Error loading dashboard settings:', error);
+            }
+        },
+
+        setDebugMode: function(value) {
+            this.dashboardSettings.debugMode = value;
+            console.log(`🐛 Debug mode: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setLLMDebugMode: function(value) {
+            this.dashboardSettings.llmDebugMode = value;
+            console.log(`🤖 LLM Debug mode: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setPipelineDebugMode: function(value) {
+            this.dashboardSettings.pipelineDebugMode = value;
+            console.log(`🔧 Pipeline Debug mode: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setAPIDebugMode: function(value) {
+            this.dashboardSettings.apiDebugMode = value;
+            console.log(`🌐 API Debug mode: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setSemanticDebugMode: function(value) {
+            this.dashboardSettings.semanticDebugMode = value;
+            console.log(`🔍 Semantic Debug mode: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setMemoryDebugMode: function(value) {
+            this.dashboardSettings.memoryDebugMode = value;
+            console.log(`🧠 Memory Debug mode: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setStreamingSpeed: function(value) {
+            this.dashboardSettings.streamingSpeed = value;
+            console.log(`⚡ Streaming speed: ${value}x`);
+            this.saveDashboardSettings();
+        },
+
+        setDarkMode: function(value) {
+            this.dashboardSettings.darkMode = value;
+            console.log(`🌙 Dark mode: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setSemanticSearch: function(value) {
+            this.dashboardSettings.semanticSearch = value;
+            console.log(`🔍 Semantic search: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setEnhancedPipeline: function(value) {
+            this.dashboardSettings.enhancedPipeline = value;
+            console.log(`🚀 Enhanced pipeline: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setCacheEnabled: function(value) {
+            this.dashboardSettings.cacheEnabled = value;
+            console.log(`💾 Cache: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setTurboMode: function(value) {
+            this.dashboardSettings.turboMode = value;
+            console.log(`⚡ Turbo mode: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setConsoleLogging: function(value) {
+            this.dashboardSettings.consoleLogging = value;
+            console.log(`📝 Console logging: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setTypingSound: function(value) {
+            this.dashboardSettings.typingSound = value;
+            console.log(`🔊 Typing sound: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setSuggestions: function(value) {
+            this.dashboardSettings.suggestions = value;
+            console.log(`💡 Suggestions: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setConversationMemory: function(value) {
+            this.dashboardSettings.conversationMemory = value;
+            console.log(`🧠 Conversation memory: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setExperimentalFeatures: function(value) {
+            this.dashboardSettings.experimentalFeatures = value;
+            console.log(`🧪 Experimental features: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setGPUAcceleration: function(value) {
+            this.dashboardSettings.gpuAcceleration = value;
+            console.log(`🎮 GPU acceleration: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setAnimations: function(value) {
+            this.dashboardSettings.animations = value;
+            console.log(`✨ Animations: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setDetailedLogging: function(value) {
+            this.dashboardSettings.detailedLogging = value;
+            console.log(`📊 Detailed logging: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setMetrics: function(value) {
+            this.dashboardSettings.metrics = value;
+            console.log(`📈 Metrics: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        setDevMode: function(value) {
+            this.dashboardSettings.devMode = value;
+            console.log(`🔧 Dev mode: ${value ? 'ON' : 'OFF'}`);
+            this.saveDashboardSettings();
+        },
+
+        updateApiConfigFromDashboard: function(config) {
+            if (config.streamingSpeed) {
+                this.setStreamingSpeed(config.streamingSpeed);
+            }
+            console.log('🔧 API config updated from dashboard:', config);
+        },
+
+        saveDashboardSettings: function() {
+            try {
+                localStorage.setItem('dashboard-settings', JSON.stringify(this.dashboardSettings));
+                console.log('💾 Dashboard settings saved');
+            } catch (error) {
+                console.warn('⚠️ Error saving dashboard settings:', error);
             }
         },
 
@@ -264,8 +486,9 @@ if (typeof ChatCore === 'undefined') {
             console.log('🔄 Streaming element passed to sendToAPI:', streamingElement);
             
             try {
+                // Use enhanced streaming endpoint (now the default)
                 const fullUrl = `${this.API_BASE_URL}/chat/stream`;
-                console.log('🌐 Making request to:', fullUrl);
+                console.log('🧠🌊 Using enhanced streaming endpoint:', fullUrl);
                 
                 const response = await fetch(fullUrl, {
                     method: 'POST',
@@ -306,6 +529,7 @@ if (typeof ChatCore === 'undefined') {
             
             if (!response.body) {
                 console.error('❌ No response body available for streaming');
+                this.appendMessage('Désolé, une erreur s\'est produite lors de la réception de la réponse.', false, true);
                 return;
             }
             
@@ -319,13 +543,33 @@ if (typeof ChatCore === 'undefined') {
                 console.log('⚠️ No streaming element provided, creating new one...');
                 streamingElement = this.appendMessage('', false, false, true);
             }
+            
+            // Ensure we have a valid streaming element
+            if (!streamingElement) {
+                console.error('❌ Failed to create streaming element!');
+                return;
+            }
+            
             const textElement = streamingElement?.querySelector('.message-text');
             console.log('🔍 Text element found:', textElement);
+            console.log('🔍 Streaming element:', streamingElement);
+            console.log('🔍 Text element innerHTML:', textElement?.innerHTML);
             
             // Clear the streaming placeholder and start with empty content
             if (textElement) {
-                textElement.textContent = '';
+                console.log('🧹 Clearing text element content...');
+                textElement.innerHTML = '';
                 textElement.classList.add('streaming-active');
+                textElement.style.opacity = '1'; // Ensure it's visible
+                // Remove the spinner and placeholder text
+                const spinner = textElement.querySelector('.spinner');
+                if (spinner) {
+                    console.log('🗑️ Removing spinner...');
+                    spinner.remove();
+                }
+                console.log('✅ Text element cleared, ready for streaming');
+            } else {
+                console.error('❌ Text element not found for streaming!');
             }
             
             try {
@@ -347,55 +591,154 @@ if (typeof ChatCore === 'undefined') {
                         if (line.startsWith('data: ')) {
                             const data = line.slice(6);
                             
-                                                             if (data === '[DONE]') {
-                                     console.log('✅ Streaming completed');
-                                     // Replace streaming placeholder with final message
-                                     if (textElement && fullResponse) {
-                                         textElement.innerHTML = this.formatMessage(fullResponse);
-                                         textElement.classList.remove('streaming', 'streaming-active');
-                                     }
-                                     break;
-                                 }
+                            if (data.trim() === '') continue;
                             
                             try {
                                 const parsed = JSON.parse(data);
+                                console.log(`📡 Received parsed data:`, parsed);
                                 
-                                                                             if (parsed.type === 'offers' && parsed.offers) {
-                console.log('🎯 Received offers data:', parsed.offers);
-                // Display offers using the confirmation flow card system
-                if (window.confirmationFlow) {
-                    window.confirmationFlow.displayOffers(parsed.offers);
-                }
-            } else if (parsed.type === 'content' && textElement) {
+                                // Handle different response types
+                                if (parsed.type === 'metadata') {
+                                    console.log('🧠 Enhanced metadata received:', parsed);
+                                    // Log enhanced features or fallback reason
+                                    if (parsed.enhanced) {
+                                        console.log('✅ Using enhanced features');
+                                    } else {
+                                        console.log('⚠️ Using fallback features');
+                                    }
+                                                                    } else if (parsed.type === 'offers' && parsed.offers) {
+                                        console.log('🎯 Received offers from travel orchestrator:', parsed.offers);
+                                        if (window.confirmationFlow) {
+                                            // Add match scores, budget indicators, and LLM metadata to offers
+                                            const offersWithScores = parsed.offers.map((offer, index) => ({
+                                                ...offer,
+                                                match_score: parsed.match_scores ? parsed.match_scores[index] : 0.8,
+                                                budget_indicator: parsed.budget_indicators ? parsed.budget_indicators[index] : '€€€',
+                                                llm_selected: parsed.llm_selected || false,
+                                                confidence: parsed.confidence || 'medium'
+                                            }));
+                                            window.confirmationFlow.displayOffers(offersWithScores);
+                                        }
+                                    } else if (parsed.type === 'confirmation_request') {
+                                        console.log('🤔 Confirmation requested from travel orchestrator');
+                                        // The text response will be displayed normally, asking for confirmation
+                                    } else if (parsed.type === 'content' && textElement) {
+                                    // Optimized content streaming
+                                    if (parsed.chunk) {
+                                        // Remove any existing cursor
+                                        const existingCursor = textElement.querySelector('.streaming-cursor');
+                                        if (existingCursor) {
+                                            existingCursor.remove();
+                                        }
+                                        
+                                        // Safely add text content
+                                        textElement.textContent += parsed.chunk;
                                      fullResponse += parsed.chunk;
-                                     // Use textContent for streaming to show word-by-word effect
-                                     textElement.textContent = fullResponse;
-                                     console.log('📝 Updated streaming content:', fullResponse);
-                                     
-                                     // Add a small delay to make streaming more visible
-                                     await new Promise(resolve => setTimeout(resolve, 50));
+                                        
+                                        // Add typing cursor
+                                        const cursor = document.createElement('span');
+                                        cursor.className = 'streaming-cursor';
+                                        textElement.appendChild(cursor);
+                                        
+                                        // Force browser to render the update and add small delay for visible streaming
+                                        await new Promise(resolve => {
+                                            requestAnimationFrame(() => {
+                                                setTimeout(resolve, 20); // 20ms delay for visible streaming
+                                            });
+                                        });
+                                        
+                                        // Optimized scrolling - only scroll every few chunks
+                                        if (fullResponse.length % 50 === 0) {
+                                            this.scrollToBottom();
+                                        }
+                                    }
                                  } else if (parsed.type === 'end') {
-                                     console.log('✅ Streaming ended');
-                                     // Replace streaming placeholder with final message
-                                     if (textElement && fullResponse) {
-                                         textElement.innerHTML = this.formatMessage(fullResponse);
-                                         textElement.classList.remove('streaming', 'streaming-active');
-                                     }
-                                     
-                                     // No confirmation dialog - AI handles everything
-                                     console.log('🎯 AI agent handles all confirmation logic - no UI needed');
-                                     break;
-                                 }
-                            } catch (e) {
-                                console.warn('⚠️ Error parsing JSON:', e, 'Data:', data);
+                                    console.log('✅ Stream ended');
+                                    if (textElement) {
+                                        textElement.classList.remove('streaming-active');
+                                        // Remove typing cursor
+                                        const cursor = textElement.querySelector('.streaming-cursor');
+                                        if (cursor) {
+                                            cursor.remove();
+                                        }
+                                        
+                                        // Format bullet points after stream ends
+                                        this.formatBulletPoints(textElement);
+                                    }
+                                    this.scrollToBottom();
+                                    return;
+                                } else if (parsed.type === 'error') {
+                                    console.error('❌ Stream error:', parsed.error);
+                                    this.appendMessage('Désolé, une erreur s\'est produite lors du traitement de votre demande. Veuillez réessayer.', false, true);
+                                    return;
+                                }
+                                
+                            } catch (parseError) {
+                                console.warn('⚠️ Failed to parse stream data:', parseError);
+                                // Continue processing other lines
                             }
                         }
                     }
                 }
+                
+                // Final scroll after stream completion
+                this.scrollToBottom();
+                
             } catch (error) {
-                console.error('❌ Error processing stream:', error);
+                console.error('❌ Error processing streaming response:', error);
+                
+                // Handle specific layout error
+                if (error.message && error.message.includes('Layout was forced before the page was fully loaded')) {
+                    console.warn('⚠️ Layout issue detected - waiting for page to load');
+                    this.appendMessage('Chargement en cours... Veuillez patienter un instant.', false, true);
+                    
+                    // Wait for page to fully load and retry
+                    setTimeout(() => {
+                        this.scrollToBottom();
+                    }, 1000);
+                } else {
+                    this.appendMessage('Désolé, une erreur s\'est produite lors du traitement de la réponse. Veuillez réessayer.', false, true);
+                }
+                
             } finally {
-                reader.releaseLock();
+                // Cleanup
+                if (textElement) {
+                    textElement.classList.remove('streaming-active');
+                }
+                this.isSending = false;
+                this.isAITyping = false;
+                this.updateSendButtonState();
+            }
+        },
+
+
+
+        scrollToBottom: function() {
+            const chatArea = document.querySelector('.chat-messages');
+            if (chatArea) {
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+        },
+
+        formatBulletPoints: function(textElement) {
+            if (!textElement || !textElement.textContent) return;
+            
+            const text = textElement.textContent;
+            
+            // Detect bullet points (•, -, *, etc.) and format them
+            const bulletPointRegex = /(^|\n)\s*[•\-\*]\s+/gm;
+            
+            if (bulletPointRegex.test(text)) {
+                // Replace bullet points with properly formatted text
+                const formattedText = text
+                    .replace(/(^|\n)\s*[•\-\*]\s+/gm, '\n\n• ') // Add double line breaks before bullet points
+                    .replace(/\n\n\n+/g, '\n\n') // Clean up multiple line breaks
+                    .trim();
+                
+                // Update the text content with formatted version
+                textElement.textContent = formattedText;
+                
+                console.log('✅ Bullet points formatted with line breaks');
             }
         },
 
@@ -421,13 +764,13 @@ if (typeof ChatCore === 'undefined') {
                 console.log('🔄 Created streaming element:', firstChild);
                 console.log('🔍 Streaming element HTML:', firstChild?.innerHTML);
                 chatArea.appendChild(firstChild);
-                chatArea.scrollTop = chatArea.scrollHeight;
+                this.scrollToBottom();
                 
                 return firstChild;
             } else {
                 // For regular messages, append directly
                 chatArea.insertAdjacentHTML('beforeend', messageHtml);
-                chatArea.scrollTop = chatArea.scrollHeight;
+                this.scrollToBottom();
             }
             
             return null;
@@ -475,31 +818,73 @@ if (typeof ChatCore === 'undefined') {
         },
 
         formatMessage: function(message) {
-            if (message.includes('•')) {
-                const parts = message.split('•');
-                const intro = parts[0].trim();
-                const bulletPoints = parts.slice(1).map(point => point.trim()).filter(point => point);
+            // Handle complex AI response formatting with emojis and bullet points
+            let formattedMessage = message;
+            
+            // First, handle line breaks
+            formattedMessage = formattedMessage.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+            
+            // Universal bullet point formatting - works for any bullet points
+            if (formattedMessage.includes('•') || formattedMessage.includes('-') || formattedMessage.includes('*')) {
+                // Split by lines first
+                const lines = formattedMessage.split('<br>');
+                let processedLines = [];
                 
-                let html = '';
-                if (intro) {
-                    html += `<div class="mb-3">${intro}</div>`;
+                for (let line of lines) {
+                    // Check for bullet points (•, -, *)
+                    if (line.includes('•') || line.includes('-') || line.includes('*')) {
+                        // Split by bullet points and format each as a separate line
+                        const bulletParts = line.split(/[•\-\*]/);
+                        const introText = bulletParts[0].trim();
+                        
+                        if (introText) {
+                            processedLines.push(introText);
+                        }
+                        
+                        // Add each bullet point as a separate line with proper spacing
+                        for (let i = 1; i < bulletParts.length; i++) {
+                            const bulletItem = bulletParts[i].trim();
+                            if (bulletItem) {
+                                processedLines.push(`• ${bulletItem}`);
+                            }
+                        }
+                    } else {
+                        processedLines.push(line);
+                    }
                 }
                 
-                if (bulletPoints.length > 0) {
-                    html += '<ul class="list-none space-y-2 mt-3">';
-                    bulletPoints.forEach(point => {
-                        html += `<li class="flex items-start">
-                            <span class="text-gray-600 dark:text-gray-400 mr-2 mt-1">•</span>
-                            <span>${point}</span>
-                        </li>`;
-                    });
-                    html += '</ul>';
+                // Now process the processed lines for proper HTML formatting
+                const processedMessage = processedLines.join('<br>');
+                
+                // Check if we still have bullet points to format
+                if (processedMessage.includes('•')) {
+                    const parts = processedMessage.split('•');
+                    const intro = parts[0].trim();
+                    const bulletPoints = parts.slice(1).map(point => point.trim()).filter(point => point);
+                    
+                    let html = '';
+                    if (intro) {
+                        html += `<div class="mb-3">${intro}</div>`;
+                    }
+                    
+                    if (bulletPoints.length > 0) {
+                        html += '<ul class="list-none space-y-3 mt-4 ml-4">';
+                        bulletPoints.forEach(point => {
+                            html += `<li class="flex items-start mb-3">
+                                <span class="text-gray-600 dark:text-gray-400 mr-3 mt-1 text-xl font-bold">•</span>
+                                <span class="text-gray-800 dark:text-gray-200 leading-relaxed">${point}</span>
+                            </li>`;
+                        });
+                        html += '</ul>';
+                    }
+                    
+                    return html;
                 }
                 
-                return html;
-            } else {
-                return message.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+                return processedMessage;
             }
+            
+            return formattedMessage;
         },
 
         updateSendButtonState: function() {
@@ -823,6 +1208,28 @@ if (typeof ChatCore === 'undefined') {
                 }
                 .streaming-active {
                     /* Removed red border for cleaner look */
+                }
+                .streaming-cursor {
+                    display: inline-block;
+                    width: 2px;
+                    height: 1.2em;
+                    background-color: #dc2626;
+                    animation: blink 1s infinite;
+                    margin-left: 2px;
+                }
+                @keyframes blink {
+                    0%, 50% { opacity: 1; }
+                    51%, 100% { opacity: 0; }
+                }
+                .offers-container {
+                    margin-top: 1rem;
+                }
+                .offer-card {
+                    transition: all 0.2s ease;
+                }
+                .offer-card:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
                 }
             `;
             document.head.appendChild(style);

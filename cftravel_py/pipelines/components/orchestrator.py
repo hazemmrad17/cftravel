@@ -168,8 +168,11 @@ UNDERSTAND NATURALLY:
 REQUIRED PREFERENCES FOR OFFERS:
 - destination (country/city)
 - duration (number of days/weeks)
-- budget (low/medium/high)
+- travel_dates (when they want to travel - required for date range matching)
 - style (cultural, adventure, luxury, relaxation, etc.)
+
+OPTIONAL PREFERENCES (help narrow search if provided):
+- budget_amount (numeric amount in euros) - optional, only if user mentions specific budget
 
 UNDERSTAND THE USER'S INTENT NATURALLY:
 - Don't rely only on keywords, understand the context and meaning

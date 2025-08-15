@@ -94,9 +94,10 @@ class ApiService
         $url = $this->config->getApiEndpoint('chat_stream');
         $timeout = $this->config->getValue('api', 'timeout', 60);
         
-        $this->logger->info('Making streaming API request', [
+        $this->logger->info('Making enhanced streaming API request', [
             'url' => $url,
-            'conversation_id' => $conversationId
+            'conversation_id' => $conversationId,
+            'enhanced' => true
         ]);
         
         try {
@@ -122,7 +123,7 @@ class ApiService
             );
             
         } catch (\Exception $e) {
-            $this->logger->error('Streaming API request failed', [
+            $this->logger->error('Enhanced streaming API request failed', [
                 'error' => $e->getMessage()
             ]);
             

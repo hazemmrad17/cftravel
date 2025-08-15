@@ -230,6 +230,12 @@
                 >
                   <div class="space-y-1">
                     <a
+                      href="{{ path('app_dashboard') }}"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      🎛️ Dashboard
+                    </a>
+                    <a
                       href="{{ path('settings_page') }}"
                       class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
                     >
@@ -387,13 +393,13 @@
                 class="mt-2 space-y-1 pl-4"
               >
                 <a
-                  href="{{ path('chat_agent', {'agent': 'tentatio'}) }}"
+                  				href="{{ path('chat_home') }}"
                   class="flex items-center px-3 py-2 gap-3 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <span>Agent Tentatio</span>
                 </a>
                 <a
-                  href="{{ path('chat_agent', {'agent': 'ovoyages'}) }}"
+                  				href="{{ path('chat_home') }}"
                   class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <span>Agent Ovoyages</span>
@@ -430,6 +436,12 @@
                 x-cloak
                 class="mt-2 space-y-1 pl-4"
               >
+                <a
+                  href="{{ path('app_dashboard') }}"
+                  class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  🎛️ Dashboard
+                </a>
                 <a
                   href="{{ path('settings_page') }}"
                   class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"

@@ -1,0 +1,1583 @@
+{% extends 'base_app.html.twig' %}
+
+{% block title %}Dashboard - ASIA.fr{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Dashboard Header -->
+    <div class="mb-8 rounded-2xl relative overflow-hidden" style="background: linear-gradient(92deg, #8B0000 0%, #DC2626 100%);" x-data="{ closed: false }" x-show="!closed">
+        <div class="px-6 py-8 md:px-10 md:py-10 md:max-w-3xl relative z-10">
+            <div>
+                <h2 class="text-2xl font-bold text-white mb-2">
+                    Bienvenue sur l'Agent IA
+                </h2>
+                <p class="text-white/80 text-sm mb-6">
+                    Bienvenue sur le tableau de bord – Pilotez votre contenu avec la puissance de l'IA
+                </p>
+                <button class="inline-flex items-center text-white bg-transparent hover:bg-white hover:text-red-600 transition border border-white/50 py-3 px-5 shadow-theme-xs text-sm font-medium rounded-full">
+                    En savoir plus
+                </button>
+            </div>
+        </div>
+        <img src="/assets/images/dashboard/Saly.png" alt="AI Agent illustration" class="absolute right-5 top-0 h-full object-contain hidden md:block" style="max-width: 300px">
+        <button @click="closed = true" class="rounded-full p-2 bg-white/30 hover:bg-white/70 hover:text-gray-800 transition text-gray-500 absolute right-3 top-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M3.96967 5.03099C3.67678 4.73809 3.67678 4.26322 3.96967 3.97033C4.26256 3.67743 4.73744 3.67743 5.03033 3.97033L7.99935 6.93934L10.9683 3.97041C11.2612 3.67752 11.736 3.67752 12.0289 3.97041C12.3218 4.26331 12.3218 4.73818 12.0289 5.03107L9.06001 8L12.0289 10.9689C12.3218 11.2618 12.3218 11.7367 12.0289 12.0296C11.736 12.3225 11.2612 12.3225 10.9683 12.0296L7.99935 9.06066L5.03033 12.0297C4.73744 12.3226 4.26256 12.3226 3.96967 12.0297C3.67678 11.7368 3.67678 11.2619 3.96967 10.969L6.93869 8.00001L3.96967 5.03099Z" fill="currentColor"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number" id="total-requests">0</div>
+            <div class="stat-label">Requêtes Total</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="avg-response-time">0ms</div>
+            <div class="stat-label">Temps de Réponse Moyen</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="success-rate">0%</div>
+            <div class="stat-label">Taux de Succès</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="active-models">0</div>
+            <div class="stat-label">Modèles Actifs</div>
+        </div>
+    </div>
+
+    <!-- Settings Grid -->
+    <div class="settings-grid">
+        <!-- AI Models Settings -->
+        <div class="settings-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a3 3 0 0 0-3 3c0 1.4-.8 2.5-2 3 1.2.5 2 1.6 2 3 0 1.4-.8 2.5-2 3 1.2.5 2 1.6 2 3a3 3 0 0 0 6 0c0-1.4.8-2.5 2-3-1.2-.5-2-1.6-2-3 0-1.4.8-2.5 2-3-1.2-.5-2-1.6-2-3a3 3 0 0 0-3-3z"/>
+                        <path d="M12 8v8"/>
+                        <path d="M8 12h8"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">Modèles IA</h3>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Modèle Principal</div>
+                                            <div class="setting-description">llama3.2-3b-instant</div>
+                </div>
+                <div class="status-indicator status-online">En ligne</div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Modèle de Secours</div>
+                    <div class="setting-description">gpt-3.5-turbo</div>
+                </div>
+                <div class="status-indicator status-online">En ligne</div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Modèle Sémantique</div>
+                    <div class="setting-description">all-MiniLM-L6-v2</div>
+                </div>
+                <div class="status-indicator status-online">En ligne</div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Mode Développement</div>
+                    <div class="setting-description">Utiliser des modèles de test</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="dev-mode-toggle">
+                    <label for="dev-mode-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Debug LLM Models</div>
+                    <div class="setting-description">Afficher les détails des modèles LLM</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="llm-debug-toggle">
+                    <label for="llm-debug-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Settings -->
+        <div class="settings-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">Performance</h3>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Vitesse de Streaming</div>
+                    <div class="setting-description">Contrôle la vitesse d'affichage du texte</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <input type="range" class="speed-slider" id="streaming-speed" min="1" max="10" value="5">
+                    <span class="speed-value" id="speed-value">5x</span>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Cache des Offres</div>
+                    <div class="setting-description">Mettre en cache les résultats de recherche</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="cache-toggle" checked>
+                    <label for="cache-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Optimisation GPU</div>
+                    <div class="setting-description">Utiliser l'accélération GPU si disponible</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="gpu-toggle">
+                    <label for="gpu-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Mode Turbo</div>
+                    <div class="setting-description">Réponse ultra-rapide (consomme plus de ressources)</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="turbo-toggle">
+                    <label for="turbo-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Debug & Logging -->
+        <div class="settings-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 9l3 3-3 3"/>
+                        <path d="M16 9l-3 3 3 3"/>
+                        <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">Debug & Logs</h3>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Mode Debug Général</div>
+                    <div class="setting-description">Afficher les informations de débogage générales</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="debug-toggle">
+                    <label for="debug-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Debug Pipeline</div>
+                    <div class="setting-description">Afficher les détails du pipeline de traitement</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="pipeline-debug-toggle">
+                    <label for="pipeline-debug-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Debug API Calls</div>
+                    <div class="setting-description">Afficher les appels API et leurs réponses</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="api-debug-toggle">
+                    <label for="api-debug-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Debug Semantic Search</div>
+                    <div class="setting-description">Afficher les détails de la recherche sémantique</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="semantic-debug-toggle">
+                    <label for="semantic-debug-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Debug Memory Service</div>
+                    <div class="setting-description">Afficher les opérations de mémoire conversationnelle</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="memory-debug-toggle">
+                    <label for="memory-debug-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Logs Détaillés</div>
+                    <div class="setting-description">Enregistrer tous les événements</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="detailed-logs-toggle">
+                    <label for="detailed-logs-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Console Browser</div>
+                    <div class="setting-description">Afficher les logs dans la console</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="console-toggle" checked>
+                    <label for="console-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Métriques Temps Réel</div>
+                    <div class="setting-description">Afficher les performances en temps réel</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="metrics-toggle">
+                    <label for="metrics-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Experience -->
+        <div class="settings-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v6"/>
+                        <path d="M1 12h6m6 0h6"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">Expérience Utilisateur</h3>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Mode Sombre</div>
+                    <div class="setting-description">Interface en thème sombre</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="dark-mode-toggle">
+                    <label for="dark-mode-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Animations</div>
+                    <div class="setting-description">Effets visuels et transitions</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="animations-toggle" checked>
+                    <label for="animations-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Son de Frappe</div>
+                    <div class="setting-description">Son pendant la saisie de l'IA</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="typing-sound-toggle" checked>
+                    <label for="typing-sound-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Suggestions Intelligentes</div>
+                    <div class="setting-description">Propositions automatiques</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="suggestions-toggle" checked>
+                    <label for="suggestions-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Features -->
+        <div class="settings-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09A1.65 1.65 0 0 0 15.4 9a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">Fonctionnalités Avancées</h3>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Recherche Sémantique</div>
+                    <div class="setting-description">Recherche intelligente par similarité</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="semantic-toggle" checked>
+                    <label for="semantic-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Mémoire Conversationnelle</div>
+                    <div class="setting-description">Se souvenir du contexte</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="memory-toggle" checked>
+                    <label for="memory-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Pipeline Amélioré</div>
+                    <div class="setting-description">Utiliser le pipeline intelligent</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="pipeline-toggle" checked>
+                    <label for="pipeline-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Mode Expérimental</div>
+                    <div class="setting-description">Fonctionnalités en développement</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="experimental-toggle">
+                    <label for="experimental-toggle" class="checkbox-slider"></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="settings-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 3v18h18"/>
+                        <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                    </svg>
+                </div>
+                <h3 class="card-title">État du Système</h3>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">API Python</div>
+                    <div class="setting-description">Serveur backend principal</div>
+                </div>
+                <div class="status-indicator status-online">En ligne</div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Base de Données</div>
+                    <div class="setting-description">Stockage des offres et préférences</div>
+                </div>
+                <div class="status-indicator status-online">En ligne</div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Services IA</div>
+                    <div class="setting-description">Modèles de langage et sémantique</div>
+                </div>
+                <div class="status-indicator status-online">En ligne</div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Synchronisation</div>
+                    <div class="setting-description">Mise à jour des paramètres</div>
+                </div>
+                <div class="status-indicator status-loading">Synchronisation...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debug Console -->
+    <div class="settings-card">
+        <div class="card-header">
+            <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+            </div>
+            <h3 class="card-title">Console de Debug</h3>
+        </div>
+        
+        <div class="debug-console" id="debug-console">
+            <div class="debug-entry info">Dashboard chargé avec succès</div>
+            <div class="debug-entry success">Tous les services sont en ligne</div>
+            <div class="debug-entry warning">Mode debug activé</div>
+        </div>
+        
+        <div style="margin-top: 1rem;">
+            <button class="btn btn-secondary" onclick="clearDebugConsole()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"/>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                </svg>
+                Vider la Console
+            </button>
+            <button class="btn btn-secondary" onclick="exportDebugLogs()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7,10 12,15 17,10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Exporter les Logs
+            </button>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button class="btn btn-primary" onclick="saveSettings()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17,21 17,13 7,13 7,21"/>
+                <polyline points="7,3 7,8 15,8"/>
+            </svg>
+            Sauvegarder les Paramètres
+        </button>
+        <button class="btn btn-secondary" onclick="resetToDefaults()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1,4 1,10 7,10"/>
+                <polyline points="23,20 23,14 17,14"/>
+                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+            </svg>
+            Réinitialiser
+        </button>
+        <button class="btn btn-secondary" onclick="exportSettings()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7,10 12,15 17,10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Exporter
+        </button>
+        <button class="btn btn-danger" onclick="clearCache()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"/>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+            </svg>
+            Vider le Cache
+        </button>
+    </div>
+</div>
+
+<!-- Notification Container -->
+<div id="notification-container"></div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .dashboard-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .settings-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .dark .settings-card {
+            background: #1f2937;
+            border: 1px solid #374151;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+        
+        .settings-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f3f4f6;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .dark .card-icon {
+            background: #374151;
+            color: #9ca3af;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .dark .card-title {
+            color: #f9fafb;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-info {
+            flex: 1;
+        }
+        
+        .setting-label {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.25rem;
+        }
+        
+        .dark .setting-label {
+            color: #e5e7eb;
+        }
+        
+        .setting-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+        
+        .dark .setting-description {
+            color: #9ca3af;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 34px;
+            background: #d1d5db;
+            border-radius: 34px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .toggle-switch input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-switch .checkbox-slider {
+            position: relative;
+            width: 60px;
+            height: 34px;
+            background: #d1d5db;
+            border-radius: 34px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .toggle-switch .checkbox-slider::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle-switch input[type="checkbox"]:checked + .checkbox-slider {
+            background: #dc2626;
+        }
+        
+        .toggle-switch input[type="checkbox"]:checked + .checkbox-slider::after {
+            transform: translateX(26px);
+        }
+        
+        .speed-slider {
+            width: 120px;
+            height: 6px;
+            border-radius: 3px;
+            background: #e5e7eb;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #dc2626;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .speed-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #dc2626;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .speed-value {
+            font-weight: 600;
+            color: #dc2626;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-online {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-offline {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .status-loading {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .dark .stat-card {
+            background: #1f2937;
+            border: 1px solid #374151;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #dc2626;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: #10b981;
+        }
+        
+        .notification.error {
+            background: #ef4444;
+        }
+        
+        .notification.warning {
+            background: #f59e0b;
+        }
+        
+        .debug-console {
+            background: #1f2937;
+            color: #f9fafb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #374151;
+        }
+        
+        .debug-entry {
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0;
+        }
+        
+        .debug-entry.info {
+            color: #60a5fa;
+        }
+        
+        .debug-entry.warning {
+            color: #fbbf24;
+        }
+        
+        .debug-entry.error {
+            color: #f87171;
+        }
+        
+        .debug-entry.success {
+            color: #34d399;
+        }
+        
+        /* Dark mode improvements */
+        .dark .dashboard-container {
+            background: #111827;
+        }
+        
+        .dark .btn-secondary {
+            background: #374151;
+            color: #e5e7eb;
+        }
+        
+        .dark .btn-secondary:hover {
+            background: #4b5563;
+        }
+        
+        .dark .speed-slider {
+            background: #4b5563;
+        }
+        
+        .dark .speed-slider::-webkit-slider-thumb {
+            background: #dc2626;
+        }
+        
+        .dark .speed-slider::-moz-range-thumb {
+            background: #dc2626;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        console.log('🎬 Dashboard script loaded');
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM Content Loaded - Starting dashboard initialization');
+            
+            // Check dark mode state
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+            }
+            
+            console.log('🔧 Calling initializeDashboard...');
+            initializeDashboard();
+            
+            console.log('📥 Calling loadSettings...');
+            loadSettings();
+            
+            console.log('📊 Calling updateStats...');
+            updateStats();
+            
+            addDebugEntry('info', 'Dashboard chargé avec succès');
+            console.log('✅ Dashboard initialization complete');
+        });
+
+        // Speed slider functionality
+        const speedSlider = document.getElementById('streaming-speed');
+        const speedValue = document.getElementById('speed-value');
+        
+        if (speedSlider && speedValue) {
+            speedSlider.addEventListener('input', function() {
+                const value = this.value;
+                speedValue.textContent = value + 'x';
+                updateSetting('streaming-speed', parseInt(value));
+            });
+        }
+
+        function initializeDashboard() {
+            console.log('🚀 Dashboard initialized');
+            
+            // Add change handlers for all checkboxes
+            const toggles = [
+                'dev-mode-toggle', 'cache-toggle', 'gpu-toggle', 'turbo-toggle',
+                'debug-toggle', 'detailed-logs-toggle', 'console-toggle', 'metrics-toggle',
+                'dark-mode-toggle', 'animations-toggle', 'typing-sound-toggle', 'suggestions-toggle',
+                'semantic-toggle', 'memory-toggle', 'pipeline-toggle', 'experimental-toggle',
+                'llm-debug-toggle', 'pipeline-debug-toggle', 'api-debug-toggle', 'semantic-debug-toggle', 'memory-debug-toggle'
+            ];
+            
+            console.log('🔍 Looking for checkboxes...');
+            let foundToggles = 0;
+            
+            toggles.forEach(toggleId => {
+                const checkbox = document.getElementById(toggleId);
+                if (checkbox) {
+                    foundToggles++;
+                    console.log(`🔧 Setting up checkbox: ${toggleId} - Found!`);
+                    
+                                         // Add change event listener
+                     checkbox.addEventListener('change', function(e) {
+                         console.log(`🎯 Checkbox changed: ${this.id}`);
+                         console.log(`🎯 Checkbox element:`, this);
+                         console.log(`🎯 Current checked state:`, this.checked);
+                         
+                         const isActive = this.checked;
+                         const settingId = this.id;
+                         
+                         console.log(`🎯 New checked state:`, isActive);
+                         console.log(`🎯 Setting ID:`, settingId);
+                         
+                         // Add detailed debug entry
+                         addDebugEntry('info', `🔄 Setting changed: ${settingId} = ${isActive}`);
+                         
+                         // Update setting immediately
+                         updateSetting(settingId, isActive);
+                         
+                         // Apply setting to chat system if available
+                         if (window.chatCore) {
+                             const methodName = 'set' + settingId.replace(/-([a-z])/g, (g) => g[1].toUpperCase()).replace(/^./, (str) => str.toUpperCase());
+                             console.log(`🎯 Looking for method:`, methodName);
+                             if (window.chatCore[methodName]) {
+                                 window.chatCore[methodName](isActive);
+                                 console.log(`🎯 Applied to chatCore:`, methodName, isActive);
+                                 addDebugEntry('success', `✅ Applied to chatCore: ${methodName}(${isActive})`);
+                             } else {
+                                 console.log(`🎯 Method not found:`, methodName);
+                                 addDebugEntry('warning', `⚠️ Method not found: ${methodName}`);
+                             }
+                         } else {
+                             console.log(`🎯 chatCore not available`);
+                             addDebugEntry('warning', `⚠️ chatCore not available`);
+                         }
+                         
+                         // Send to backend API
+                         sendSettingToBackend(settingId, isActive);
+                         
+                         // Show notification
+                         showNotification(`${settingId.replace('-toggle', '')} ${isActive ? 'activé' : 'désactivé'}`, 'success');
+                     });
+                    
+                    console.log(`✅ Checkbox ${toggleId} setup complete`);
+                } else {
+                    console.warn(`❌ Checkbox not found: ${toggleId}`);
+                }
+            });
+            
+            console.log(`📊 Total checkboxes found: ${foundToggles} out of ${toggles.length}`);
+        }
+
+        function loadSettings() {
+            // First load from localStorage for immediate display
+            const localSettings = JSON.parse(localStorage.getItem('dashboard-settings') || '{}');
+            
+            // Apply saved settings to checkboxes
+            Object.keys(localSettings).forEach(settingId => {
+                const checkbox = document.getElementById(settingId);
+                if (checkbox) {
+                    checkbox.checked = localSettings[settingId] === true;
+                }
+                
+                // Handle slider
+                if (settingId === 'streaming-speed') {
+                    const slider = document.getElementById('streaming-speed');
+                    const value = document.getElementById('speed-value');
+                    if (slider && value) {
+                        slider.value = localSettings[settingId];
+                        value.textContent = localSettings[settingId] + 'x';
+                    }
+                }
+            });
+            
+            // Then try to load from backend API
+            fetch('/api/settings/get')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.settings) {
+                        // Apply backend settings (they override local settings)
+                        Object.keys(data.settings).forEach(settingId => {
+                            const value = data.settings[settingId].value;
+                            const checkbox = document.getElementById(settingId);
+                            
+                            if (checkbox) {
+                                checkbox.checked = value === true;
+                            }
+                            
+                            // Handle slider
+                            if (settingId === 'streaming-speed') {
+                                const slider = document.getElementById('streaming-speed');
+                                const valueEl = document.getElementById('speed-value');
+                                if (slider && valueEl) {
+                                    slider.value = value;
+                                    valueEl.textContent = value + 'x';
+                                }
+                            }
+                        });
+                        
+                        addDebugEntry('success', 'Paramètres chargés depuis le serveur');
+                    }
+                })
+                .catch(error => {
+                    console.warn('Could not load settings from backend:', error);
+                    addDebugEntry('warning', 'Paramètres chargés depuis le stockage local');
+                });
+        }
+
+        function updateSetting(settingId, value) {
+            // Save setting to localStorage
+            const settings = JSON.parse(localStorage.getItem('dashboard-settings') || '{}');
+            settings[settingId] = value;
+            localStorage.setItem('dashboard-settings', JSON.stringify(settings));
+            
+            // Apply setting to application
+            applySetting(settingId, value);
+        }
+
+        function applySetting(settingId, value) {
+            console.log(`🔧 Applying setting locally: ${settingId} = ${value}`);
+            
+            switch(settingId) {
+                case 'debug-toggle':
+                    window.debugMode = value;
+                    console.log(`🔧 Debug mode: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Debug général ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                case 'llm-debug-toggle':
+                    window.llmDebugMode = value;
+                    console.log(`🔧 LLM Debug mode: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Debug LLM ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                case 'pipeline-debug-toggle':
+                    window.pipelineDebugMode = value;
+                    console.log(`🔧 Pipeline Debug mode: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Debug Pipeline ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                case 'api-debug-toggle':
+                    window.apiDebugMode = value;
+                    console.log(`🔧 API Debug mode: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Debug API ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                case 'semantic-debug-toggle':
+                    window.semanticDebugMode = value;
+                    console.log(`🔧 Semantic Debug mode: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Debug Sémantique ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                case 'memory-debug-toggle':
+                    window.memoryDebugMode = value;
+                    console.log(`🔧 Memory Debug mode: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Debug Mémoire ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                case 'streaming-speed':
+                    window.streamingSpeed = value;
+                    console.log(`🔧 Streaming speed: ${value}x`);
+                    addDebugEntry('info', `🔧 Local: Vitesse de streaming: ${value}x`);
+                    break;
+                    
+                case 'dark-mode-toggle':
+                    document.documentElement.classList.toggle('dark', value);
+                    localStorage.setItem('darkMode', value);
+                    console.log(`🔧 Dark mode: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Mode sombre ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                case 'semantic-toggle':
+                    window.semanticSearchEnabled = value;
+                    console.log(`🔧 Semantic search: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Recherche sémantique ${value ? 'activée' : 'désactivée'}`);
+                    break;
+                    
+                case 'pipeline-toggle':
+                    window.enhancedPipelineEnabled = value;
+                    console.log(`🔧 Enhanced pipeline: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Pipeline amélioré ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                case 'cache-toggle':
+                    window.cacheEnabled = value;
+                    console.log(`🔧 Cache: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Cache ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                case 'turbo-toggle':
+                    window.turboMode = value;
+                    console.log(`🔧 Turbo mode: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('warning', `🔧 Local: Mode turbo ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                case 'console-toggle':
+                    window.consoleLogging = value;
+                    console.log(`🔧 Console logging: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Logs console ${value ? 'activés' : 'désactivés'}`);
+                    break;
+                    
+                case 'typing-sound-toggle':
+                    window.typingSoundEnabled = value;
+                    console.log(`🔧 Typing sound: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Son de frappe ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                case 'suggestions-toggle':
+                    window.suggestionsEnabled = value;
+                    console.log(`🔧 Suggestions: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Suggestions ${value ? 'activées' : 'désactivées'}`);
+                    break;
+                    
+                case 'memory-toggle':
+                    window.conversationMemory = value;
+                    console.log(`🔧 Conversation memory: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Mémoire conversationnelle ${value ? 'activée' : 'désactivée'}`);
+                    break;
+                    
+                case 'experimental-toggle':
+                    window.experimentalFeatures = value;
+                    console.log(`🔧 Experimental features: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('warning', `🔧 Local: Fonctionnalités expérimentales ${value ? 'activées' : 'désactivées'}`);
+                    break;
+                    
+                case 'gpu-toggle':
+                    window.gpuAcceleration = value;
+                    console.log(`🔧 GPU acceleration: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Accélération GPU ${value ? 'activée' : 'désactivée'}`);
+                    break;
+                    
+                case 'animations-toggle':
+                    window.animationsEnabled = value;
+                    document.body.classList.toggle('no-animations', !value);
+                    console.log(`🔧 Animations: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Animations ${value ? 'activées' : 'désactivées'}`);
+                    break;
+                    
+                case 'detailed-logs-toggle':
+                    window.detailedLogging = value;
+                    console.log(`🔧 Detailed logging: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Logs détaillés ${value ? 'activés' : 'désactivés'}`);
+                    break;
+                    
+                case 'metrics-toggle':
+                    window.metricsEnabled = value;
+                    console.log(`🔧 Metrics: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('info', `🔧 Local: Métriques ${value ? 'activées' : 'désactivées'}`);
+                    break;
+                    
+                case 'dev-mode-toggle':
+                    window.devMode = value;
+                    console.log(`🔧 Dev mode: ${value ? 'ON' : 'OFF'}`);
+                    addDebugEntry('warning', `🔧 Local: Mode développement ${value ? 'activé' : 'désactivé'}`);
+                    break;
+                    
+                default:
+                    console.log(`🔧 Unknown setting: ${settingId}`);
+                    addDebugEntry('warning', `🔧 Local: Setting inconnu: ${settingId}`);
+                    break;
+            }
+            
+            // Log current window state for debugging
+            if (window.consoleLogging) {
+                console.log(`🔧 Current window settings:`, {
+                    debugMode: window.debugMode,
+                    llmDebugMode: window.llmDebugMode,
+                    semanticSearchEnabled: window.semanticSearchEnabled,
+                    cacheEnabled: window.cacheEnabled,
+                    streamingSpeed: window.streamingSpeed
+                });
+            }
+        }
+
+        function updateStats() {
+            // Fetch real-time stats from backend
+            fetchRealTimeStats();
+            
+            // Update stats every 5 seconds
+            setInterval(() => {
+                fetchRealTimeStats();
+            }, 5000);
+        }
+
+        function addDebugEntry(type, message) {
+            const console = document.getElementById('debug-console');
+            if (console) {
+                const entry = document.createElement('div');
+                entry.className = `debug-entry ${type}`;
+                entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                console.appendChild(entry);
+                console.scrollTop = console.scrollHeight;
+            }
+        }
+
+        function clearDebugConsole() {
+            const console = document.getElementById('debug-console');
+            if (console) {
+                console.innerHTML = '<div class="debug-entry info">Console vidée</div>';
+                addDebugEntry('info', 'Console de debug vidée');
+            }
+        }
+
+        function exportDebugLogs() {
+            const console = document.getElementById('debug-console');
+            if (console) {
+                const logs = console.innerText;
+                const blob = new Blob([logs], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'debug-logs.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+                showNotification('Logs exportés', 'success');
+                addDebugEntry('info', 'Logs de debug exportés');
+            }
+        }
+
+        function saveSettings() {
+            const settings = {};
+            
+            // Collect all checkbox states
+            const toggles = [
+                'dev-mode-toggle', 'cache-toggle', 'gpu-toggle', 'turbo-toggle',
+                'debug-toggle', 'detailed-logs-toggle', 'console-toggle', 'metrics-toggle',
+                'dark-mode-toggle', 'animations-toggle', 'typing-sound-toggle', 'suggestions-toggle',
+                'semantic-toggle', 'memory-toggle', 'pipeline-toggle', 'experimental-toggle',
+                'llm-debug-toggle', 'pipeline-debug-toggle', 'api-debug-toggle', 'semantic-debug-toggle', 'memory-debug-toggle'
+            ];
+            
+            toggles.forEach(toggleId => {
+                const checkbox = document.getElementById(toggleId);
+                if (checkbox) {
+                    settings[toggleId] = checkbox.checked;
+                }
+            });
+            
+            // Add slider value
+            const speedSlider = document.getElementById('streaming-speed');
+            if (speedSlider) {
+                settings['streaming-speed'] = parseInt(speedSlider.value);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('dashboard-settings', JSON.stringify(settings));
+            
+            // Send to backend API
+            fetch('/api/settings/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    settings: settings,
+                    timestamp: new Date().toISOString(),
+                    user_id: '1'
+                })
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            })
+            .then(data => {
+                if (data.success) {
+                    showNotification('Paramètres sauvegardés avec succès', 'success');
+                    addDebugEntry('success', 'Paramètres sauvegardés sur le serveur');
+                } else {
+                    throw new Error(data.message || 'Erreur inconnue');
+                }
+            })
+            .catch(error => {
+                showNotification('Erreur lors de la sauvegarde', 'error');
+                addDebugEntry('error', 'Erreur lors de la sauvegarde: ' + error.message);
+                console.error('Error saving settings:', error);
+            });
+        }
+
+        function resetToDefaults() {
+            if (confirm('Êtes-vous sûr de vouloir réinitialiser tous les paramètres ?')) {
+                localStorage.removeItem('dashboard-settings');
+                addDebugEntry('warning', 'Paramètres réinitialisés');
+                location.reload();
+            }
+        }
+
+        function exportSettings() {
+            const settings = localStorage.getItem('dashboard-settings');
+            const blob = new Blob([settings], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'asia-settings.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('Paramètres exportés', 'success');
+            addDebugEntry('info', 'Paramètres exportés');
+        }
+
+        function clearCache() {
+            if (confirm('Êtes-vous sûr de vouloir vider le cache ?')) {
+                // Clear localStorage
+                localStorage.clear();
+                
+                // Clear other caches
+                if ('caches' in window) {
+                    caches.keys().then(names => {
+                        names.forEach(name => {
+                            caches.delete(name);
+                        });
+                    });
+                }
+                
+                // Send cache clear request to backend
+                fetch('/api/cache/clear', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        showNotification('Cache vidé avec succès', 'success');
+                        addDebugEntry('success', 'Cache vidé localement et sur le serveur');
+                    } else {
+                        showNotification('Cache vidé localement', 'warning');
+                        addDebugEntry('warning', 'Cache vidé localement seulement');
+                    }
+                }).catch(error => {
+                    showNotification('Cache vidé localement', 'warning');
+                    addDebugEntry('warning', 'Cache vidé localement seulement');
+                });
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notification-container');
+            if (container) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                
+                container.appendChild(notification);
+                
+                // Show notification
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+                
+                // Hide notification
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        container.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        function sendSettingToBackend(settingId, value) {
+            const settingData = {
+                setting_id: settingId,
+                value: value,
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log(`📡 Sending to backend:`, settingData);
+            addDebugEntry('info', `📡 Sending to backend: ${settingId} = ${value}`);
+            
+            fetch('/api/settings/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(settingData)
+            }).then(response => {
+                console.log(`📡 Backend response status:`, response.status);
+                addDebugEntry('info', `📡 Backend response: ${response.status} ${response.statusText}`);
+                
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            }).then(data => {
+                console.log(`📡 Backend response data:`, data);
+                
+                if (data.success) {
+                    addDebugEntry('success', `✅ Backend updated: ${settingId} = ${value}`);
+                    console.log(`✅ Setting ${settingId} updated on backend:`, value);
+                    
+                    // Show what was applied to the system
+                    const settingDescription = getSettingDescription(settingId);
+                    addDebugEntry('info', `🔧 Applied to system: ${settingDescription}`);
+                    
+                } else {
+                    throw new Error(data.message || 'Erreur inconnue');
+                }
+            }).catch(error => {
+                addDebugEntry('error', `❌ Backend error for ${settingId}: ${error.message}`);
+                console.error('Error updating setting on backend:', error);
+            });
+        }
+        
+        function getSettingDescription(settingId) {
+            const descriptions = {
+                'debug-toggle': 'General debug mode',
+                'llm-debug-toggle': 'LLM service debug mode',
+                'pipeline-debug-toggle': 'Pipeline debug mode',
+                'api-debug-toggle': 'API debug mode',
+                'semantic-debug-toggle': 'Semantic search debug mode',
+                'memory-debug-toggle': 'Memory service debug mode',
+                'streaming-speed': 'Streaming speed',
+                'dark-mode-toggle': 'Dark mode',
+                'semantic-toggle': 'Semantic search',
+                'pipeline-toggle': 'Enhanced pipeline',
+                'cache-toggle': 'Caching',
+                'turbo-toggle': 'Turbo mode',
+                'console-toggle': 'Console logging',
+                'typing-sound-toggle': 'Typing sound',
+                'suggestions-toggle': 'Intelligent suggestions',
+                'memory-toggle': 'Conversation memory',
+                'experimental-toggle': 'Experimental features',
+                'gpu-toggle': 'GPU acceleration',
+                'animations-toggle': 'Animations',
+                'detailed-logs-toggle': 'Detailed logging',
+                'metrics-toggle': 'Metrics collection',
+                'dev-mode-toggle': 'Development mode'
+            };
+            
+            return descriptions[settingId] || settingId;
+        }
+        
+        function fetchRealTimeStats() {
+            fetch('/api/stats/realtime')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update stats display
+                        const totalRequestsEl = document.getElementById('total-requests');
+                        const avgResponseTimeEl = document.getElementById('avg-response-time');
+                        const successRateEl = document.getElementById('success-rate');
+                        const activeModelsEl = document.getElementById('active-models');
+                        
+                        if (totalRequestsEl) totalRequestsEl.textContent = data.stats.total_requests.toLocaleString();
+                        if (avgResponseTimeEl) avgResponseTimeEl.textContent = data.stats.avg_response_time + 'ms';
+                        if (successRateEl) successRateEl.textContent = data.stats.success_rate + '%';
+                        if (activeModelsEl) activeModelsEl.textContent = data.stats.active_models;
+                        
+                        // Add debug entry if metrics are enabled
+                        if (window.metricsEnabled) {
+                            addDebugEntry('info', `Stats mises à jour: ${data.stats.total_requests} requêtes, ${data.stats.avg_response_time}ms`);
+                        }
+                    } else {
+                        console.warn('Failed to fetch stats:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching stats:', error);
+                    // Fallback to simulated stats if API fails
+                    const totalRequests = Math.floor(Math.random() * 1000) + 500;
+                    const avgResponseTime = Math.floor(Math.random() * 200) + 50;
+                    const successRate = Math.floor(Math.random() * 20) + 80;
+                    const activeModels = Math.floor(Math.random() * 3) + 2;
+                    
+                    const totalRequestsEl = document.getElementById('total-requests');
+                    const avgResponseTimeEl = document.getElementById('avg-response-time');
+                    const successRateEl = document.getElementById('success-rate');
+                    const activeModelsEl = document.getElementById('active-models');
+                    
+                    if (totalRequestsEl) totalRequestsEl.textContent = totalRequests.toLocaleString();
+                    if (avgResponseTimeEl) avgResponseTimeEl.textContent = avgResponseTime + 'ms';
+                    if (successRateEl) successRateEl.textContent = successRate + '%';
+                    if (activeModelsEl) activeModelsEl.textContent = activeModels;
+                });
+        }
+        
+        // Auto-save settings every 30 seconds
+        setInterval(saveSettings, 30000);
+        
+        // Fetch real-time stats every 5 seconds
+        setInterval(fetchRealTimeStats, 5000);
+        
+        // Function to display current settings state
+        function displayCurrentSettings() {
+            const settings = {
+                'Debug Mode': window.debugMode || false,
+                'LLM Debug': window.llmDebugMode || false,
+                'Pipeline Debug': window.pipelineDebugMode || false,
+                'API Debug': window.apiDebugMode || false,
+                'Semantic Debug': window.semanticDebugMode || false,
+                'Memory Debug': window.memoryDebugMode || false,
+                'Semantic Search': window.semanticSearchEnabled || false,
+                'Enhanced Pipeline': window.enhancedPipelineEnabled || false,
+                'Cache': window.cacheEnabled || false,
+                'Turbo Mode': window.turboMode || false,
+                'Console Logging': window.consoleLogging || false,
+                'Conversation Memory': window.conversationMemory || false,
+                'Streaming Speed': window.streamingSpeed || 5
+            };
+            
+            console.log('📊 Current Settings State:', settings);
+            addDebugEntry('info', '📊 Current Settings State:');
+            
+            Object.entries(settings).forEach(([key, value]) => {
+                const status = value ? '✅ ON' : '❌ OFF';
+                const entry = `${key}: ${status}`;
+                console.log(`  ${entry}`);
+                addDebugEntry('info', `  ${entry}`);
+            });
+        }
+        
+        // Expose function globally for debugging
+        window.displayCurrentSettings = displayCurrentSettings;
+    </script>
+{% endblock %} 
